@@ -10,7 +10,7 @@ class PatientsController < ApplicationController
 			flash[:notice] = "Paciente cadastrado com sucesso"
 			redirect_to root_path
 		else
-			rendering :new
+			render :new
 		end
 	end
 

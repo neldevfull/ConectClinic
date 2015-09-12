@@ -1,9 +1,19 @@
-<h2 class="page-header">Paciente</h2>  
-<% @patient.errors.full_messages.each do |message| %>
-	<div class="alert alert-danger" role="alert">
-		<%= message %>
+<h2 class="page-header">Paciente</h2> 
+<% 
+	counter = @patient.errors.full_messages.count
+	if counter > 0
+%>
+	<div class="alert alert-danger" role="alert"> 
+		<% @patient.errors.full_messages.each do |message| %>
+			<%= message %>
+			<% counter -= 1 %>					
+			<% if counter != 0 %>
+				<%=p' , '%>
+			<% end %>
+		<% end %>
 	</div>
 <% end %>
+
 <% if flash[:notice] %>
 	<div class="alert alert-success" role="alert">
 		<%= flash[:notice] %>
