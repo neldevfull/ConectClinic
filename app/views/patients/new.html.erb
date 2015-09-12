@@ -1,0 +1,60 @@
+<h2 class="page-header">Paciente</h2> 
+<form class="container-fluid">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<div class="row">
+				<h3 class="col-xs-12">Geral</h3>
+			</div>
+		</div>
+		<div class="panel-body">
+			<!-- Name -->
+			<div class="form-group">
+				<label for="name" class="control-label _sl col-sm-1 col-lg-1">Nome</label>
+				<div class="col-xs-12 col-sm-4 col-lg-7">					
+					<input id="name" class="form-control" type="text">
+				</div>
+			</div>
+			<!-- E-mail -->
+			<div class="form-group">
+				<label for="email" class="control-label _sl col-sm-1 col-lg-1">E-mail</label>
+				<div class="col-xs-12 col-sm-4 col-lg-7">					
+					<input id="email" class="form-control" type="text">
+				</div>
+			</div>
+			<!-- Telephones -->
+			<div class="form-group">
+				<label for="tellephone" class="control-label _sl col-sm-1 col-lg-1">Telefone</label>
+				<div class="col-xs-6 col-sm-2 col-lg-3">					
+					<input id="tellephone" class="form-control" type="text">
+				</div>
+				<label for="cellphone" class="control-label col-sm-1 col-lg-1">Celular</label>
+				<div class="col-xs-6 col-sm-2 col-lg-3">					
+					<input id="cellphone" class="form-control" type="text">
+				</div>
+			</div>
+			<!-- Birth date and gender -->
+			<div class="form-group">
+				<label for="birth" class="control-label _sl col-sm-1 col-lg-1">Nascimento</label>
+				<div class="col-xs-6 col-sm-2 col-lg-3">					
+					<input id="birth" class="form-control" type="text">
+				</div>
+				<label class="control-label _sl col-sm-1 col-lg-1">Sexo</label>
+				<div class="radio-inline">
+					<input type="radio" name="gender" id="male"><label class="_ls" for="male">Masculino</label>
+				</div>
+				<div class="radio-inline">
+					<input type="radio" name="gender" id="female"><label class="_ls" for="female">Feminina</label>
+				</div>
+			</div>
+			<!-- Accept e-mail -->
+			<div class="form-group" style="margin-top: -1em;">
+				<label class="control-label _sl col-sm-1 col-lg-1" for="accept">Aceita</label>
+				<label class="checkbox-inline"><input type="checkbox" name="emailAccept" id="accept">
+					<span class="_ls">envio de e-mails de confirmaçao</span>
+				</label>			
+			</div>
+			<!-- Button -->
+			<button class="btn btn-success" type="submit">Cadastrar</button>
+		</div>
+	</div>	
+</form>
