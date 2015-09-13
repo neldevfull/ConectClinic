@@ -37,6 +37,12 @@
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: 'find';
+  src: url('find.woff?95576706') format('woff');
+  font-weight: normal;
+  font-style: normal;
+} 
 /* end */
 
 /* Menu start */
@@ -162,7 +168,7 @@
 label {
   cursor: pointer;
 }
-/* Space Label */
+/* Space */
 ._sl {
   margin-right: .5em;
 }
@@ -176,7 +182,60 @@ label {
 ._ls {  
   font-weight: bold;
 }
-.alert {
-  width: 99%;
+/* Label Width */
+._lbw {
+  width: 10%;
+}
+/* Space Margin */
+._mp {
+  margin-right: 2em;  
+}
+._select {
+  width: 20%;
+  display: inline;
+}
+/* Correction button */
+._btnc {
+  margin-top: -.6em;
+}
+._find:after {
+  content: '\e800'; 
+  font-family: 'find';
+  speak: none;
+  display: inline-block;
+  color: #333333;   
+}
+._new-patient {
+  font-size: 1.5em;
+  background-color: #F2F2F2;
+}
+._btn-back {
+  margin: -.5em 0 0 1em;
+}
+._lessen-row {
+  margin-bottom: -.5em;
+}
+/* end */ 
+
+/* Grid start */
+._container-table {
+  padding: 0 1em;
+}
+._container-table table 
+tbody tr th {
+  color: #333;
+  font-weight: normal;
+}
+._container-table table 
+tbody tr th{
+  padding-bottom: .5em; 
+}
+._container-table table 
+tbody tr:nth-child(2n+1) {
+background: #dddddd;
+}
+._btn-success {
+  float: right;
+  margin: -.1em 2.5em;
 }
 /* end */ 

@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  root "patients#new"
-  get  "patients" => "patients#index"  
-  post "patients" => "patients#create"
+  root "patients#index"  
+  resources :patients, only: [:new, :create, :destroy, :edit, :update]
 end
