@@ -196,9 +196,9 @@ label {
 }
 /* Correction button */
 ._btnc {
-  margin-top: -.6em;
+  margin-top: -.5em;
 }
-._find:after {
+._find:after { 
   content: '\e800'; 
   font-family: 'find';
   speak: none;

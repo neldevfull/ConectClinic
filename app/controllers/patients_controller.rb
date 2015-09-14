@@ -2,7 +2,14 @@ class PatientsController < ApplicationController
 	before_action :set_patient, only: [:edit, :update, :destroy]
 
 	def index
-		@patients = Patient.select('id', 'name', 'email', 'tellephone').order('id DESC')
+		@patients = Patient.select('id', 'name', 'email', 'tellephone').order('id DESC')		
+	end
+
+	def search		
+		@value = params[:value]
+		@field = params[:field]
+		@patient_search = Patient.where "#{@field} like ?", "%#{@value}%"
+		@value = '' 		
 	end
 
 	def new
