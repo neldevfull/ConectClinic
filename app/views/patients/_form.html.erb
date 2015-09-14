@@ -1,10 +1,18 @@
 <div class="container-fluid">
 	<h2 class="page-header">Paciente</h2> 
+	<% success = 0 %>
+	<% if flash[:notice] %>
+		<div class="alert alert-success" role="alert">
+			<%= flash[:notice] %>
+			<% success = 1 %>			
+		</div>
+	<% end %>
 	<% 
-		counter = @patient.errors.full_messages.count
-		if counter > 0
+	counter = @patient.errors.full_messages.count
+	if counter > 0
 	%>
 		<div class="alert alert-danger" role="alert"> 
+			<%= "Erro ao #{button_value} Paciente:"%>
 			<% @patient.errors.full_messages.each do |message| %>
 				<%= message %>
 				<% counter -= 1 %>					
@@ -13,13 +21,15 @@
 				<% end %>
 			<% end %>
 		</div>
+	<% else %>
+		<% if success != 1 %>
+			<div class="alert alert-warning" role="alert"> 
+				<p><%= button_value %> Paciente</p>
+			</div>
+		<% end %>
 	<% end %>
 
-	<% if flash[:notice] %>
-		<div class="alert alert-success" role="alert">
-			<%= flash[:notice] %>
-		</div>
-	<% end %>
+	
 	<%= form_for @patient do |f| %>
 		<div class="panel panel-default">
 			<div class="panel-heading">
