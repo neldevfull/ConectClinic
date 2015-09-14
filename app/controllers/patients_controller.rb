@@ -6,9 +6,13 @@ class PatientsController < ApplicationController
 	end
 
 	def search		
-		@value = params[:value]
-		@field = params[:field]
-		@patient_search = Patient.where "#{@field} like ?", "%#{@value}%"
+		@value  = params[:value]
+		@field  = params[:field]
+		@filter = params[:filter]
+				
+		@patient_search = Patient.where "#{@field} like ?", "%#{@value}%" if @value	
+		@patient_search = Patient.where "gender = ?", "#{@filter}" if @filter
+			
 		@value = '' 		
 	end
 

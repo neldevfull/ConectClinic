@@ -41,13 +41,14 @@
 					<label class="_mp _lbw control-label col-sm-1 col-lg-1">Filtrar por</label>
 					<%= form_tag search_patient_path, method: :get do %>
 						<%=
-							select_tag :field,															
-								"<option value='agenda'>Agendamentos de hoje</option>
+							select_tag :filter,															
+								"<option value='agenda'>Agendamentos de hoje</option> 
 								<option value='male'>Sexo masculino</option>
 								<option value='female'>Sexo feminino</option>".html_safe,
-									class: 'form-control _select _mp col-sm-2 col-lg-2'
+									class: 'form-control _select _mp col-sm-2 col-lg-2',
+										onchange: 'this.form.submit()'
 						%>
-					<% end %>		
+					<% end %>							
 				</div>
 				<div class="row _container-table table-responsive">				
 					<table class="table table-condensed">
