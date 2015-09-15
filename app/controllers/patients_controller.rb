@@ -11,22 +11,22 @@ class PatientsController < ApplicationController
 		@filter = params[:filter]
 				
 		@patient_search = Patient.where "#{@field} like ?", "%#{@value}%" if @value	
-		@patient_search = Patient.where "gender = ?", "#{@filter}" if @filter
-			
-		@value = '' 		
+		@patient_search = Patient.where "gender = ?", "#{@filter}" if @filter			  
 	end
 
 	def new
-		@patient = Patient.new
+		@patient = Patient.new 			
 	end 
 
 	def create
 		@patient = Patient.new patient_params
-		if @patient.save
-			flash[:notice] = "Paciente cadastrado com sucesso"
-			redirect_to new_patient_path 
-		else
-			render :new
+
+		respond_to do |format|
+		    if @patient.save
+		      format.html { redirect_to new_patient_path, notice: "Paciente cadastrado com sucesso" }		      
+		    else
+		      format.html { render :new }		      
+		    end
 		end
 	end
 
@@ -35,11 +35,12 @@ class PatientsController < ApplicationController
 	end
 
 	def update
-		if @patient.update patient_params
-			flash[:notice] = "Paciente alterado com sucesso"
-			redirect_to edit_patient_path
-		else
-			render :edit
+		respond_to do |format|
+		    if @patient.update patient_params
+		      format.html { redirect_to edit_patient_path, notice: "Paciente alterado com sucesso" }		      
+		    else
+		      format.html { render :new }		      
+		    end
 		end
 	end
 

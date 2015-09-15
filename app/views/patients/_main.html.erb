@@ -1,7 +1,7 @@
 <div class="container-fluid">
 	<h2 class="page-header">
 		<span>Pacientes</span>
-		<%= link_to "Cadastrar Novo Paciente", new_patient_path,   
+		<%= link_to "Cadastrar Novo Paciente", new_patient_path,    
 			class: "_btn-success btn btn-success"%>
 	</h2> 
 	<div class="panel panel-default">
@@ -16,7 +16,8 @@
 				<div class="row">								
 					<label class="_mp _lbw control-label col-sm-1 col-lg-1">Buscar por</label>	
 
-					<%= form_tag search_patient_path, method: :get do %> 
+					<%= form_tag search_patient_path, method: :get,
+						remote: true, id: "find_patient" do %> 
 						<%=						
 							select_tag :field,															
 								"<option value='name'>Nome do paciente</option>
@@ -27,6 +28,8 @@
 						<!-- Button Find -->				
 						<div class="input-group col-sm-5 col-lg-5">
 							<%= text_field_tag :value, @value,
+								placeholder: "Buscar...",
+								id: "search_name",
 								class: "form-control" %>
 							<span class="input-group-btn">
 								<%= 
@@ -39,7 +42,7 @@
 				</div>				 					
 				<div class="row form-group">
 					<label class="_mp _lbw control-label col-sm-1 col-lg-1">Filtrar por</label>
-					<%= form_tag search_patient_path, method: :get do %>
+					<%= form_tag search_patient_path, method: :get do %> 
 						<%=
 							select_tag :filter,															
 								"<option value='agenda'>Agendamentos de hoje</option> 
@@ -51,7 +54,7 @@
 					<% end %>							
 				</div>
 				<div class="row _container-table table-responsive">				
-					<table class="table table-condensed">
+					<table class="table table-condensed" id="grid_patient">
 						<thead>
 							<tr>
 								<th>Nome</th>
