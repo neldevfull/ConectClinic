@@ -1,75 +1,83 @@
-<div class="container-fluid">
-	<h2 class="page-header">
-		<span>Pacientes</span>
-		<%= link_to "Cadastrar Novo Paciente", new_patient_path,    
-			class: "_btn-success btn btn-success"%>
-	</h2> 
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<div class="row">
-				<h3 class="col-xs-12">Cadastrados</h3>
-			</div>
-		</div>
-		<div class="panel-body">
-			<!-- Find -->
-			<div class="form-group">				
-				<div class="row">								
-					<label class="_mp _lbw control-label col-sm-1 col-lg-1">Buscar por</label>	
-
-					<%= form_tag search_patient_path, method: :get,
-						remote: true, id: "find_patient" do %> 
-						<%=						
-							select_tag :field,															
-								"<option value='name'>Nome do paciente</option>
-								<option value='email'>E-mail</option>
-								<option value='tellephone'>Telefone</option>".html_safe,
-									class: 'form-control _select _mp col-sm-2 col-lg-2'																		 					
-						%>
-						<!-- Button Find -->				
-						<div class="input-group col-sm-5 col-lg-5">
-							<%= text_field_tag :value, @value,
-								placeholder: "Buscar...",
-								id: "search_name",
-								class: "form-control" %>
-							<span class="input-group-btn">
-								<%= 
-									button_to_with_icon("<span class='input-group-bt'></span>",						
-									class: "btn btn-default _btnc _find")
-								%>
-							</span>
-						</div>
-					<% end %> 					
-				</div>				 					
-				<div class="row form-group">
-					<label class="_mp _lbw control-label col-sm-1 col-lg-1">Filtrar por</label>
-					<%= form_tag search_patient_path, method: :get do %> 
-						<%=
-							select_tag :filter,															
-								"<option value='agenda'>Agendamentos de hoje</option> 
-								<option value='male'>Sexo masculino</option>
-								<option value='female'>Sexo feminino</option>".html_safe,
-									class: 'form-control _select _mp col-sm-2 col-lg-2',
-										onchange: 'this.form.submit()'
-						%>
-					<% end %>							
+<div class="main">	
+	<div class="container-fluid">
+		<h2 class="page-header">
+			<span>Pacientes</span>
+			<%= link_to "Cadastrar Novo Paciente", new_patient_path,    
+				class: "_btn-success btn btn-success"%>
+		</h2> 
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<h3 class="col-xs-12">Cadastrados</h3>
 				</div>
-				<div class="row _container-table table-responsive">				
-					<table class="table table-condensed" id="grid_patient">
-						<thead>
-							<tr>
-								<th>Nome</th>
-								<th>E-mail</th>
-								<th>Telefone</th>	
-								<th>Convenio</th>															
-								<th>Ultima consulta</th>
-							</tr>
-						</thead>
-						<tbody>
-							<%= render patients%> 
-						</tbody>
-					</table>													
+			</div>
+			<div class="panel-body">
+				<!-- Find -->
+				<div class="form-group">				
+					<div class="row">								
+						<label class="_mp _lbw control-label col-sm-1 col-lg-1">Buscar por</label>	
+
+						<%= form_tag search_patient_path, method: :get,
+							remote: true, id: "find_patient" do %> 
+							<%=						
+								select_tag :field,															
+									"<option value='name'>Nome do paciente</option>
+									<option value='email'>E-mail</option>
+									<option value='tellephone'>Telefone</option>".html_safe,
+										class: 'form-control _select _mp col-sm-2 col-lg-2'																		 					
+							%>
+							<!-- Button Find -->				
+							<div class="input-group col-sm-5 col-lg-5">
+								<%= text_field_tag :value, @value,
+									placeholder: "Buscar...",
+									id: "search_name",
+									class: "form-control" %>
+								<span class="input-group-btn">
+									<%= 
+										button_to_with_icon("<span class='input-group-bt'></span>",						
+										class: "btn btn-default _btnc _find")
+									%>
+								</span>
+							</div>
+						<% end %> 					
+					</div>				 					
+					<div class="row form-group">
+						<label class="_mp _lbw control-label col-sm-1 col-lg-1">Filtrar por</label>
+						<%= form_tag search_patient_path, method: :get do %> 
+							<%=
+								select_tag :filter,															
+									"<option value='agenda'>Agendamentos de hoje</option> 
+									<option value='male'>Sexo masculino</option>
+									<option value='female'>Sexo feminino</option>".html_safe,
+										class: 'form-control _select _mp col-sm-2 col-lg-2',
+											onchange: 'this.form.submit()'
+							%>
+						<% end %>							
+					</div>
+					<div class="row _container-table table-responsive">				
+					<% unless patients %>
+						<div class="alert alert-warning" role="alert">
+							<p>Nao ha pacientes cadastrados ate o momento</p>
+						</div> 
+					<% else %> 	
+						<table class="table table-condensed" id="grid_patient">
+							<thead>
+								<tr>
+									<th>Nome</th>
+									<th>E-mail</th>
+									<th>Telefone</th>	
+									<th>Convenio</th>															
+									<th>Ultima consulta</th>
+								</tr>
+							</thead>
+							<tbody>
+								<%= render patients%> 
+					<% end %>
+							</tbody>
+						</table>													
+					</div><!-- form-group -->
 				</div><!-- form-group -->
-			</div><!-- form-group -->
-		</div>	
-	</div>
-</div>	
+			</div><!-- panel-body -->	
+		</div><!-- panel panel-default -->
+	</div><!-- container-fluid -->	
+</div><!-- main -->

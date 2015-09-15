@@ -1,15 +1,19 @@
 $(function(){	 	
-	var $patient        = $('.new_patient');
-	var $editPatient   = $('.edit_patient');
-	var $findPatient   = $('#find_patient'); 
-	var $linkPatient   = $('#link_patient');
+	var $patient     = $('.new_patient');
+	var $editPatient = $('.edit_patient');
+	var $findPatient = $('#find_patient'); 
+	var $showPatient = $('#show_patient');
 	// var $filter_patient = $('#filter_patient'); 
 
 	// $filter_patient.bind('ajax:success', function(e, data) {	
 	// 	alert('chegou');	
 	// 	loadAjax(data, '#grid_patient', '#grid_patient')
 	// });
-	
+
+	// Patient show
+	$showPatient.on('ajax:success', function(e, data) {
+		loadAjax(data, '.main', 'main');
+	});	
 	// Patient search by AJAX
 	$findPatient.on('ajax:success', function(e, data) {		
 		loadAjax(data, '#grid_patient', '#grid_patient');
@@ -23,11 +27,7 @@ $(function(){
 	$editPatient.on('ajax:success', function(e, data) {											
 		loadAjax(data, '#_patient_msg', '#_patient_msg');		
 	});
-	
-	$linkPatient.on('ajax:success', function(e, data) {						
-		loadAjax(data, '.main', 'main'); 		
-	}); 
-
+	 
 	// Function to change the layout 
 	function loadAjax(_data, _find, _append) {
 		var content = $(_data).find(_find);						
