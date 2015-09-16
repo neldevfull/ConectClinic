@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  typeConsult: MyString
+  namePatient: MyString
+  TellephonePatient: MyString
+  emailPatient: MyString
+  agreement: MyString
+  dateConsult: MyString
+  hourConsult: MyString
+  obsConsult: MyString
+
+two:
+  typeConsult: MyString
+  namePatient: MyString
+  TellephonePatient: MyString
+  emailPatient: MyString
+  agreement: MyString
+  dateConsult: MyString
+  hourConsult: MyString
+  obsConsult: MyString

@@ -5,7 +5,13 @@ gem 'rails', '4.2.4'
 gem 'sqlite3'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
+# jQuery User Interface
+gem 'jquery-ui-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks' 
 # Twitter Bootstrap
-gem 'bootstrap-sass' 
+gem 'bootstrap-sass'  
+# FullCalendar
+gem 'fullcalendar-rails'
+# Dependency FullCalendar
+gem 'momentjs-rails'

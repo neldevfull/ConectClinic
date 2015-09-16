@@ -1,0 +1,26 @@
+<div class="main">	 
+	<div class="container-fluid">
+		<h2 class="page-header">
+			<span>Agenda</span>
+			<%= link_to "Agendar consulta", new_consult_path,    
+				class: "_btn-success btn btn-success"%>
+		</h2> 
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<h3 class="col-xs-12">Consultas</h3>
+				</div>
+			</div>
+			<div class="panel-body">					
+				<div class="form-group">
+					<!-- Calendar -->				
+					<div class="row">
+						<div class="col-sm-12 col-lg-12">							
+							<div id="calendar"></div>																		
+						</div>
+					</div><!-- form-group -->
+				</div><!-- form-group -->
+			</div><!-- panel-body -->	
+		</div><!-- panel panel-default -->
+	</div><!-- container-fluid -->	
+</div><!-- main -->
