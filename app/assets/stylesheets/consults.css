@@ -1,4 +1,20 @@
-/* Change in FullCalendar */
+/* Change in FullCalendar start */
 .fc-left h2{
 	font-size: 1.5em;
 }
+/* Header and border-left */
+.fc-day-header, .fc-axis {
+	background-color: #F5F5F5;
+	color: #222;
+	padding: 1em 0;
+}
+/* Increases cell */
+.fc-time-grid .fc-slats td {
+	height: 2.5em;
+}
+/* New style for cell when scheduled */
+.fc-time-grid-event {
+	background-color: #425690;
+	border-color: #425690;
+}
+/* end */
