@@ -4,6 +4,10 @@ $(document).ready(function() {
 	var d = date.getDate();
 	var m = date.getMonth();
 	var y = date.getFullYear();
+	var name;
+	var start;
+	var end;
+	var _event;
 
 	var calendar = $('#calendar').fullCalendar({
 		header: {
@@ -11,36 +15,40 @@ $(document).ready(function() {
 			center: 'prev,next today',
 			right: 'agendaWeek,agendaDay'
 		},
-		defaultView: 'agendaWeek',
+		defaultView: 'agendaWeek', 
 		lang: currentLangCode,
 		selectable: true,
-		selectHelper: true,
-		select: function(start, end) {			
-			var title = prompt('Agendar paciente: ');
-			if(title) {
-				calendar.fullCalendar('renderEvent',
-					{
-						title: title,
-						start: start,
-						end: end
-					},
-					true // Make the event "stick"
-				);
-			}
+		selectHelper: true,		
+		editable: true,				
+		select: function(start, end) {	
+			$('#name').val('');							
+			$('#dialog').dialog("open");
+			_event = {
+				start: start,
+				end: end 
+			};					
 			calendar.fullCalendar('unselect');
-		}, 
-		editable: true,		
-		events: [
-			{
-				title: 'All Day Event',
-				start: '2015-09-13'
-			},
-			{
-				title: 'Long Event',
-				start: new Date(y, m, d+1, 19, 0),
-				end: new Date(y, m, d+1, 22, 30),
-
-			}
-		]
+		}, 	
 	});
+
+	$("#dialog").dialog({
+        autoOpen: false,
+        height: 350,
+        width: 700,
+        modal: true,
+        buttons: {
+            'Create event': function () { 
+            	_event.title = $('#name').val();
+            	$('#calendar').fullCalendar('renderEvent', _event, true);  	            	
+                $(this).dialog('close');
+            },
+            Cancel: function () {
+                $(this).dialog('close');
+            }
+        },
+
+        close: function () {
+        }
+    });   
+
 });
