@@ -18,3 +18,29 @@
 	border-color: #425690;
 }
 /* end */
+
+/* Change jQuery Dialog start */
+.ui-widget-header {
+    background: #222222;
+    color: white; 
+}
+.btn-success .ui-button-text,
+.btn-danger .ui-button-text, 
+.btn-info .ui-button-text {
+	color: white;
+	border-radius: .25em;	
+}
+.btn-success .ui-button-text {
+	background-color: #449D44;
+}
+.btn-info .ui-button-text {
+	background-color: #31B0D5;
+}
+.btn-danger .ui-button-text {
+	background-color: #C9302C;
+} 
+.ui-button {	
+	outline: none !important; 
+	border: none !important; 
+	background: transparent !important;
+}

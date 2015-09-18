@@ -1,6 +1,7 @@
 class ConsultsController < ApplicationController
 	
-	def show
+	def index
+		@patient = Patient.new
 		@consult = Consult.new		
 	end
 

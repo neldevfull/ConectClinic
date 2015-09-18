@@ -51,29 +51,47 @@ $(document).ready(function() {
 	    }	
 	});
 
-	$("#dialog").dialog({
+	$('#dialog').dialog({
         autoOpen: false,
-        height: 350,
-        width: 700,
+        height: 480,
+        width: 720,
         modal: false,
-        buttons: {
-            'Agendar': function() { 
-            	_event.title = $('#name').val();
-            	if(control == 1)
-            		$('#calendar').fullCalendar('renderEvent', _event, true);  	            	
-            	else if(control == 2)
-            		$('#calendar').fullCalendar('updateEvent', _event);                
-            	$(this).dialog('close');
+        closeOnEscape: false,
+        buttons: [
+        	{
+	        	text: 'Remover',
+	        	open: function() {
+	        		$(this).addClass('btn btn-danger');	         		     	        			        		
+	        	},	        	
+	        	click: function() {
+	                $('#calendar').fullCalendar('removeEvents', _event._id);
+	                $(this).dialog('close');
+	            }
             },
-            'Remover': function() {
-                $('#calendar').fullCalendar('removeEvents', _event._id);
-                $(this).dialog('close');
-            },
-            'Fechar': function() {            	
-            	$(this).dialog('close');
-            }            
-        },
-
+            {
+            	text: 'Fechar',
+            	open: function() {            		
+	        		$(this).addClass('btn btn-info');
+            	},
+            	click: function() {            	
+            		$(this).dialog('close');
+            	}
+            },            
+            {
+            	text: 'Agendar',
+            	open: function() {            		
+	        		$(this).addClass('btn btn-success');
+            	},
+            	click: function() { 
+	            	_event.title = $('#name').val();
+	            	if(control == 1)
+	            		$('#calendar').fullCalendar('renderEvent', _event, true);  	            	
+	            	else if(control == 2)
+	            		$('#calendar').fullCalendar('updateEvent', _event);                
+	            	$(this).dialog('close');
+            	}
+            }
+        ],
         close: function () {
         }
     });  

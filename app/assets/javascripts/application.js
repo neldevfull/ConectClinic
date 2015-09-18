@@ -1,8 +1,8 @@
 //= require jquery
+//= require bootstrap
 //= require jquery-ui/datepicker
 //= require jquery-ui/dialog
 //= require jquery_ujs
-//= require bootstrap
 //= require moment
 //= require fullcalendar
 //= require lang-all
