@@ -2,6 +2,8 @@
 //= require bootstrap
 //= require jquery-ui/datepicker
 //= require jquery-ui/dialog
+//= require jquery.inputmask
+//= require jquery.inputmask.date.extensions
 //= require jquery_ujs
 //= require moment
 //= require fullcalendar

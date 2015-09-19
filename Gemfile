@@ -15,3 +15,5 @@ gem 'bootstrap-sass'
 gem 'fullcalendar-rails'
 # Dependency FullCalendar
 gem 'momentjs-rails'
+# jQuery InputMask
+gem 'jquery-inputmask-rails'

@@ -1,12 +1,22 @@
-$(document).ready(function() {
-	var currentLangCode = 'pt-br';
-	// var date = new Date();
-	// var d = date.getDate();
-	// var m = date.getMonth();
-	// var y = date.getFullYear();
+$(document).ready(function() { 		
+	// Call function that loads the masks
+	loadMasks();
+	// Call function that load the calendar
+	fullCalendar();  
+});
 
+function loadMasks() {
+	$('#dateConsult').inputmask('99/99/9999');
+	$('#telephonePatient').inputmask('(99) 9999-9999');
+	$('#cellphonePatient').inputmask('(99) 9999[9]-9999');
+	$('#hourIniConsult').inputmask('99:99');
+	$('#hourEndConsult').inputmask('99:99'); 
+}
+
+function fullCalendar() {
+	var currentLangCode = 'pt-br';
 	var _event;
-	var control = 0;	
+	var control = 0;
 
 	var calendar = $('#calendar').fullCalendar({
 		header: {
@@ -25,7 +35,7 @@ $(document).ready(function() {
 		businessHours:
 			{
 				start: '8:00',
-	    		end: '18:00'
+	    		end: '19:00'
 	    	},
 	    contentHeight: 460,
 		selectable: true,
@@ -33,7 +43,8 @@ $(document).ready(function() {
 		editable: true,	
 		// Insert consultation			
 		select: function(start, end) {		
-			$('#name').val('');								
+			// Clean Fields
+			cleanFields();					
 			$('#dialog').dialog("open");
 			_event = {
 				start: start,
@@ -44,19 +55,22 @@ $(document).ready(function() {
 		}, 
 		// Update consultation
 		eventClick: function(event, element) {
-			$('#name').val(event.title);
+			loadFields(event);
 			$('#dialog').dialog("open");
 	        _event = event;	        
 	        control = 2;
 	    }	
 	});
-
+ 
 	$('#dialog').dialog({
         autoOpen: false,
         height: 480,
         width: 720,
-        modal: false,
+        modal: true,
         closeOnEscape: false,
+        open: function() {
+        	$('.ui-widget-overlay').addClass('custom-overlay');
+        },
         buttons: [
         	{
 	        	text: 'Remover',
@@ -83,9 +97,11 @@ $(document).ready(function() {
 	        		$(this).addClass('btn btn-success');
             	},
             	click: function() { 
-	            	_event.title = $('#name').val();
-	            	if(control == 1)
-	            		$('#calendar').fullCalendar('renderEvent', _event, true);  	            	
+	            	_event.title = $('#namePatient').val();
+	            	if(control == 1) {
+	            		$('#calendar').fullCalendar('renderEvent', _event, true);
+	            		//storeConsults(_event);  	            	
+	            	}
 	            	else if(control == 2)
 	            		$('#calendar').fullCalendar('updateEvent', _event);                
 	            	$(this).dialog('close');
@@ -93,6 +109,60 @@ $(document).ready(function() {
             }
         ],
         close: function () {
+        	$('.ui-widget-overlay').removeClass('custom-overlay');
         }
-    });  
-});
+    });
+}
+
+function loadFields(event) {	
+	var hourIni    = '';
+	var catchStart = event.start;
+	var catchEnd   = event.end;
+	var hourStart  = +/ (\d+):/.exec(catchStart)[1];
+	var minStart   = +/:(\d+):/.exec(catchStart)[1];
+	var hourEnd    = +/ (\d+):/.exec(catchEnd)[1];
+	var minEnd     = +/:(\d+):/.exec(catchEnd)[1];
+
+	if(hourStart.toString().length == 1)
+		hourStart = '0' + hourStart;	
+	if(minStart.toString().length == 1)
+		minStart = '0' + minStart;
+
+	if(hourEnd.toString().length == 1)
+		hourEnd = '0' + hourEnd;
+	if(minEnd.toString().length == 1)
+		minEnd = '0' + minEnd;
+
+	hourIni = hourStart + minStart;
+	hourEnd = hourEnd + minEnd;
+
+	$('#namePatient').val(event.title);
+	$('#hourIniConsult').val(hourIni);
+	$('#hourEndConsult').val(hourEnd);
+}
+
+function storeConsults(event) {
+	// var consult              = {};
+	// consult.id               = event._id;
+	// consult.namePatient      = event.title;
+	// consult.emailPatient     = $('#emailPatient').val();
+	// consult.telephonePatient = $('#telephonePatient').val();
+	// consult.cellphonePatient = $('#cellphonePatient').val();
+	// consult.dateConsult      = $('#dateConsult').val();  
+	// consult.hourIniPatient   = event.start();
+	// consult.hourEndPatient   = event.end();	 
+}
+
+function recorversFields(event) {
+
+}
+
+function cleanFields() {
+	$('#namePatient').val('');
+	$('#emailPatient').val('');
+	$('#telephonePatient').val('');
+	$('#cellphonePatient').val('');
+	$('#dateConsult').val('');
+	$('#hourIniConsult').val('');
+	$('#hourEndConsult').val('');
+}

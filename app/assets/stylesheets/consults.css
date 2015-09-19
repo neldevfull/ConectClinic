@@ -14,7 +14,7 @@
 }
 /* New style for cell when scheduled */
 .fc-time-grid-event {
-	background-color: #425690;
+	background-color: #3F9F3F;
 	border-color: #425690;
 }
 /* end */
@@ -43,4 +43,13 @@
 	outline: none !important; 
 	border: none !important; 
 	background: transparent !important;
+}
+.ui-widget-overlay.custom-overlay {
+    background-color: black;
+    background-image: none;
+    opacity: .4;  
+}
+/* Correction width */
+._cw {
+	width: 95% !important; 
 }
