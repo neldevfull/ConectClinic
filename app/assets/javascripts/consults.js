@@ -1,16 +1,24 @@
-$(document).ready(function() { 		
-	// Call function that loads the masks
-	loadMasks();
-	// Call function that load the calendar
-	fullCalendar();  
+$(document).ready(function() { 			
+	var resource = window.location.href.toString().split(window.location.host + '/')[1];
+	if(resource == 'consults') {		
+		recorversConsults();
+		// Call function that load the calendar
+		fullCalendar();
+		// Call function that loads the masks
+		loadMasks();  
+	}
 });
 
-function loadMasks() {
-	$('#dateConsult').inputmask('99/99/9999');
-	$('#telephonePatient').inputmask('(99) 9999-9999');
-	$('#cellphonePatient').inputmask('(99) 9999[9]-9999');
-	$('#hourIniConsult').inputmask('99:99');
-	$('#hourEndConsult').inputmask('99:99'); 
+function recorversConsults() {	 
+	$.ajax({
+		type: "GET",
+		url: "/consults",
+		data: 'dateStart=' + $('#dateStart').val() +
+			'&dateEnd=' + $('#dateEnd').val(),
+		success: function(data) {
+			console.log(data);   
+		}
+    }); 	
 }
 
 function fullCalendar() {
@@ -21,8 +29,8 @@ function fullCalendar() {
 	var calendar = $('#calendar').fullCalendar({
 		header: {
 			left: 'title',
-			center: 'prev,next today',
-			right: 'agendaWeek,agendaDay'
+			center: 'prev, next today',
+			right: 'agendaWeek, agendaDay'
 		},
 		defaultView: 'agendaWeek', 
 		lang: currentLangCode,
@@ -43,8 +51,8 @@ function fullCalendar() {
 		editable: true,	
 		// Insert consultation			
 		select: function(start, end) {		
-			// Clean Fields
-			cleanFields();					
+			// Prepared Fields
+			preparedFields(start, end);					
 			$('#dialog').dialog("open");
 			_event = {
 				start: start,
@@ -55,13 +63,13 @@ function fullCalendar() {
 		}, 
 		// Update consultation
 		eventClick: function(event, element) {
-			loadFields(event);
+			console.log(event._id + ' '+ event.title);
 			$('#dialog').dialog("open");
 	        _event = event;	        
 	        control = 2;
 	    }	
 	});
- 
+  
 	$('#dialog').dialog({
         autoOpen: false,
         height: 480,
@@ -97,10 +105,22 @@ function fullCalendar() {
 	        		$(this).addClass('btn btn-success');
             	},
             	click: function() { 
-	            	_event.title = $('#namePatient').val();
+	            	_event.title = $('.namePatient').val();
 	            	if(control == 1) {
 	            		$('#calendar').fullCalendar('renderEvent', _event, true);
-	            		//storeConsults(_event);  	            	
+	            		$.ajax({
+							type: "POST",
+							url: "/consults",
+							data: 'consult[namePatient]='+$('.namePatient').val()+'&consult[emailPatient]='+$('.emailPatient').val()+
+								'&consult[telephonePatient]='+$('.telephonePatient').val()+
+								'&consult[cellphonePatient]='+$('.cellphonePatient').val()+
+								'&consult[dateConsult]='+$('.dateConsult').val()+
+								'&consult[hourIniConsult]='+$('.hourIniConsult').val()+
+								'&consult[hourEndConsult]='+$('.hourEndConsult').val(),
+							success: function(data) {
+								console.log("Paciente agendado com sucesso");  
+							}
+					    });  	            	
 	            	}
 	            	else if(control == 2)
 	            		$('#calendar').fullCalendar('updateEvent', _event);                
@@ -114,10 +134,15 @@ function fullCalendar() {
     });
 }
 
-function loadFields(event) {	
+function preparedFields(start, end) {	
 	var hourIni    = '';
-	var catchStart = event.start;
-	var catchEnd   = event.end;
+	var catchStart = start;
+	var catchEnd   = end;
+	
+	var date       = (new Date(start)).toISOString().slice(0, 10);
+	var vDate      = date.split("-");
+	date 		   = vDate[2] + '/' + vDate[1] + '/' + vDate[0];
+
 	var hourStart  = +/ (\d+):/.exec(catchStart)[1];
 	var minStart   = +/:(\d+):/.exec(catchStart)[1];
 	var hourEnd    = +/ (\d+):/.exec(catchEnd)[1];
@@ -133,12 +158,16 @@ function loadFields(event) {
 	if(minEnd.toString().length == 1)
 		minEnd = '0' + minEnd;
 
-	hourIni = hourStart + minStart;
-	hourEnd = hourEnd + minEnd;
+	hourIni = hourStart.toString() + minStart.toString();
+	hourEnd = hourEnd.toString() + minEnd.toString();
 
-	$('#namePatient').val(event.title);
-	$('#hourIniConsult').val(hourIni);
-	$('#hourEndConsult').val(hourEnd);
+	$('.namePatient').val('');
+	$('.emailPatient').val('');
+	$('.telephonePatient').val('');
+	$('.cellphonePatient').val('');
+	$('.dateConsult').val(date);
+	$('.hourIniConsult').val(hourIni);
+	$('.hourEndConsult').val(hourEnd);
 }
 
 function storeConsults(event) {
@@ -153,16 +182,10 @@ function storeConsults(event) {
 	// consult.hourEndPatient   = event.end();	 
 }
 
-function recorversFields(event) {
-
-}
-
-function cleanFields() {
-	$('#namePatient').val('');
-	$('#emailPatient').val('');
-	$('#telephonePatient').val('');
-	$('#cellphonePatient').val('');
-	$('#dateConsult').val('');
-	$('#hourIniConsult').val('');
-	$('#hourEndConsult').val('');
+function loadMasks() {
+	$('.dateConsult').inputmask('99/99/9999');
+	$('.telephonePatient').inputmask('(99) 9999-9999');
+	$('.cellphonePatient').inputmask('(99) 9999[9]-9999');
+	$('.hourIniConsult').inputmask('99:99');
+	$('.hourEndConsult').inputmask('99:99'); 
 }

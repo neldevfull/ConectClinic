@@ -4,5 +4,5 @@ Rails.application.routes.draw do
   resources :patients, only: [:new, :create, :destroy, :edit, :update]
   get "patients/search" => "patients#search", as: :search_patient
   # Routes for Consults
-  resources :consults, only: [:index, :create, :destroy, :edit, :update] 
+  resources :consults, only: [:index, :new, :create, :destroy, :edit, :update] 
 end
