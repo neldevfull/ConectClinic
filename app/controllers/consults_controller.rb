@@ -2,7 +2,7 @@ class ConsultsController < ApplicationController
 
 	# Check if dates have been sent, if so,
 	# search Consults scheduled for the requested week
-	def index		
+	def index				
 		dateStart    = params[:dateStart]
 		dateEnd      = params[:dateEnd]
 		if dateStart && dateEnd
@@ -20,24 +20,30 @@ class ConsultsController < ApplicationController
 		end 
 	end
 
-	def new
-		@consult = Consult.new
-		render :index
-	end
-
 	def create
-		@consult = Consult.new patient_params
+		@consult = Consult.new consult_params
 
 		respond_to do |format|
 			if @consult.save
-				format.html { redirect_to new_patient_path, notice: "Consulta agendada com sucesso" }
+				format.html { redirect_to consults_path, notice: "Consulta agendada com sucesso" }
 			else
 				format.html { render :index }
 			end
 		end
 	end
 
-	def patient_params
+	def update   
+		@consult = Consult.find params[:id] 
+		respond_to do |format|
+			if @consult.update consult_params
+				format.html { redirect_to consults_path, notice: "Consulta alterada com sucesso" } 
+			else
+				format.html {render :index }
+			end
+		end
+	end
+
+	def consult_params
 		params.require(:consult)
 			.permit :namePatient, :emailPatient, :telephonePatient,
 				:cellphonePatient, :dateConsult, :hourIniConsult, :hourEndConsult 
