@@ -19,11 +19,11 @@
 							<div id="calendar"></div>
 							<%= render partial: "new"%>	
 							<%
-								dateStart = Date.today.beginning_of_week
-								dateEnd   = (dateStart + 4).to_s
+								weekStart = Date.today.beginning_of_week
+								weekEnd   = weekStart + 4
 							%>
-							<%= hidden_field_tag 'dateStart', dateStart %>						
-							<%= hidden_field_tag 'dateEnd', dateEnd %> 
+							<%= hidden_field_tag 'weekStart', weekStart %>						
+							<%= hidden_field_tag 'weekEnd', weekEnd %> 
 						</div>
 					</div>														
 				</div><!-- form-group -->

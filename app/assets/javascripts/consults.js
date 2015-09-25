@@ -1,39 +1,91 @@
 var _consults = {
-	events: []
+	weekStarts: [],
+	events: []	
 };
 var _event;
 var _consult;
 
 $(document).ready(function() { 			
 	var resource = window.location.href.toString().split(window.location.host + '/')[1];
-	if(resource == 'consults') {					 		
+	if(resource == 'consults') {
+		// Initialize vars
+		var _weekStart = $('#weekStart');
+		var _weekEnd   = $('#weekEnd');							 		
 		// Recovers Consults
-		recoversConsults();	
+		recoversConsults(_weekStart, _weekEnd);	
 		// Call function that load the calendar
 		fullCalendar();
 		// Call function that loads the masks
-		loadMasks();  
+		loadMasks();
+		// Call function that load event buttons
+		eventButtons();  		
 	}
 }); 
-// Function responsible for recovers data of the Consults
-function recoversConsults() {	 
-	$.ajax({
-		type: "GET",
-		url: "/consults",
-		data: 'dateStart=' + $('#dateStart').val() +
-			'&dateEnd=' + $('#dateEnd').val(),
-		success: function(consults) {			
-			consults.forEach(function(consult) {
-				_consults.events.push(consult);
-				var _event = {
-					title: consult.namePatient,
-					start: parseDateToMoment(consult.dateConsult, consult.hourIniConsult),
-					end:   parseDateToMoment(consult.dateConsult, consult.hourEndConsult)				
-				}				
-				renderEvent(_event); 												
-			});					
+// Function responsible for load event buttons
+function eventButtons() {			
+	var weekStart;
+	var weekEnd; 
+	var _weekStart = $('#weekStart');
+	var _weekEnd   = $('#weekEnd');
+
+	$('.fc-next-button').click(function() {	
+		weekDates();
+    }); 
+
+	$('.fc-prev-button').click(function() {
+		weekDates();
+	});
+
+	function weekDates() {
+    	weekStart = $('#calendar').fullCalendar('getDate');    	
+    	weekEnd   = $('#calendar').fullCalendar('getDate');	
+
+    	weekStart = parseMomentToDate(weekStart.add(1, 'days'));
+    	weekEnd   = parseMomentToDate(weekEnd.add(5, 'days'));
+
+		_weekStart.val(weekStart);
+		_weekEnd.val(weekEnd);
+		recoversConsults(_weekStart, _weekEnd); 
+	}
+} 
+// Function responsible for recovers data of the Consults 
+function recoversConsults(_weekStart, _weekEnd) {	
+	var success = true;
+	_consults.weekStarts.forEach(function(weekStart) {		
+		if(weekStart == _weekStart.val()) {
+			success = false;
+			return false;
 		}
-    });     	
+	}); 	
+	if(success === true) {		
+		$.ajax({
+			type: "GET",
+			url: "/consults",
+			data: 'weekStart=' + _weekStart.val() +
+				'&weekEnd=' + _weekEnd.val(),
+			success: function(consults) {	
+				if(consults.length > 0){										
+					consults.forEach(function(consult) {				
+						var _event = {
+							title: consult.namePatient,
+							start: parseDateToMoment(consult.dateConsult, consult.hourIniConsult),
+							end:   parseDateToMoment(consult.dateConsult, consult.hourEndConsult)				
+						}				
+						renderEvent(_event);	
+						_consults.events.push(consult);					
+					});	 				
+					console.log('Consultas recuperadas com sucesso');			 												
+				}
+				else {
+					console.log('Nao ha consultas agendadas para essa  semana');	
+				}		
+			},
+			error: function(error) {
+				console.log(error);
+			}
+	    });     	
+	}
+	_consults.weekStarts.push(_weekStart.val());
 }
 // Function responsible for FullCalendar and Dialog
 function fullCalendar() {
@@ -142,6 +194,8 @@ function fullCalendar() {
 	            		// FAZER FUNCAO PARA CHECAR DATE E DATEFORMAT
 	            		// CASO USUARIO MODIFIQUE A DATA E A HORA
 						isChangeDate();   
+        				insertConsult();
+						renderEvent(_event);	            		
 	            		$.ajax({
 							type: "POST",
 							url: "/consults",
@@ -153,8 +207,6 @@ function fullCalendar() {
 								'&consult[hourEndConsult]='+$('.hourEndConsult').val(),
 							success: function(data) {
 								console.log("Paciente agendado com sucesso");
-	            				insertConsult();
-								renderEvent(_event);	            		
 							},
 							error: function(error) {
 								console.log(error);
@@ -165,14 +217,14 @@ function fullCalendar() {
 	            	else if(control == 2){	            		
 	            		// Update Consult
 	            		var pData = fieldUpdateConsult();
+						updateConsult();
+        				$('#calendar').fullCalendar('updateEvent', _event);                 
 		            	$.ajax({
 							type: "POST",
 							url: "/consults/" + _consult.id,
 							data: pData,
 							success: function(data) {
 								console.log("Consulta alterada com sucesso");  
-								updateConsult();
-	            				$('#calendar').fullCalendar('updateEvent', _event);                 
 							},
 							error: function(error) {
 								console.log(error);  

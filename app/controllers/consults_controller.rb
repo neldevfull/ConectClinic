@@ -3,12 +3,12 @@ class ConsultsController < ApplicationController
 	# Check if dates have been sent, if so,
 	# search Consults scheduled for the requested week
 	def index				
-		dateStart    = params[:dateStart]
-		dateEnd      = params[:dateEnd]
-		if dateStart && dateEnd
+		weekStart    = params[:weekStart]
+		weekEnd      = params[:weekEnd]
+		if weekStart && weekEnd
 			array    = Array.new
 			consult  = Consult.new
-			result   = consult.getConsults(dateStart, dateEnd)			
+			result   = consult.getConsults(weekStart, weekEnd)			
 			result.each do |consult|
 				array.push(consult)								
 			end

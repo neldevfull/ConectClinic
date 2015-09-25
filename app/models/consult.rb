@@ -1,10 +1,10 @@
 class Consult < ActiveRecord::Base
 	
-	def getConsults(dateStart, dateEnd)			
+	def getConsults(weekStart, weekEnd)			
 		conn = ActiveRecord::Base.connection
 		result = conn.select_all "SELECT id, namePatient, emailPatient,
 			telephonePatient, cellphonePatient, dateConsult, hourIniConsult,
-			hourEndConsult FROM consults WHERE dateConsult >= '#{dateStart}'
-			AND dateConsult <= '#{dateEnd}';"					
+			hourEndConsult FROM consults WHERE dateConsult BETWEEN '#{weekStart}'
+			AND '#{weekEnd}';"					
 	end
 end 
