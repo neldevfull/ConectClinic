@@ -4,6 +4,7 @@ var _consults = {
 };
 var _event;
 var _consult;
+var _control = 0;
 
 $(document).ready(function() { 			
 	var resource = window.location.href.toString().split(window.location.host + '/')[1];
@@ -34,6 +35,17 @@ function eventButtons() {
 
 	$('.fc-prev-button').click(function() {
 		weekDates();
+	});
+
+	$('#agenda_consulta').click(function() {
+		preparedFields('', '');
+		_control = 1;
+		_event = {
+			title: '',
+			start: '',
+			end: '' 
+		};
+		$('#dialog').dialog("open");
 	});
 
 	function weekDates() {
@@ -89,9 +101,7 @@ function recoversConsults(_weekStart, _weekEnd) {
 }
 // Function responsible for FullCalendar and Dialog
 function fullCalendar() {
-	var currentLangCode = 'pt-br';
-	var control = 0;
-
+	var lang 	 = 'pt-br';
 	var calendar = $('#calendar').fullCalendar({
 		header: {
 			left: 'title',
@@ -99,7 +109,7 @@ function fullCalendar() {
 			right: 'agendaWeek, agendaDay'
 		},
 		defaultView: 'agendaWeek', 
-		lang: currentLangCode,
+		lang: lang,
 		weekends: false,
 		allDaySlot: false,
 		slotDuration: '00:15:00',
@@ -119,21 +129,22 @@ function fullCalendar() {
 		select: function(start, end, jsEvent, view) {	
 			var _start = start;
 			var _end   = end;			
+			_control = 1;
 			// Prepared Fields
 			preparedFields(start, end);					
-			$('#dialog').dialog("open");
 			_event = {
 				start: _start,
 				end: _end 
 			};					
 			calendar.fullCalendar('unselect');
-			control = 1;
+			$('#dialog').dialog("open");
 		}, 
 		// Update consultation
-		eventClick: function(event, element) {		
+		eventClick: function(event, element) {					
 			var _start = parseMomentToHour(event.start);
 			var _end   = parseMomentToHour(event.end); 
 			var _date  = parseMomentToDate(event.start); 
+	        _control = 2;
 			// Dealings for start and end to comparison purpose
 			_start = [_start.slice(0, 2), ':', _start.slice(2)].join('');
 			_end   = [_end.slice(0, 2), ':', _end.slice(2)].join(''); 			
@@ -147,10 +158,8 @@ function fullCalendar() {
 					return false;										
 				}
 			});
-
-			$('#dialog').dialog("open");
 	        _event = event;	        
-	        control = 2;
+			$('#dialog').dialog("open");
 	    }	
 	});
   
@@ -171,6 +180,18 @@ function fullCalendar() {
 	        	},	        	
 	        	click: function() {
 	                $('#calendar').fullCalendar('removeEvents', _event._id);
+	                $.ajax({
+						type: "POST",
+						url: "/consults/" + _consult.id,
+						data: '_method=delete',
+						success: function(data) {
+							console.log(data);
+							console.log("Consulta removida com sucesso");  
+						},
+						error: function(error) {
+							console.log(error);  
+						}
+				    });
 	                $(this).dialog('close');
 	            }
             },
@@ -190,12 +211,10 @@ function fullCalendar() {
             	},
             	click: function() { 
 	            	_event.title = $('.namePatient').val();
-	            	if(control == 1) {
-	            		// FAZER FUNCAO PARA CHECAR DATE E DATEFORMAT
-	            		// CASO USUARIO MODIFIQUE A DATA E A HORA
+	            	if(_control == 1) {
 						isChangeDate();   
         				insertConsult();
-						renderEvent(_event);	            		
+						renderEvent(_event); 	            		
 	            		$.ajax({
 							type: "POST",
 							url: "/consults",
@@ -214,7 +233,7 @@ function fullCalendar() {
 					    });  
 					    $(this).dialog('close'); 	            		            		
 	            	} 
-	            	else if(control == 2){	            		
+	            	else if(_control == 2){	            		
 	            		// Update Consult
 	            		var pData = fieldUpdateConsult();
 						updateConsult();
@@ -308,14 +327,17 @@ function fieldUpdateConsult() {
 
 	return data;
 }
-
+// Check if date was modified
 function isChangeDate() {
 	var date           = parseDate($('.dateFormatConsult').val(), '/', '-');
 	var hourStart      = $('.hourIniConsult').val(); 
 	var hourEnd        = $('.hourEndConsult').val();
-	var eventDate      = parseMomentToDate(_event.start); 
-	var eventHourStart = parseMomentToHour(_event.start);
-	var eventHourEnd   = parseMomentToHour(_event.end);
+	var eventDate      = _event.start != '' ?
+		parseMomentToDate(_event.start) : ''; 
+	var eventHourStart = _event.start != '' ?
+		parseMomentToHour(_event.start) : '';
+	var eventHourEnd   = _event.end != '' ?
+		parseMomentToHour(_event.end) : '';
 
 	if(date != eventDate) {
 		_event.start = parseDateToMoment(date, hourStart);
@@ -364,10 +386,14 @@ function loadMasks() {
 }
 // Prepare fields of the New Form
 function preparedFields(start, end) {	
-	var hourIni    = parseMomentToHour(start);
-	var hourEnd    = parseMomentToHour(end);	
-	var date       = parseMomentToDate(start);
-	var dateFormat = parseDate(date, '-', '/');  
+	var hourIni    = start != '' ?
+		parseMomentToHour(start) : '';
+	var hourEnd    = end != '' ?
+		parseMomentToHour(end) : '';	
+	var date       = start != '' ? 
+		parseMomentToDate(start) : '';
+	var dateFormat = date != '' ?
+		parseDate(date, '-', '/') : '';  
 
 	$('.namePatient').val('');
 	$('.emailPatient').val('');

@@ -25,7 +25,7 @@ class ConsultsController < ApplicationController
 
 		respond_to do |format|
 			if @consult.save
-				format.html { redirect_to consults_path, notice: "Consulta agendada com sucesso" }
+				format.html { redirect_to consults_path }
 			else
 				format.html { render :index }
 			end
@@ -36,9 +36,20 @@ class ConsultsController < ApplicationController
 		@consult = Consult.find params[:id] 
 		respond_to do |format|
 			if @consult.update consult_params
-				format.html { redirect_to consults_path, notice: "Consulta alterada com sucesso" } 
+				format.html { redirect_to consults_path } 
 			else
-				format.html {render :index }
+				format.html { render :index }
+			end
+		end
+	end
+
+	def destroy
+		@consult = Consult.find params[:id] 
+		respond_to do |format|
+			if @consult.destroy
+				format.html { redirect_to consults_path }
+			else
+				format.html { render :index }
 			end
 		end
 	end
@@ -49,4 +60,4 @@ class ConsultsController < ApplicationController
 				:cellphonePatient, :dateConsult, :hourIniConsult, :hourEndConsult 
 	end
 
-end
+end 
