@@ -101,6 +101,11 @@ function recoversConsults(_weekStart, _weekEnd) {
 }
 // Function responsible for FullCalendar and Dialog
 function fullCalendar() {
+	var _start;
+	var _end; 
+	var _date;
+	var _data;
+	var _eventDD;
 	var lang 	 = 'pt-br';
 	var calendar = $('#calendar').fullCalendar({
 		header: {
@@ -126,9 +131,9 @@ function fullCalendar() {
 		selectHelper: true,		
 		editable: true,	
 		// Insert consultation			
-		select: function(start, end, jsEvent, view) {	
-			var _start = start;
-			var _end   = end;			
+		select: function(start, end) {	
+			_start = start;
+			_end   = end;			
 			_control = 1;
 			// Prepared Fields
 			preparedFields(start, end);					
@@ -140,10 +145,10 @@ function fullCalendar() {
 			$('#dialog').dialog("open");
 		}, 
 		// Update consultation
-		eventClick: function(event, element) {					
-			var _start = parseMomentToHour(event.start);
-			var _end   = parseMomentToHour(event.end); 
-			var _date  = parseMomentToDate(event.start); 
+		eventClick: function(event) {					
+			_start = parseMomentToHour(event.start);
+			_end   = parseMomentToHour(event.end); 
+			_date  = parseMomentToDate(event.start); 
 	        _control = 2;
 			// Dealings for start and end to comparison purpose
 			_start = [_start.slice(0, 2), ':', _start.slice(2)].join('');
@@ -160,6 +165,40 @@ function fullCalendar() {
 			});
 	        _event = event;	        
 			$('#dialog').dialog("open");
+	    },
+	    eventDragStart: function(event) {
+	    	_start = parseMomentToHour(event.start);
+			_end   = parseMomentToHour(event.end); 
+			_date  = parseMomentToDate(event.start); 
+			// Dealings for start and end to comparison purpose
+			_start = [_start.slice(0, 2), ':', _start.slice(2)].join('');
+			_end   = [_end.slice(0, 2), ':', _end.slice(2)].join('');  
+	    	_eventDD = {
+	    		start: _start,
+	    		end: _end,
+	    		date: _date
+	    	}
+	    },
+	    eventDrop: function(event) { 
+	    	_start = parseMomentToHour(event.start);
+			_end   = parseMomentToHour(event.end); 
+			_date  = parseMomentToDate(event.start); 
+			// Dealings for start and end to comparison purpose
+			_start = [_start.slice(0, 2), ':', _start.slice(2)].join('');
+			_end   = [_end.slice(0, 2), ':', _end.slice(2)].join('');  
+			// Find scheduled consult and update consult 
+			_consults.events.forEach(function(consult) {
+				if(consult.hourIniConsult == _eventDD.start 
+					&& consult.hourEndConsult == _eventDD.end
+					&& consult.dateConsult == _eventDD.date) {
+					_data = 'consult[dateConsult]=' + _date +
+						'&consult[hourIniConsult]=' + _start +
+						'&consult[hourEndConsult]=' + _end + 
+						'&_method=put';										
+					ajaxjQuery('POST', '/consults/' + consult.id, _data);
+					return false;  										
+				}
+			});
 	    }	
 	});
   
@@ -185,7 +224,6 @@ function fullCalendar() {
 						url: "/consults/" + _consult.id,
 						data: '_method=delete',
 						success: function(data) {
-							console.log(data);
 							console.log("Consulta removida com sucesso");  
 						},
 						error: function(error) {
@@ -214,41 +252,23 @@ function fullCalendar() {
 	            	if(_control == 1) {
 						isChangeDate();   
         				insertConsult();
-						renderEvent(_event); 	            		
-	            		$.ajax({
-							type: "POST",
-							url: "/consults",
-							data: 'consult[namePatient]='+$('.namePatient').val()+'&consult[emailPatient]='+$('.emailPatient').val()+
-								'&consult[telephonePatient]='+$('.telephonePatient').val()+
-								'&consult[cellphonePatient]='+$('.cellphonePatient').val()+
-								'&consult[dateConsult]='+$('.dateConsult').val()+
-								'&consult[hourIniConsult]='+$('.hourIniConsult').val()+
-								'&consult[hourEndConsult]='+$('.hourEndConsult').val(),
-							success: function(data) {
-								console.log("Paciente agendado com sucesso");
-							},
-							error: function(error) {
-								console.log(error);
-							}
-					    });  
+						renderEvent(_event); 						
+	            		var data = 'consult[namePatient]='+$('.namePatient').val()+
+	            			'&consult[emailPatient]='+$('.emailPatient').val()+
+							'&consult[telephonePatient]='+$('.telephonePatient').val()+
+							'&consult[cellphonePatient]='+$('.cellphonePatient').val()+
+							'&consult[dateConsult]='+$('.dateConsult').val()+
+							'&consult[hourIniConsult]='+$('.hourIniConsult').val()+
+							'&consult[hourEndConsult]='+$('.hourEndConsult').val();
+						ajaxjQuery('POST', '/consults', data);	            		 
 					    $(this).dialog('close'); 	            		            		
 	            	} 
 	            	else if(_control == 2){	            		
 	            		// Update Consult
-	            		var pData = fieldUpdateConsult();
+	            		var data = fieldUpdateConsult();
+        				$('#calendar').fullCalendar('updateEvent', _event); 
 						updateConsult();
-        				$('#calendar').fullCalendar('updateEvent', _event);                 
-		            	$.ajax({
-							type: "POST",
-							url: "/consults/" + _consult.id,
-							data: pData,
-							success: function(data) {
-								console.log("Consulta alterada com sucesso");  
-							},
-							error: function(error) {
-								console.log(error);  
-							}
-					    }); 
+        				ajaxjQuery('POST', '/consults/' + _consult.id, data);                		             
 	            		$(this).dialog('close');
 	            	}
             	}
@@ -259,6 +279,20 @@ function fullCalendar() {
         }
     });
 } 
+// jQuery AJAX
+function ajaxjQuery(method, url, data) {
+	$.ajax({
+		type: method,
+		url: url,
+		data: data,
+		success: function(data) {
+			console.log("Sucesso");  
+		},
+		error: function(error) {
+			console.log(error);  
+		}
+    });
+}
 // Update consultation 
 function updateConsult() {
 	_consults.events.forEach(function(consult) {
