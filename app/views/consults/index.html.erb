@@ -20,7 +20,9 @@
 					<div class="row">
 						<div class="col-sm-12 col-lg-12">						
 							<div id="calendar"></div>
-							<%= render partial: "new"%>	
+							<div id="new_consult">
+								<%= render partial: "consult"%>
+							</div>
 							<%
 								weekStart = Date.today.beginning_of_week
 								weekEnd   = weekStart + 4

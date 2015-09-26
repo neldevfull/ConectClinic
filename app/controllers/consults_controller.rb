@@ -6,14 +6,14 @@ class ConsultsController < ApplicationController
 		weekStart    = params[:weekStart]
 		weekEnd      = params[:weekEnd]
 		if weekStart && weekEnd
-			array    = Array.new
 			consult  = Consult.new
+			consults = Array.new
 			result   = consult.getConsults(weekStart, weekEnd)			
 			result.each do |consult|
-				array.push(consult)								
+				consults.push(consult)								
 			end
 			respond_to do |format|			  
-			  format.json { render :json => array.to_json }
+			  format.json { render :json => consults.to_json }
 			end
 		else
 			render :index  

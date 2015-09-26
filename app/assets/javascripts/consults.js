@@ -2,6 +2,7 @@ var _consults = {
 	weekStarts: [],
 	events: []	
 };
+var _patients = [];
 var _event;
 var _consult;
 var _control = 0;
@@ -16,12 +17,38 @@ $(document).ready(function() {
 		recoversConsults(_weekStart, _weekEnd);	
 		// Call function that load the calendar
 		fullCalendar();
+		// Call function that load event buttons
+		eventButtons();
+		// Function responsible get Patient's names 
+		getPatients(); 
 		// Call function that loads the masks
 		loadMasks();
-		// Call function that load event buttons
-		eventButtons();  		
 	}
-}); 
+});
+// Get Patients Names
+function getPatients() {	
+	var namePatient  = $('.namePatient');
+	var emailPatient = $('.emailPatient'); 
+	$.get('patients/patients', function(patients) {	 		
+		var names       = [];
+		_patients       = patients;
+		patients.forEach(function(patient) {			
+			names.push(patient.name);
+		});
+		namePatient.autocomplete({
+	      source: names
+	    });
+	});
+	emailPatient.focus(function() {
+		_patients.forEach(function(patient) {
+			if(patient.name == namePatient.val()) {
+				emailPatient.val(patient.email); 
+				$('.telephonePatient').val(patient.telephone);
+				$('.cellphonePatient').val(patient.cellphone);
+			}	 	 
+		});
+	});
+} 
 // Function responsible for load event buttons
 function eventButtons() {			
 	var weekStart;
@@ -45,7 +72,8 @@ function eventButtons() {
 			start: '',
 			end: '' 
 		};
-		$('#dialog').dialog("open");
+		// Open Dialog
+		openDialog();
 	});
 
 	function weekDates() {
@@ -142,7 +170,8 @@ function fullCalendar() {
 				end: _end 
 			};					
 			calendar.fullCalendar('unselect');
-			$('#dialog').dialog("open");
+			// Open Dialog
+			openDialog();
 		}, 
 		// Update consultation
 		eventClick: function(event) {					
@@ -163,8 +192,9 @@ function fullCalendar() {
 					return false;										
 				}
 			});
-	        _event = event;	        
-			$('#dialog').dialog("open");
+	        _event = event;
+	        // Open Dialog
+	        openDialog();
 	    },
 	    // Event Drag n' Drop
 	    eventDragStart: function(event) {
@@ -443,6 +473,11 @@ function loadFields(consult) {
 	$('.hourIniConsult').val(consult.hourIniConsult);
 	$('.hourEndConsult').val(consult.hourEndConsult);
 }
+// Open Dialog
+function openDialog() {
+	$('#dialog').css('display', 'block');
+	$('#dialog').dialog('open');
+}
 // Render events into calendar
 function renderEvent(_event) {
 	$('#calendar').fullCalendar('renderEvent', _event, true);
@@ -502,5 +537,5 @@ function parseMomentToHour(moment) {
 	if(min.toString().length == 1)
 		min = '0' + min;
 
-	return hour.toString() + min.toString(); 
+	return hour.toString() + ':' + min.toString(); 
 } 

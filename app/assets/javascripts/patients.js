@@ -1,15 +1,10 @@
-$(function(){	 	
+$(document).ready(function() {  	
 	var $patient     = $('.new_patient');
 	var $editPatient = $('.edit_patient');
 	var $findPatient = $('#find_patient'); 
 	var $showPatient = $('#show_patient');
-	// var $filter_patient = $('#filter_patient'); 
-
-	// $filter_patient.bind('ajax:success', function(e, data) {	
-	// 	alert('chegou');	
-	// 	loadAjax(data, '#grid_patient', '#grid_patient')
-	// });
-
+	// Call function that loads the masks
+	loadMasks();
 	// Patient show
 	$showPatient.on('ajax:success', function(e, data) {
 		loadAjax(data, '.main', 'main');
@@ -33,26 +28,10 @@ $(function(){
 		var content = $(_data).find(_find);						
     	$(_append).empty().append(content);
 	}
-
-	// var $linkPatient = $('#link_patient');
-	// var $newPatient  = $('#_new_patient');
-
-	// $patient.on('ajax:before', function(obj) {
-	// 	console.log(obj);
-	// });
-
-	// $newPatient.on('ajax:success', function(e, data) {		
-	// 	alert('funcao para cadastrar');
-	// 	loadAjax(data, "._main", "main");		
-	// });
-
-	// $patient.on('ajax:beforeSend', function(obj) {
-	// 	console.log(obj);
-	// });
-
-	// $review.on('ajax.error', function() {
-	// 	alert('nao rolou');
-	// 	// $('.alert-danger').append('Erro Paciente:');
-	// });
-
 });
+// Load masks into input form 
+function loadMasks() {
+	$('#patient_birth').inputmask('99/99/9999');
+	$('#patient_telephone').inputmask('(99) 9999-9999');
+	$('#patient_cellphone').inputmask('(99) 9999[9]-9999');	
+}

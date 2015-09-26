@@ -53,3 +53,7 @@
 ._cw {
 	width: 95% !important; 
 }
+/* Invisible form to new Consults */
+#new_consult {
+	display: none; 
+}

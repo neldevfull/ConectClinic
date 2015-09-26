@@ -2,7 +2,7 @@ class PatientsController < ApplicationController
 	before_action :set_patient, only: [:edit, :update, :destroy]
 
 	def index
-		@patients = Patient.select('id', 'name', 'email', 'tellephone').order('id DESC')		
+		@patients = Patient.select('id', 'name', 'email', 'telephone', 'cellphone').order('id DESC')		
 	end
 
 	def search		
@@ -12,6 +12,18 @@ class PatientsController < ApplicationController
 				
 		@patient_search = Patient.where "#{@field} like ?", "%#{@value}%" if @value	
 		@patient_search = Patient.where "gender = ?", "#{@filter}" if @filter			  
+	end
+
+	def patients
+		patient  = Patient.new
+		patients = Array.new
+		result   = patient.getPatients
+		result.each do |patient|			
+			patients.push(patient) 
+		end
+		respond_to do |format|
+			format.json { render :json => patients.to_json }
+		end
 	end
 
 	def new
@@ -52,7 +64,7 @@ class PatientsController < ApplicationController
 
 	def patient_params
 		params.require(:patient)
-			.permit :name, :email, :tellephone,
+			.permit :name, :email, :telephone,
 				:cellphone, :birth, :gender, :mailAccept
 	end
 
