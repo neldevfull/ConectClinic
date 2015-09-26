@@ -105,7 +105,7 @@ function fullCalendar() {
 	var _end; 
 	var _date;
 	var _data;
-	var _eventDD;
+	var _eventStart;
 	var lang 	 = 'pt-br';
 	var calendar = $('#calendar').fullCalendar({
 		header: {
@@ -151,8 +151,8 @@ function fullCalendar() {
 			_date  = parseMomentToDate(event.start); 
 	        _control = 2;
 			// Dealings for start and end to comparison purpose
-			_start = [_start.slice(0, 2), ':', _start.slice(2)].join('');
-			_end   = [_end.slice(0, 2), ':', _end.slice(2)].join(''); 			
+			_start = fixHour(_start);
+			_end   = fixHour(_end);			
 			// Find scheduled consult and carries fields 
 			_consults.events.forEach(function(consult) {
 				if(consult.hourIniConsult == _start 
@@ -166,42 +166,60 @@ function fullCalendar() {
 	        _event = event;	        
 			$('#dialog').dialog("open");
 	    },
+	    // Event Drag n' Drop
 	    eventDragStart: function(event) {
-	    	_start = parseMomentToHour(event.start);
-			_end   = parseMomentToHour(event.end); 
-			_date  = parseMomentToDate(event.start); 
-			// Dealings for start and end to comparison purpose
-			_start = [_start.slice(0, 2), ':', _start.slice(2)].join('');
-			_end   = [_end.slice(0, 2), ':', _end.slice(2)].join('');  
-	    	_eventDD = {
-	    		start: _start,
-	    		end: _end,
-	    		date: _date
-	    	}
+	    	_eventStart = eventStart(event);
 	    },
 	    eventDrop: function(event) { 
 	    	_start = parseMomentToHour(event.start);
 			_end   = parseMomentToHour(event.end); 
 			_date  = parseMomentToDate(event.start); 
 			// Dealings for start and end to comparison purpose
-			_start = [_start.slice(0, 2), ':', _start.slice(2)].join('');
-			_end   = [_end.slice(0, 2), ':', _end.slice(2)].join('');  
+			_start = fixHour(_start);	
+			_end   = fixHour(_end);  
 			// Find scheduled consult and update consult 
 			_consults.events.forEach(function(consult) {
-				if(consult.hourIniConsult == _eventDD.start 
-					&& consult.hourEndConsult == _eventDD.end
-					&& consult.dateConsult == _eventDD.date) {
+				if(consult.hourIniConsult == _eventStart.start 
+					&& consult.hourEndConsult == _eventStart.end
+					&& consult.dateConsult == _eventStart.date) { 
 					_data = 'consult[dateConsult]=' + _date +
 						'&consult[hourIniConsult]=' + _start +
 						'&consult[hourEndConsult]=' + _end + 
 						'&_method=put';										
-					ajaxjQuery('POST', '/consults/' + consult.id, _data);
+					ajaxjQuery('POST', '/consults/' + consult.id,
+						_data, 'put');
+					// Update into consult
+					consult.dateConsult    = _date;
+					consult.hourIniConsult = _start;
+					consult.hourEndConsult = _end;
+					return false;  										
+				}
+			});
+	    },
+	    // Event Resize
+	    eventResizeStart: function(event) {
+	    	_eventStart = eventStart(event);
+	    },
+	    eventResize: function(event) {
+	    	_end  = parseMomentToHour(event.end); 			
+			_end   = fixHour(_end); 
+	    	// Find scheduled consult and update consult 
+			_consults.events.forEach(function(consult) {
+				if(consult.hourIniConsult == _eventStart.start 
+					&& consult.hourEndConsult == _eventStart.end
+					&& consult.dateConsult == _eventStart.date) { 
+					_data = 'consult[hourEndConsult]=' + _end + 
+						'&_method=put';										
+					ajaxjQuery('POST', '/consults/' + consult.id,
+						_data, 'put');
+					// Update into consult					
+					consult.hourEndConsult = _end;
 					return false;  										
 				}
 			});
 	    }	
-	});
-  
+	}); 
+  	// Dialog 
 	$('#dialog').dialog({
         autoOpen: false,
         height: 480,
@@ -251,7 +269,6 @@ function fullCalendar() {
 	            	_event.title = $('.namePatient').val();
 	            	if(_control == 1) {
 						isChangeDate();   
-        				insertConsult();
 						renderEvent(_event); 						
 	            		var data = 'consult[namePatient]='+$('.namePatient').val()+
 	            			'&consult[emailPatient]='+$('.emailPatient').val()+
@@ -260,7 +277,7 @@ function fullCalendar() {
 							'&consult[dateConsult]='+$('.dateConsult').val()+
 							'&consult[hourIniConsult]='+$('.hourIniConsult').val()+
 							'&consult[hourEndConsult]='+$('.hourEndConsult').val();
-						ajaxjQuery('POST', '/consults', data);	            		 
+						ajaxjQuery('POST', '/consults', data, 'post'); 							            		 
 					    $(this).dialog('close'); 	            		            		
 	            	} 
 	            	else if(_control == 2){	            		
@@ -268,7 +285,8 @@ function fullCalendar() {
 	            		var data = fieldUpdateConsult();
         				$('#calendar').fullCalendar('updateEvent', _event); 
 						updateConsult();
-        				ajaxjQuery('POST', '/consults/' + _consult.id, data);                		             
+        				ajaxjQuery('POST', '/consults/' + _consult.id,
+        					data, 'put');                		             
 	            		$(this).dialog('close');
 	            	}
             	}
@@ -279,14 +297,32 @@ function fullCalendar() {
         }
     });
 } 
+// Event start for Drag n' Drop and Resize
+function eventStart(_event) {
+	var start = parseMomentToHour(_event.start);
+	var end   = parseMomentToHour(_event.end); 
+	var date  = parseMomentToDate(_event.start); 
+	var eventStart = {};
+	// Dealings for start and end to comparison purpose
+	start = fixHour(start);
+	end   = fixHour(end);  
+	eventStart = {
+		start: start,
+		end: end,
+		date: date
+	}
+	return eventStart;
+}
 // jQuery AJAX
-function ajaxjQuery(method, url, data) {
+function ajaxjQuery(method, url, data, verb) {
 	$.ajax({
 		type: method,
 		url: url,
 		data: data,
 		success: function(data) {
-			console.log("Sucesso");  
+			console.log("Sucesso"); 
+			if(verb === 'post')
+				insertConsult(data.id); 
 		},
 		error: function(error) {
 			console.log(error);  
@@ -384,8 +420,9 @@ function isChangeDate() {
 		_event.end = parseDateToMoment(date, hourEnd);
 }
 // Insert consultation
-function insertConsult() {
+function insertConsult(id) {
 	var _consult = {
+		id: id,
 		namePatient: $('.namePatient').val(),
 		emailPatient: $('.emailPatient').val(),
 		telephonePatient: $('.telephonePatient').val(),
@@ -437,6 +474,10 @@ function preparedFields(start, end) {
 	$('.dateFormatConsult').val(dateFormat);
 	$('.hourIniConsult').val(hourIni);
 	$('.hourEndConsult').val(hourEnd);
+}
+// Fix hour
+function fixHour(hour) {
+	return [hour.slice(0, 2), ':', hour.slice(2)].join('');
 }
 // Parse Date to Moment
 function parseDateToMoment(date, hour) {

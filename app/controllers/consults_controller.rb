@@ -2,7 +2,7 @@ class ConsultsController < ApplicationController
 
 	# Check if dates have been sent, if so,
 	# search Consults scheduled for the requested week
-	def index				
+	def index						
 		weekStart    = params[:weekStart]
 		weekEnd      = params[:weekEnd]
 		if weekStart && weekEnd
@@ -23,12 +23,13 @@ class ConsultsController < ApplicationController
 	def create
 		@consult = Consult.new consult_params
 
-		respond_to do |format|
-			if @consult.save
-				format.html { redirect_to consults_path }
-			else
-				format.html { render :index }
-			end
+		if @consult.save
+			id = { id: @consult.id }			
+			respond_to do |format|
+				format.json { render :json => id.to_json }
+			end				
+		else
+			render :index
 		end
 	end
 
