@@ -4,11 +4,7 @@ $(document).ready(function() {
 	var $findPatient = $('#find_patient'); 
 	var $showPatient = $('#show_patient');
 	// Call function that loads the masks
-	loadMasks();
-	// Patient show
-	$showPatient.on('ajax:success', function(e, data) {
-		loadAjax(data, '.main', 'main');
-	});	
+	loadMasksPatients();
 	// Patient search by AJAX
 	$findPatient.on('ajax:success', function(e, data) {		
 		loadAjax(data, '#grid_patient', '#grid_patient');
@@ -30,8 +26,8 @@ $(document).ready(function() {
 	}
 });
 // Load masks into input form 
-function loadMasks() {
+function loadMasksPatients() {
 	$('#patient_birth').inputmask('99/99/9999');
 	$('#patient_telephone').inputmask('(99) 9999-9999');
-	$('#patient_cellphone').inputmask('(99) 9999[9]-9999');	
+	$('#patient_cellphone').inputmask('(99) 99999-9999');	
 }

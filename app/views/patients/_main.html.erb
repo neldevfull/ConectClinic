@@ -55,11 +55,11 @@
 						<% end %>							
 					</div>
 					<div class="row _container-table table-responsive">				
-					<% unless patients %>
+					<% if patients.empty? %>
 						<div class="alert alert-warning" role="alert">
 							<p>Nao ha pacientes cadastrados ate o momento</p>
 						</div> 
-					<% else %> 	
+					<% else %> 					    	
 						<table class="table table-condensed" id="grid_patient">
 							<thead>
 								<tr>

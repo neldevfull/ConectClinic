@@ -1,28 +1,32 @@
+// Initialize vars
 var _consults = {
-	weekStarts: [],
+	weeks: [
+		{
+			start: '',
+			end: ''
+		}
+	],
 	events: []	
 };
 var _patients = [];
 var _event;
 var _consult;
+var _view    = 'week';
 var _control = 0;
 
 $(document).ready(function() { 			
 	var resource = window.location.href.toString().split(window.location.host + '/')[1];
 	if(resource == 'consults') {
-		// Initialize vars
-		var _weekStart = $('#weekStart');
-		var _weekEnd   = $('#weekEnd');							 		
-		// Recovers Consults
-		recoversConsults(_weekStart, _weekEnd);	
 		// Call function that load the calendar
-		fullCalendar();
+		fullCalendar();									 		
+		// WeekDates and Recovers Consults
+		weekDates();
 		// Call function that load event buttons
 		eventButtons();
 		// Function responsible get Patient's names 
 		getPatients(); 
 		// Call function that loads the masks
-		loadMasks();
+		loadMasksConsults();
 	}
 });
 // Get Patients Names
@@ -51,17 +55,22 @@ function getPatients() {
 } 
 // Function responsible for load event buttons
 function eventButtons() {			
-	var weekStart;
-	var weekEnd; 
-	var _weekStart = $('#weekStart');
-	var _weekEnd   = $('#weekEnd');
-
 	$('.fc-next-button').click(function() {	
-		weekDates();
+		loadCalendar();
     }); 
 
 	$('.fc-prev-button').click(function() {
-		weekDates();
+		loadCalendar();
+	});
+
+	$('.fc-agendaWeek-button').click(function() {
+		_view = 'week';
+		loadCalendar();
+	});
+
+	$('.fc-agendaDay-button').click(function() {
+		_view = 'day';
+		loadCalendar();
 	});
 
 	$('#agenda_consulta').click(function() {
@@ -75,24 +84,58 @@ function eventButtons() {
 		// Open Dialog
 		openDialog();
 	});
+} 
+// Load Calendar
+function loadCalendar() {	
+	switch(_view) {
+		case 'week':
+			weekDates();
+		break;
 
-	function weekDates() {
-    	weekStart = $('#calendar').fullCalendar('getDate');    	
-    	weekEnd   = $('#calendar').fullCalendar('getDate');	
+		case 'day':
+			var view = $('#calendar').fullCalendar('getView');	
+			console.log(view.start.weekday());		
+			if(view.start.weekday() == 0) 
+				dayWeekDates(view, view.start.weekday());	
+			if(view.start.weekday() == 4)
+				dayWeekDates(view, view.start.weekday());			
+		break;
 
-    	weekStart = parseMomentToDate(weekStart.add(1, 'days'));
-    	weekEnd   = parseMomentToDate(weekEnd.add(5, 'days'));
-
-		_weekStart.val(weekStart);
-		_weekEnd.val(weekEnd);
-		recoversConsults(_weekStart, _weekEnd); 
+		default: break;
+	}	
+}
+// Make dealings on day and loads consultations
+function dayWeekDates(view, weekDay) {
+	var weekStart;
+	var weekEnd;
+	if(weekDay === 0){		
+		weekStart = parseMomentToDate(view.start);
+		weekEnd   = parseMomentToDate(view.end.add(3, 'day')); 	
+	}	
+	else if(weekDay === 4) {
+		weekStart = parseMomentToDate(view.start.subtract(4, 'day'));
+		weekEnd   = parseMomentToDate(view.end.subtract(1, 'day')); 
 	}
+	recoversConsults(weekStart, weekEnd);
+}
+// Make dealings on the dates and loads consultations
+function weekDates() {
+	var view      = $('#calendar').fullCalendar('getView');
+	var weekStart = parseMomentToDate(view.start);
+	var weekEnd   = parseMomentToDate(view.end.subtract(1, 'day')); 
+	
+	recoversConsults(weekStart, weekEnd); 
 } 
 // Function responsible for recovers data of the Consults 
-function recoversConsults(_weekStart, _weekEnd) {	
+function recoversConsults(_weekStart, _weekEnd) {		
 	var success = true;
-	_consults.weekStarts.forEach(function(weekStart) {		
-		if(weekStart == _weekStart.val()) {
+	var _week = {
+		start: _weekStart,
+		end: _weekEnd
+	}
+	_consults.weeks.forEach(function(week) {		
+		if(week.start >= _week.start &&
+			week.end <= _week.end) {
 			success = false;
 			return false;
 		}
@@ -101,8 +144,8 @@ function recoversConsults(_weekStart, _weekEnd) {
 		$.ajax({
 			type: "GET",
 			url: "/consults",
-			data: 'weekStart=' + _weekStart.val() +
-				'&weekEnd=' + _weekEnd.val(),
+			data: 'weekStart=' + _week.start +
+				'&weekEnd=' + _week.end,
 			success: function(consults) {	
 				if(consults.length > 0){										
 					consults.forEach(function(consult) {				
@@ -124,8 +167,8 @@ function recoversConsults(_weekStart, _weekEnd) {
 				console.log(error);
 			}
 	    });     	
+		_consults.weeks.push(_week);
 	}
-	_consults.weekStarts.push(_weekStart.val());
 }
 // Function responsible for FullCalendar and Dialog
 function fullCalendar() {
@@ -157,7 +200,8 @@ function fullCalendar() {
 	    contentHeight: 460,
 		selectable: true,
 		selectHelper: true,		
-		editable: true,	
+		editable: true,			
+		firstDay: 1,
 		// Insert consultation			
 		select: function(start, end) {	
 			_start = start;
@@ -174,19 +218,17 @@ function fullCalendar() {
 			openDialog();
 		}, 
 		// Update consultation
-		eventClick: function(event) {					
+		eventClick: function(event) {				 				
 			_start = parseMomentToHour(event.start);
 			_end   = parseMomentToHour(event.end); 
 			_date  = parseMomentToDate(event.start); 
-	        _control = 2;
-			// Dealings for start and end to comparison purpose
-			_start = fixHour(_start);
-			_end   = fixHour(_end);			
+	        _control = 2;		
 			// Find scheduled consult and carries fields 
 			_consults.events.forEach(function(consult) {
-				if(consult.hourIniConsult == _start 
-					&& consult.hourEndConsult == _end
-					&& consult.dateConsult == _date) {
+				if(consult.namePatient == event.title && 
+					consult.hourIniConsult == _start &&
+					consult.hourEndConsult == _end &&
+					consult.dateConsult == _date) {
 					_consult = consult;
 					loadFields(consult);
 					return false;										
@@ -204,14 +246,12 @@ function fullCalendar() {
 	    	_start = parseMomentToHour(event.start);
 			_end   = parseMomentToHour(event.end); 
 			_date  = parseMomentToDate(event.start); 
-			// Dealings for start and end to comparison purpose
-			_start = fixHour(_start);	
-			_end   = fixHour(_end);  
 			// Find scheduled consult and update consult 
 			_consults.events.forEach(function(consult) {
-				if(consult.hourIniConsult == _eventStart.start 
-					&& consult.hourEndConsult == _eventStart.end
-					&& consult.dateConsult == _eventStart.date) { 
+				if(consult.namePatient == _eventStart.title &&
+					consult.hourIniConsult == _eventStart.start && 
+					consult.hourEndConsult == _eventStart.end &&
+					consult.dateConsult == _eventStart.date) { 
 					_data = 'consult[dateConsult]=' + _date +
 						'&consult[hourIniConsult]=' + _start +
 						'&consult[hourEndConsult]=' + _end + 
@@ -232,12 +272,12 @@ function fullCalendar() {
 	    },
 	    eventResize: function(event) {
 	    	_end  = parseMomentToHour(event.end); 			
-			_end   = fixHour(_end); 
 	    	// Find scheduled consult and update consult 
 			_consults.events.forEach(function(consult) {
-				if(consult.hourIniConsult == _eventStart.start 
-					&& consult.hourEndConsult == _eventStart.end
-					&& consult.dateConsult == _eventStart.date) { 
+				if(consult.namePatient == _eventStart.title &&
+					consult.hourIniConsult == _eventStart.start && 
+					consult.hourEndConsult == _eventStart.end &&
+					consult.dateConsult == _eventStart.date) { 
 					_data = 'consult[hourEndConsult]=' + _end + 
 						'&_method=put';										
 					ajaxjQuery('POST', '/consults/' + consult.id,
@@ -328,15 +368,13 @@ function fullCalendar() {
     });
 } 
 // Event start for Drag n' Drop and Resize
-function eventStart(_event) {
+function eventStart(_event) {	
 	var start = parseMomentToHour(_event.start);
 	var end   = parseMomentToHour(_event.end); 
 	var date  = parseMomentToDate(_event.start); 
 	var eventStart = {};
-	// Dealings for start and end to comparison purpose
-	start = fixHour(start);
-	end   = fixHour(end);  
 	eventStart = {
+		title: _event.title,
 		start: start,
 		end: end,
 		date: date
@@ -483,10 +521,10 @@ function renderEvent(_event) {
 	$('#calendar').fullCalendar('renderEvent', _event, true);
 } 
 // Load masks into input form 
-function loadMasks() {
+function loadMasksConsults() {
 	$('.dateFormatConsult').inputmask('99/99/9999');
 	$('.telephonePatient').inputmask('(99) 9999-9999');
-	$('.cellphonePatient').inputmask('(99) 9999[9]-9999');
+	$('.cellphonePatient').inputmask('(99) 99999-9999');
 	$('.hourIniConsult').inputmask('99:99');
 	$('.hourEndConsult').inputmask('99:99'); 
 }
@@ -509,10 +547,6 @@ function preparedFields(start, end) {
 	$('.dateFormatConsult').val(dateFormat);
 	$('.hourIniConsult').val(hourIni);
 	$('.hourEndConsult').val(hourEnd);
-}
-// Fix hour
-function fixHour(hour) {
-	return [hour.slice(0, 2), ':', hour.slice(2)].join('');
 }
 // Parse Date to Moment
 function parseDateToMoment(date, hour) {
