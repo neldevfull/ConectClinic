@@ -1,4 +1,4 @@
-// Initialize vars
+// Initialize vars 
 var _consults = {
 	weeks: [
 		{
@@ -93,30 +93,29 @@ function loadCalendar() {
 		break;
 
 		case 'day':
-			var view = $('#calendar').fullCalendar('getView');	
-			console.log(view.start.weekday());		
-			if(view.start.weekday() == 0) 
-				dayWeekDates(view, view.start.weekday());	
-			if(view.start.weekday() == 4)
-				dayWeekDates(view, view.start.weekday());			
+			dayWeekDates();
 		break;
 
 		default: break;
 	}	
 }
 // Make dealings on day and loads consultations
-function dayWeekDates(view, weekDay) {
+function dayWeekDates() {
+	var view    = $('#calendar').fullCalendar('getView');	
+	var weekDay = view.start.weekday(); 
 	var weekStart;
-	var weekEnd;
+	var weekEnd;	
+
 	if(weekDay === 0){		
 		weekStart = parseMomentToDate(view.start);
 		weekEnd   = parseMomentToDate(view.end.add(3, 'day')); 	
+		recoversConsults(weekStart, weekEnd);
 	}	
 	else if(weekDay === 4) {
 		weekStart = parseMomentToDate(view.start.subtract(4, 'day'));
 		weekEnd   = parseMomentToDate(view.end.subtract(1, 'day')); 
+		recoversConsults(weekStart, weekEnd);
 	}
-	recoversConsults(weekStart, weekEnd);
 }
 // Make dealings on the dates and loads consultations
 function weekDates() {
@@ -126,26 +125,26 @@ function weekDates() {
 	
 	recoversConsults(weekStart, weekEnd); 
 } 
-// Function responsible for recovers data of the Consults 
-function recoversConsults(_weekStart, _weekEnd) {		
-	var success = true;
-	var _week = {
-		start: _weekStart,
-		end: _weekEnd
-	}
+// Check if there is already week
+function checkWeek(_weekStart, _weekEnd) {
+	var success = true;	
 	_consults.weeks.forEach(function(week) {		
-		if(week.start >= _week.start &&
-			week.end <= _week.end) {
+		if(_weekStart == week.start &&
+			_weekEnd == week.end) {						
 			success = false;
 			return false;
 		}
-	}); 	
-	if(success === true) {		
+	});
+	return success; 	
+}
+// Function responsible for recovers data of the Consults 
+function recoversConsults(_weekStart, _weekEnd) {		
+	if(checkWeek(_weekStart, _weekEnd)) {		
 		$.ajax({
 			type: "GET",
 			url: "/consults",
-			data: 'weekStart=' + _week.start +
-				'&weekEnd=' + _week.end,
+			data: 'weekStart=' + _weekStart +
+				'&weekEnd=' + _weekEnd,
 			success: function(consults) {	
 				if(consults.length > 0){										
 					consults.forEach(function(consult) {				
@@ -166,10 +165,15 @@ function recoversConsults(_weekStart, _weekEnd) {
 			error: function(error) {
 				console.log(error);
 			}
-	    });     	
-		_consults.weeks.push(_week);
+	    });     			
+		_consults.weeks.push(
+			{
+				start: _weekStart,
+				end: _weekEnd
+			}
+		);
 	}
-}
+} 
 // Function responsible for FullCalendar and Dialog
 function fullCalendar() {
 	var _start;
@@ -306,7 +310,7 @@ function fullCalendar() {
 	        		$(this).addClass('btn btn-danger');	         		     	        			        		
 	        	},	        	
 	        	click: function() {
-	                $('#calendar').fullCalendar('removeEvents', _event._id);
+	                calendar.fullCalendar('removeEvents', _event._id);
 	                $.ajax({
 						type: "POST",
 						url: "/consults/" + _consult.id,
@@ -353,7 +357,7 @@ function fullCalendar() {
 	            	else if(_control == 2){	            		
 	            		// Update Consult
 	            		var data = fieldUpdateConsult();
-        				$('#calendar').fullCalendar('updateEvent', _event); 
+        				calendar.fullCalendar('updateEvent', _event); 
 						updateConsult();
         				ajaxjQuery('POST', '/consults/' + _consult.id,
         					data, 'put');                		             
