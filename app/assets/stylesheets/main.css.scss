@@ -238,4 +238,18 @@ background: #eaeaea;
   float: right;
   margin-top: -.1em;
 }
-/* end */  
+/* end */
+
+/* ProgressBar start */  
+#progressbar {
+  display: none;
+  overflow: hidden; 
+  margin-top: -.1em; 
+}
+.ui-widget-content {
+  border: .075em solid #adadad !important;
+}
+.ui-widget-header {
+  border: .075em solid #adadad !important;
+}
+/* end */

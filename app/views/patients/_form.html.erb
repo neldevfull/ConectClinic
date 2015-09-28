@@ -1,6 +1,7 @@
 <div class="container-fluid">
 	<h2 class="page-header">Paciente</h2>
-	<div id="_patient_msg">		
+	<div id="progressbar"></div>
+	<div id="_patient_msg">				
 		<% success = 0 %>
 		<% if flash[:notice] %>
 			<div class="alert alert-success" role="alert">
@@ -29,11 +30,11 @@
 				</div>
 			<% end %>
 		<% end %>
-	</div> 	
+	</div> 		
 	<%= form_for @patient, remote: true do |f| %>
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<div class="row">
+				<div class="row">					
 					<h3 class="col-xs-12">Geral</h3>
 				</div>
 			</div>
@@ -87,9 +88,10 @@
 				</div>
 				<!-- Buttons -->
 				<div class="button-group row _lessen-row">					
-					<%= f.submit button_value, class: "btn btn-success" %>
+					<%= f.submit button_value,
+						class: "btn btn-success _btn-confirm" %>
 					<%= link_to "Voltar", root_path,   
-						class: "btn btn-default _btn-back"%>								
+						class: "btn btn-default _btn-back"%>													
 				</div>				
 			</div>
 		</div>
