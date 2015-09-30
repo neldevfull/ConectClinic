@@ -1,0 +1,8 @@
+pt:  
+  activerecord:    
+    attributes:
+      patient:
+        name: Nome
+        gender: Sexo
+        telephone: Telefone
+        cellphone: Celular         

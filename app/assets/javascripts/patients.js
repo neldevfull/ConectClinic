@@ -54,9 +54,9 @@ $(document).ready(function() {
 		progress();
 
 		function progress() {
-			var val = $progressBar.progressbar( "value" ) || 0;	
-			$progressBar.progressbar( "value", val + 1 );
-			if ( val < 99 ) {
+			var value = $progressBar.progressbar("value") || 0;	
+			$progressBar.progressbar( "value", ++value );
+			if (value < 99) {
                setTimeout( progress, 100 );
             }
 		}

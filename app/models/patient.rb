@@ -1,7 +1,24 @@
-class Patient < ActiveRecord::Base
+class Patient < ActiveRecord::Base  
 
-	validates_length_of :name, minimum: 3, maximum: 40	
-	validates_presence_of :name, :email, :gender 
+	validate do |patient|
+		if patient.name.blank?
+			errors.add :name, "nao pode ficar em branco"
+		else
+			if patient.name.length < 3
+				errors.add :name, "deve possuir no minimo 3 letras"
+			end
+		end
+
+		if patient.email.blank? 
+			unless patient.telephone.present?
+				unless patient.cellphone.present?			
+					errors.add :email, "ou telefone ou celular nao pode ficar em branco" 						
+				end
+			end
+		end
+	end
+
+	validates_presence_of :gender 
 
 	def getPatients			
 		result = getConnect().select_all "SELECT name, email, 
