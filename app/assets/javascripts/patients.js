@@ -68,8 +68,9 @@ function cleanFields() {
 	$('#patient_email').val('');
 	$('#patient_telephone').val('');
 	$('#patient_cellphone').val('');
-	$('#patient_birth').val('');
-	$('#patient_mailAccept').val('');
+	$('#patient_birth').val('');	
+	$('#patient_mailAccept').removeAttr('checked');
+	$("input:radio").attr("checked", false);
 }
 // Load masks into input form 
 function loadMasksPatients() {

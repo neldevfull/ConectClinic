@@ -17,3 +17,5 @@ gem 'fullcalendar-rails'
 gem 'momentjs-rails'
 # jQuery InputMask
 gem 'jquery-inputmask-rails'
+# Mask Validator
+gem 'mask_validator'

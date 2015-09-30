@@ -5,4 +5,6 @@ pt:
         name: Nome
         gender: Sexo
         telephone: Telefone
-        cellphone: Celular         
+        cellphone: Celular  
+        birth: Nascimento       
+        mailAccept: "Aceita envio de e-mails"
