@@ -14,7 +14,7 @@
 		if counter > 0
 		%>
 			<div class="alert alert-danger" role="alert"> 
-				<%= "Erro ao #{button_value} Paciente:"%>
+				<%= "Erro ao #{button_value}:"%>
 				<% @patient.errors.full_messages.each do |message| %>
 					<%= message %>
 					<% counter -= 1 %>					

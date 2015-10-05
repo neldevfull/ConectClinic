@@ -1,3 +1,4 @@
+#encoding: utf-8 
 class Consult < ActiveRecord::Base
 
 	def getConsults(weekStart, weekEnd)			

@@ -6,7 +6,15 @@
 				class: ""  											 
 		%></th>
 	<th><%= patient.email %></th>
-	<th><%= patient.telephone %></th>		
+	<th>
+		<%= 
+			if patient.cellphone.present?
+				patient.cellphone
+			else
+				patient.telephone
+			end 
+		%>
+	</th>		
 	<th>-----</th>							
 	<th>-----</th>
 </tr>
