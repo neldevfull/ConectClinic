@@ -53,6 +53,11 @@
 ._cw {
 	width: 95% !important; 
 }
+#error_message {	
+	padding: 10px !important;
+}
+/* end */
+
 /* Invisible form to new Consults */
 #new_consult {
 	display: none; 

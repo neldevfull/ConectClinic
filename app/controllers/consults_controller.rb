@@ -23,24 +23,24 @@ class ConsultsController < ApplicationController
 	def create
 		@consult = Consult.new consult_params
 
-		if @consult.save
-			id = { id: @consult.id }			
-			respond_to do |format|
-				format.json { render :json => id.to_json }
-			end				
-		else
-			render :index
+		if @consult.save			
+			render :json => { :response => @consult.id,
+				:error => false }			
+		else			
+			render :json => { :response => error_message(),
+				:error => true }
 		end
 	end
 
 	def update   
-		@consult = Consult.find params[:id] 
-		respond_to do |format|
-			if @consult.update consult_params
-				format.html { redirect_to consults_path } 
-			else
-				format.html { render :index }
-			end
+		@consult = Consult.find params[:id]
+
+		if @consult.update consult_params
+			render :json => { :response => "",
+				:error => false }
+		else
+			render :json => { :response => error_message(),
+				:error => true }
 		end
 	end
 
@@ -55,10 +55,25 @@ class ConsultsController < ApplicationController
 		end
 	end
 
+	private
+
 	def consult_params
 		params.require(:consult)
 			.permit :namePatient, :emailPatient, :telephonePatient,
 				:cellphonePatient, :dateConsult, :hourIniConsult, :hourEndConsult 
+	end
+
+	def error_message
+		errors = ""
+		counter = @consult.errors.full_messages.count					
+		@consult.errors.full_messages.each do |message|
+			errors += message
+			counter -= 1
+			if counter != 0
+				errors += ", "
+			end
+		end	
+		return errors
 	end
 
 end 

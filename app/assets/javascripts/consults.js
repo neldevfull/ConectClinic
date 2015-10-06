@@ -40,7 +40,8 @@ function getPatients() {
 			names.push(patient.name);
 		});
 		namePatient.autocomplete({
-	      source: names
+	      source: names,
+	      minLength: 3
 	    });
 	});
 	emailPatient.focus(function() {
@@ -261,11 +262,11 @@ function fullCalendar() {
 						'&consult[hourEndConsult]=' + _end + 
 						'&_method=put';										
 					ajaxjQuery('POST', '/consults/' + consult.id,
-						_data, 'put');
+						_data, 'eventDrop');						
 					// Update into consult
 					consult.dateConsult    = _date;
 					consult.hourIniConsult = _start;
-					consult.hourEndConsult = _end;
+					consult.hourEndConsult = _end;					
 					return false;  										
 				}
 			});
@@ -285,9 +286,9 @@ function fullCalendar() {
 					_data = 'consult[hourEndConsult]=' + _end + 
 						'&_method=put';										
 					ajaxjQuery('POST', '/consults/' + consult.id,
-						_data, 'put');
+						_data, 'eventResize');						
 					// Update into consult					
-					consult.hourEndConsult = _end;
+					consult.hourEndConsult = _end;					
 					return false;  										
 				}
 			});
@@ -296,10 +297,10 @@ function fullCalendar() {
   	// Dialog 
 	$('#dialog').dialog({
         autoOpen: false,
-        height: 480,
-        width: 720,
+        height: 580,
+        width: 700,
         modal: true,
-        closeOnEscape: false,
+        closeOnEscape: false,        
         open: function() {
         	$('.ui-widget-overlay').addClass('custom-overlay');
         },
@@ -309,8 +310,8 @@ function fullCalendar() {
 	        	open: function() {
 	        		$(this).addClass('btn btn-danger');	         		     	        			        		
 	        	},	        	
-	        	click: function() {
-	                calendar.fullCalendar('removeEvents', _event._id);
+	        	click: function() {	        		
+	                removeEvent(_event);
 	                $.ajax({
 						type: "POST",
 						url: "/consults/" + _consult.id,
@@ -340,34 +341,30 @@ function fullCalendar() {
 	        		$(this).addClass('btn btn-success');
             	},
             	click: function() { 
+            		var data;
 	            	_event.title = $('.namePatient').val();
 	            	if(_control == 1) {
-						isChangeDate();   
-						renderEvent(_event); 						
-	            		var data = 'consult[namePatient]='+$('.namePatient').val()+
+						isChangeDate();   						 						
+	            		data = 'consult[namePatient]='+$('.namePatient').val()+
 	            			'&consult[emailPatient]='+$('.emailPatient').val()+
 							'&consult[telephonePatient]='+$('.telephonePatient').val()+
 							'&consult[cellphonePatient]='+$('.cellphonePatient').val()+
 							'&consult[dateConsult]='+$('.dateConsult').val()+
 							'&consult[hourIniConsult]='+$('.hourIniConsult').val()+
 							'&consult[hourEndConsult]='+$('.hourEndConsult').val();
-						ajaxjQuery('POST', '/consults', data, 'post'); 							            		 
-					    $(this).dialog('close'); 	            		            		
+						ajaxjQuery('POST', '/consults', data, 'post');	 		            		            								 							            		 
 	            	} 
-	            	else if(_control == 2){	            		
-	            		// Update Consult
-	            		var data = fieldUpdateConsult();
-        				calendar.fullCalendar('updateEvent', _event); 
-						updateConsult();
-        				ajaxjQuery('POST', '/consults/' + _consult.id,
-        					data, 'put');                		             
-	            		$(this).dialog('close');
+	            	else if(_control == 2) {	            			            			            		
+	            		if((data = fieldUpdateConsult()) !== '') {	            			
+	        				ajaxjQuery('POST', '/consults/' + _consult.id,
+	        					data, 'put');
+	            		}	            		      				 		             
 	            	}
             	}
             }
         ],
         close: function () {
-        	$('.ui-widget-overlay').removeClass('custom-overlay');
+        	$('.ui-widget-overlay').removeClass('custom-overlay');        	
         }
     });
 } 
@@ -385,19 +382,47 @@ function eventStart(_event) {
 	}
 	return eventStart;
 }
+// Output Message
+function message(message, option) {
+	switch(option) {
+		case false:
+			$('#error_message').removeClass('alert alert-warning');
+			$('#error_message').addClass('alert alert-danger');
+			$('#error_message').empty().append(message);	
+		break;
+
+		case null:
+			$('#error_message').removeClass('alert alert-danger');
+			$('#error_message').addClass('alert alert-warning');
+			$('#error_message').empty().append(message);
+		break;
+
+		default: break;	
+	}
+}
 // jQuery AJAX
-function ajaxjQuery(method, url, data, verb) {
+function ajaxjQuery(method, url, data, option) {
 	$.ajax({
 		type: method,
 		url: url,
 		data: data,
-		success: function(data) {
-			console.log("Sucesso"); 
-			if(verb === 'post')
-				insertConsult(data.id); 
+		success: function(data) {							
+			if(data['error'] === false){				
+				if(option === 'post'){
+					renderEvent(_event);					
+					insertConsult(data["response"]); 
+				}
+				else if(option === 'put') {
+					updateEvent(_event);
+					updateConsult();
+				}								
+				$('#dialog').dialog('close');	 											
+			}
+			else
+				message(data['response'], false);														
 		},
 		error: function(error) {
-			console.log(error);  
+			console.log(error);			
 		}
     });
 }
@@ -517,6 +542,7 @@ function loadFields(consult) {
 }
 // Open Dialog
 function openDialog() {
+	message('Agendar Consulta', null);
 	$('#dialog').css('display', 'block');
 	$('#dialog').dialog('open');
 }
@@ -524,6 +550,14 @@ function openDialog() {
 function renderEvent(_event) {
 	$('#calendar').fullCalendar('renderEvent', _event, true);
 } 
+// Update events into calendar
+function updateEvent(_event) {
+	$('#calendar').fullCalendar('updateEvent', _event);
+}
+// Remove events into calendar
+function removeEvent(_event) {
+	$('#calendar').fullCalendar('removeEvents', _event._id);
+}
 // Load masks into input form 
 function loadMasksConsults() {
 	$('.dateFormatConsult').inputmask('99/99/9999');

@@ -3,8 +3,17 @@ pt:
     attributes:
       patient:
         name: Nome
+        email: E-mail
         gender: Sexo
         telephone: Telefone
         cellphone: Celular  
         birth: Nascimento       
         mailAccept: "Aceita envio de e-mails"
+      consult:
+        namePatient: Nome
+        emailPatient: E-mail
+        telephonePatient: Telefone
+        cellphonePatient: Celular
+        dateConsult: Data
+        hourIniConsult: Horário entrada
+        hourEndConsult: Horário saida	
