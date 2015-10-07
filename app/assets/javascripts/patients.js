@@ -1,84 +1,36 @@
 var patientForm = {
 	// Validate fields
 	validateFields: function() {
-		var msg = '';
-		$name       = $('#patient_name');		
-		$email      = $('#patient_email'); 
-		$telephone  = $('#patient_telephone');
-		$cellphone  = $('#patient_cellphone');
-		$birth      = $('#patient_birth');
-		$gender     = $('input[name="patient[gender]"]');		
+		var messages = [];
+		$name        = $('#patient_name').val();		
+		$email       = $('#patient_email').val(); 
+		$telephone   = $('#patient_telephone').val();
+		$cellphone   = $('#patient_cellphone').val();
+		$birth       = $('#patient_birth').val();
+		$genderName  = $('input[name="patient[gender]"]');
+		$genderId	 = 'patient_gender';
+		$mailAccept  = 'patient_mailAccept';
+		// Call Validation
+		addMessage(validationForm.fullName($name));			
+		addMessage(validationForm.email($email));
+		addMessage(validationForm.telephones(
+			$telephone, $cellphone));
+		addMessage(validationForm.date(
+			$birth, false));
+		addMessage(validationForm.gender(
+			$genderName, $genderId));
+		addMessage(validationForm.mailAccept(
+			$mailAccept, $email));
 
-		// Validate Name
-		if($name.val() != '') {	
-			if($name.val().length >= 3) {				
-				if(!(/^[a-zA-ZâÂãÃáÁàÀêÊéÉèÈíÍìÌôÔõÕóÓòÒúÚùÙûÛçÇ,-:.;1234567890?!' ']{3,999}$/i
-					.test($name.val()))) {
-					msg += 'Nome não é valido';				
-				}			
-			}
-			else
-				msg += 'Nome deve ter no mínimo 3 letras';		
-		}
-		else
-			msg += 'Nome não pode ficar em branco';
-		// Validate E-mail
-		if($email.val() != '') {			
-			if(!(/^[^0-9][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[@][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,4}$/
-				.test($email.val()))) {
-				msgIsEmpty();
-				msg += 'Email não é valido';
-			}
-		}
-		// Validate Telephones 		
-		if($telephone.val() != '' ||
-			$cellphone.val() != '') {
-			if($telephone.val() != '') {
-				if(!(/^\(\d{2}\)[\s-]?\d{4}-\d{4}$/.test($telephone.val()))) {
-					msgIsEmpty();
-					msg += 'Telefone não é valido';
-				}
-			}
-			if($cellphone.val() != '') {
-				if(!(/^\(\d{2}\)[\s-]?\d{5}-\d{4}$/.test($cellphone.val()))) {
-					msgIsEmpty();
-					msg += 'Celular não é valido';
-				}
-			}
-		}
-		else{
-			msgIsEmpty();
-			msg += 'Telefone ou Celular não pode ficar em branco';
-		}
-		// Birth
-		if($birth.val() != '') {
-			if(!(/^(\d{2})\/(\d{2})\/(\d{4})$/.test($birth.val()))) {
-				msgIsEmpty();
-				msg += 'Nascimento não é valido';
-			}
-		}
-		// Gender
-		if($gender[0].value == 'false')
-			$gender[0].value = 'male'			
-		if($gender[0].value != 'male' || $gender[1].value != 'female') {
-			msgIsEmpty();
-			msg += 'Sexo não deve possuir esse valor';
-		}
-		else {			
-			if($('input[id="patient_gender_male"]:checked').length <= 0 &&
-				$('input[id="patient_gender_female"]:checked').length <= 0) {
-				msgIsEmpty();
-				msg += 'Sexo não pode ficar em branco';						
-			}
-		}
-		// MailAccept
-		if($('input[id="patient_mailAccept"]:checked').length > 0 &&
-			$email.val() == '') {
-			msgIsEmpty();
-			msg += 'E-mail deve ser preenchido';
-		}
 		// Case error
-		if(msg != '') {
+		if(messages.length > 0) {
+			var msg;
+			for(var i = 0; i < messages.length; i++) {
+				if(i !== 0)
+					msg += ', ' + messages[i];
+				else 					
+					msg = messages[i];				
+			}			
 			$('#_patient_msg').empty().append(
 				'<div class="alert alert-danger" role="alert">' +
 				'Erro ao Salvar: ' + msg + 
@@ -87,10 +39,12 @@ var patientForm = {
 			return false;		
 		}
 		// Case Success!
-		return true;
+		else
+			return true;
 		// Check if message is empty
-		function msgIsEmpty() {
-			msg += msg != '' ? ', ' : '';
+		function addMessage(message) {
+			if(message !== true) 
+				messages.push(message);
 		}
 	},
 	// Clean fields
@@ -143,6 +97,15 @@ $(document).ready(function() {
 		loadProgressBar(100, true);
 	});
 	// Patient edit by AJAX
+	$editPatient.on('ajax:beforeSend', function() {
+		var success = patientForm.validateFields();
+		if(success === false) {
+			loadProgressBar(100, true);
+			return false;
+		}
+		else
+			return true;
+	});
 	$editPatient.on('ajax:send', function(e, data) {											
 		loadProgressBar(25, false);
 	});
