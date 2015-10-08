@@ -10,4 +10,5 @@
 //= require moment
 //= require fullcalendar
 //= require lang-all
+//= require simplePagination
 //= require_tree

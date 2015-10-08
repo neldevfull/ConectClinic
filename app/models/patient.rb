@@ -5,7 +5,7 @@ class Patient < ActiveRecord::Base
 	NAME_REGEX  = /\A[^0-9`!@#\$%\^&*+_=]+\z/
 	EMAIL_REGEX = /\A[^@]+@([^@\.]+\.)+[^@\.]+\z/ 
 	MSG_ERROR   = "nao pode ficar em branco"
-
+	# Validate
 	validate do |patient|
 		# Validate Name
 		unless patient.name.present?
@@ -53,16 +53,4 @@ class Patient < ActiveRecord::Base
 	validates :cellphone, mask: "(99) 99999-9999", if: :cellphone? 
 	validates :birth, mask: "99/99/9999", if: :birth?
 	validates_presence_of :gender 
-	# Get Patients
-	def getPatients			
-		result = getConnect().select_all "SELECT name, email, 
-			telephone, cellphone FROM patients ORDER BY name"					
-	end
-	# Private Methods
-	private
-
-	def getConnect
-		return ActiveRecord::Base.connection
-	end
-
 end

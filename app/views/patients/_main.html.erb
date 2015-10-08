@@ -55,11 +55,10 @@
 						<% end %>							
 					</div>
 					<div class="row _container-table table-responsive">				
-					<% if patients.empty? %>
-						<div class="alert alert-warning" role="alert">
+						<div class="alert alert-warning" role="alert"
+							id="no_patients">
 							<p>Não há pacientes cadastrados ata o momento</p>
-						</div> 
-					<% else %> 					    	
+						</div> 				    	
 						<table class="table table-condensed" id="grid_patient">
 							<thead>
 								<tr>
@@ -70,13 +69,13 @@
 									<th>Ultima consulta</th>
 								</tr>
 							</thead>
-							<tbody>
-								<%= render patients %> 
-					<% end %>
+							<tbody id="content_patients">
+								<%= render 'patients' %>								 
 							</tbody>
 						</table>													
 					</div><!-- form-group -->
 				</div><!-- form-group -->
+				<div class="simple_pagination"></div>
 			</div><!-- panel-body -->	
 		</div><!-- panel panel-default -->
 	</div><!-- container-fluid -->	

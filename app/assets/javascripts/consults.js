@@ -42,13 +42,13 @@ var consultForm = {
 	// Output Message
 	message: function(message, option) {
 		switch(option) {
-			case false:
+			case 0:
 				$('#error_message').removeClass('alert alert-warning');
 				$('#error_message').addClass('alert alert-danger');
 				$('#error_message').empty().append(message);	
 			break;
 
-			case null:
+			case 1:
 				$('#error_message').removeClass('alert alert-danger');
 				$('#error_message').addClass('alert alert-warning');
 				$('#error_message').empty().append(message);
@@ -120,19 +120,19 @@ $(document).ready(function() {
 		// Call function that load event buttons
 		eventButtons();
 		// Function responsible get Patient's names 
-		getPatients(); 
+		getPatientsToConsult(); 
 		// Call function that loads the masks
 		consultForm.loadMasksConsults();
 	}
 });
 // Get Patients Names
-function getPatients() {	
+function getPatientsToConsult() {	
 	var namePatient  = $('.namePatient');
-	var emailPatient = $('.emailPatient'); 
+	var emailPatient = $('.emailPatient'); 	
 	$.get('patients/patients', function(patients) {	 		
 		var names       = [];
-		_patients       = patients;
-		patients.forEach(function(patient) {			
+		_patients       = patients.patients;
+		patients.patients.forEach(function(patient) {			
 			names.push(patient.name);
 		});
 		namePatient.autocomplete({
@@ -450,7 +450,8 @@ function fullCalendar() {
 								consultUtil.parseDate($('.dateConsult').val(), '/', '-') +
 								'&consult[hourIniConsult]=' + $('.hourIniConsult').val() +
 								'&consult[hourEndConsult]=' + $('.hourEndConsult').val();
-							ajaxjQuery('POST', '/consults', data, 'post');	 		            		            								 							            		 
+							ajaxjQuery('POST', '/consults', data, 'post');
+							consultForm.message('Agendando...', 1);	 		            		            								 							            		 
 		            	} 
 		            	else if(_control == 2) {	            			            			            		
 		            		if((data = fieldUpdateConsult()) !== '') {	            			
@@ -502,7 +503,7 @@ function ajaxjQuery(method, url, data, option) {
 				$('#dialog').dialog('close');	 											
 			}
 			else
-				consultForm.message(data['response'], false);														
+				consultForm.message(data['response'], 0);														
 		},
 		error: function(error) {
 			console.log(error);			
@@ -614,7 +615,7 @@ function insertConsult(id) {
 }
 // Open Dialog
 function openDialog() {
-	consultForm.message('Agendar Consulta', null);
+	consultForm.message('Agendar Consulta', 1);
 	$('#dialog').css('display', 'block');
 	$('#dialog').dialog('open');
 }

@@ -73,6 +73,8 @@ $(document).ready(function() {
 	var $progressBar = $('#progressbar'); 
 	// Call function that loads the masks
 	patientForm.loadMasks();
+	// Call function get amout Patients and pagination
+	getPatientsAmount();
 	// Patient search by AJAX
 	$findPatient.on('ajax:success', function(e, data) {		
 		loadAjax(data, '#grid_patient', '#grid_patient');
@@ -138,7 +140,62 @@ $(document).ready(function() {
 		}
 	});
 });
-// Function to change the layout 
+// Content Patients
+function contentPatients(patients) {	
+	var contentPatient = '';
+	patients.patients.forEach(function(patient) {
+		contentPatient +=
+		'<tr>' +
+		'<th><a href="patients/' + patient.id + '/edit">' + 
+			patient.name + '</th>' +
+		'<th>' + patient.email + '</th>' + 
+		'<th>' + patient.telephone + '</th>' +		
+		'<th>-----</th>' +							
+		'<th>-----</th>' +
+		'</tr>';
+	});
+	$('#content_patients').empty().append(contentPatient);
+}
+// Get Patients Counter
+function getPatientsAmount() {
+	$.get('patients/amount', function(count) {		
+		pagination(calcItems(count.amount), 1)
+	});
+}
+// Calc Items
+function calcItems(amount) {
+	return Math.ceil(amount / 12); 
+}
+// Pagination
+function pagination(items, itemsOnPage) {
+	$('.simple_pagination').pagination({
+        items: items,
+        itemsOnPage: itemsOnPage,
+        cssStyle: 'light-theme',
+        onPageClick: function(pageNumber) { 
+        	var offset = (pageNumber - 1) * 12
+        	getPatients(offset);
+        }
+    });
+ }
+// Get Patients
+function getPatients(offset) {
+	$.get('patients/main/12/'+offset, function(patients) {	
+		if(patients.error === false) {											
+			if(patients.patients.length > 0) {
+				contentPatients(patients);
+			}
+			else {
+				$('#no_patients').css('display', 'block');
+				$('#grid_patient').css('display', 'none');
+			}
+		}
+		else if(patients.error === true) {
+			console.log('Erro ao buscar pacientes');
+		}
+	});
+}
+// Change the layout 
 function loadAjax(_data, _find, _append) {
 	var content = $(_data).find(_find);						
 	$(_append).empty().append(content);
@@ -148,4 +205,3 @@ function isPatient(_data, _find) {
 	if($(_data).find(_find).length > 0)
 		patientForm.cleanFields();
 }
- 

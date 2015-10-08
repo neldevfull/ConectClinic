@@ -1,8 +1,26 @@
 class PatientsController < ApplicationController
 	before_action :set_patient, only: [:edit, :update, :destroy]
 
-	def index
-		@patients = Patient.select('id', 'name', 'email', 'telephone', 'cellphone').order('id DESC')		
+	def index		
+		@patients = get_patients(12, 0)	
+	end
+
+	def amount
+		count = Patient.count
+		render :json => { :amount => count }
+	end
+
+	def main
+		limit  = params[:limit]
+		offset = params[:offset]		
+		patients = get_patients(limit, offset)					 
+		if patients.length > 0
+			render :json => { :patients => patients,
+					:error => false }				
+		else
+			render :json => { :patients => '',
+					:error => true }
+		end
 	end
 
 	def search		
@@ -14,16 +32,10 @@ class PatientsController < ApplicationController
 		@patient_search = Patient.where "gender = ?", "#{@filter}" if @filter			  
 	end
 
-	def patients
-		patient  = Patient.new
-		patients = Array.new
-		result   = patient.getPatients
-		result.each do |patient|			
-			patients.push(patient) 
-		end
-		respond_to do |format|
-			format.json { render :json => patients.to_json }
-		end
+	def patients		
+		patients = get_patients_to_consult
+		render :json => { :patients => patients,
+					:error => true }				
 	end
 
 	def new
@@ -57,6 +69,16 @@ class PatientsController < ApplicationController
 	end
 
 	private
+
+	def get_patients(limit, offset)
+		Patient.select('id', 'name', 'email', 'telephone', 'cellphone'). 
+			order('name ASC').limit(limit).offset(offset)
+	end
+
+	def get_patients_to_consult
+		Patient.select('name', 'email', 'telephone', 'cellphone').
+			order('name ASC')
+	end
 
 	def set_patient
 		@patient = Patient.find(params[:id])
