@@ -16,30 +16,22 @@
 				<div class="form-group">				
 					<div class="row">								
 						<label class="_mp _lbw control-label col-sm-1 col-lg-1">Buscar por</label>	
-
-						<%= form_tag search_patient_path, method: :get,
-							remote: true, id: "find_patient" do %> 
-							<%=						
-								select_tag :field,															
-									"<option value='name'>Nome do paciente</option>
-									<option value='email'>E-mail</option>
-									<option value='telephone'>Telefone</option>".html_safe,
-										class: 'form-control _select _mp col-sm-2 col-lg-2'																		 					
-							%>
-							<!-- Button Find -->				
-							<div class="input-group col-sm-5 col-lg-5">
-								<%= text_field_tag :value, @value,
-									placeholder: "Buscar...",
-									id: "search_name",
-									class: "form-control" %>
-								<span class="input-group-btn">
-									<%= 
-										button_to_with_icon("<span class='input-group-bt'></span>",						
-										class: "btn btn-default _btnc _find")
-									%>
-								</span>
-							</div>
-						<% end %> 					
+						<select class="form-control _select 
+							_mp col-sm-2 col-lg-2" id="select_search">
+							<option value="name">Nome do paciente</option>
+							<option value="email">E-mail</option>
+							<option value="telephone">Telefone</option>
+						</select>	
+						<div class="input-group col-sm-5 col-lg-5">
+							<input type="text" placeholder="Buscar..."
+								id="search_patients" class="form-control">
+							<span class="input-group-btn">
+								<button class="btn btn-default _btnc _find"
+									id="btn_search_patients">
+									<span class="input-group-bt"></span>
+								</button>
+							</span>
+						</div>					
 					</div>				 					
 					<div class="row form-group">
 						<label class="_mp _lbw control-label col-sm-1 col-lg-1">Filtrar por</label>

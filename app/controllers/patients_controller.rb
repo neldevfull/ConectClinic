@@ -76,7 +76,7 @@ class PatientsController < ApplicationController
 	end
 
 	def get_patients_to_consult
-		Patient.select('name', 'email', 'telephone', 'cellphone').
+		Patient.select('id', 'name', 'email', 'telephone', 'cellphone').
 			order('name ASC')
 	end
 
