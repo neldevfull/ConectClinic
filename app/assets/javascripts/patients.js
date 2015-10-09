@@ -1,3 +1,8 @@
+// Patients Pages
+var patientsPages = {
+	pages: []
+};
+// Patient Form
 var patientForm = {
 	// Validate fields
 	validateFields: function() {
@@ -63,7 +68,7 @@ var patientForm = {
 		$('#patient_telephone').inputmask('(99) 9999-9999');
 		$('#patient_cellphone').inputmask('(99) 99999-9999');	
 	}
-}
+};
 // jQuery Events
 $(document).ready(function() {  	
 	var $patient     = $('.new_patient');
@@ -143,7 +148,7 @@ $(document).ready(function() {
 // Content Patients
 function contentPatients(patients) {	
 	var contentPatient = '';
-	patients.patients.forEach(function(patient) {
+	patients.forEach(function(patient) {
 		contentPatient +=
 		'<tr>' +
 		'<th><a href="patients/' + patient.id + '/edit">' + 
@@ -172,18 +177,41 @@ function pagination(items, itemsOnPage) {
         items: items,
         itemsOnPage: itemsOnPage,
         cssStyle: 'light-theme',
+        prevText: 'Antes',
+        nextText: 'Depois',
         onPageClick: function(pageNumber) { 
-        	var offset = (pageNumber - 1) * 12
-        	getPatients(offset);
+        	var found    = false;
+        	var patients = [];
+        	patientsPages.pages.forEach(function(page) {
+        		if(page.number === pageNumber) {
+        			patients = page.patients;
+        			found = true;
+        			return false;
+        		}
+        	});
+        	if(found === true) {        		
+        		contentPatients(patients);
+        	}	
+        	else {
+	        	var offset = (pageNumber - 1) * 12;
+	        	getPatients(offset, pageNumber);
+        	}       	 
         }
     });
  }
 // Get Patients
-function getPatients(offset) {
+function getPatients(offset, pageNumber) {
 	$.get('patients/main/12/'+offset, function(patients) {	
 		if(patients.error === false) {											
 			if(patients.patients.length > 0) {
-				contentPatients(patients);
+				// Store Pages	
+				var page = {};
+				page.number   = pageNumber;
+				page.patients = patients.patients;				
+				patientsPages.pages.push(page); 
+				// Builds Grid Patients
+				console.log(patientsPages);
+				contentPatients(patients.patients);
 			}
 			else {
 				$('#no_patients').css('display', 'block');
