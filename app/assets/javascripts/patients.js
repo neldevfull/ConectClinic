@@ -7,20 +7,14 @@ if(resource === '') {
 		};
 		return patientsPages;
 	}
-	// Build Patients Page
+	// Start Patients Page
 	var patientsPages = __patientsPages(); 
 	// Amount Pages
 	var amountPages;	
 	// jQuery Events
-	$(function() {  	
-		var $findPatient = $('#find_patient'); 
+	$(function() {  			
 		// Call function get amout Patients and pagination
 		getPatientsAmount();
-		// Patient search by AJAX
-		$findPatient.on('ajax:success', function(e, data) {		
-			loadAjax(data, '#grid_patient', '#grid_patient');
-			$('#search_name').val('');
-		});
 		// Search Patients
 		$('#btn_search_patients').click(function() {
 			var value         = $('#search_patients');
@@ -28,11 +22,20 @@ if(resource === '') {
 			if(value.val() != '')
 				searchPatients(value, selectSearch);
 			else {
-				pagination(amountPages, 1);
-				contentPatients(getFirstTwelve());
+				mountPage(amountPages, getFirstTwelve()); 
 			}
+		});
+		// Filter Patients
+		$('#filter_patients').change(function() {
+			selectOption = $('#filter_patients option:selected');
+			filterPatients(selectOption);
 		});		
 	});
+	// MountPage
+	function mountPage(items, firstTwelve) {
+		pagination(items, 1);
+		contentPatients(firstTwelve);
+	}
 	// Get Patients Counter
 	function getPatientsAmount() {
 		$.get('patients/amount', function(count) {	
@@ -52,7 +55,7 @@ if(resource === '') {
 	}
 	// Search Patients
 	function searchPatients(value, selectSearch) {
-		var keys          = ['name', 'email', 'telephone'];
+		var keys          = ['name', 'email', 'cellphone'];
 		var patientsFound = [];
 		var length;   
 		// Check key and find Patient
@@ -68,6 +71,33 @@ if(resource === '') {
 			storePatientFound(patientsFound, length);
 			value.val('');
 		}
+	}
+	// Filter Patients
+	function filterPatients(selectOption) {
+		var keys = ['agenda', 'male', 'female'];
+		var patientsFound = [];
+		var length;
+
+		keys.forEach(function(key) {
+			if(selectOption.val() === key) {
+				patientsFound = filter(key);
+				return false;
+			}
+		});
+		length = patientsFound.length;
+		if(length > 0) {
+			storePatientFound(patientsFound, length); 
+		}
+	}
+	// Filter
+	function filter(key) {
+		var patientsFound = [];
+		patientsAll.forEach(function(patient) {
+			if(patient.gender == key) {
+				patientsFound.push(patient);
+			}
+		});
+		return patientsFound; 
 	}
 	// Store Patient found
 	function storePatientFound(patientsFound, items) {		
@@ -85,8 +115,7 @@ if(resource === '') {
 				pageNumber++;				
 			}
 		}
-		pagination(items, 1);
-		contentPatients(firstTwelve);
+		mountPage(items, firstTwelve);		
 	}
 	// Find Patient
 	function findPatient(key, value) {
@@ -101,7 +130,11 @@ if(resource === '') {
 		}
 		$.grep(patientsAll, function(patient) {
 			if(newValue.test(patient[key]))
-				patientsFound.push(patient);	        
+				patientsFound.push(patient);
+			else if(key === 'cellphone') {
+				if(newValue.test(patient['telephone']))
+					patientsFound.push(patient);
+			}
 	    });
 
 		return patientsFound;
@@ -109,13 +142,16 @@ if(resource === '') {
 	// Content Patients
 	function contentPatients(patients) {	
 		var contentPatient = '';
+		var telephone;
 		patients.forEach(function(patient) {
+			telephone = patient.cellphone != '' ?
+					patient.cellphone : patient.telephone
 			contentPatient +=
 			'<tr>' +
 			'<th><a href="patients/' + patient.id + '/edit">' + 
 				patient.name + '</th>' +
 			'<th>' + patient.email + '</th>' + 
-			'<th>' + patient.telephone + '</th>' +		
+			'<th>' + telephone + '</th>' +		
 			'<th>-----</th>' +							
 			'<th>-----</th>' +
 			'</tr>';

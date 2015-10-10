@@ -2,7 +2,7 @@ var patientsAll = null;
 // Get All Patients
 function getPatients() {
 	$.get('patients/patients', function(patients) {	
-		patientsAll = patients.patients;						
+		patientsAll = patients.patients;								
 	});
 }
 // Change the layout 

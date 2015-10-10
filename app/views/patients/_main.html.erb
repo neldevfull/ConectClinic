@@ -20,7 +20,7 @@
 							_mp col-sm-2 col-lg-2" id="select_search">
 							<option value="name">Nome do paciente</option>
 							<option value="email">E-mail</option>
-							<option value="telephone">Telefone</option>
+							<option value="cellphone">Telefones</option>
 						</select>	
 						<div class="input-group col-sm-5 col-lg-5">
 							<input type="text" placeholder="Buscar..."
@@ -32,19 +32,15 @@
 								</button>
 							</span>
 						</div>					
-					</div>				 					
+					</div>	
 					<div class="row form-group">
 						<label class="_mp _lbw control-label col-sm-1 col-lg-1">Filtrar por</label>
-						<%= form_tag search_patient_path, method: :get do %> 
-							<%=
-								select_tag :filter,															
-									"<option value='agenda'>Agendamentos de hoje</option> 
-									<option value='male'>Sexo masculino</option>
-									<option value='female'>Sexo feminino</option>".html_safe,
-										class: 'form-control _select _mp col-sm-2 col-lg-2',
-											onchange: 'this.form.submit()'
-							%>
-						<% end %>							
+						<select class="form-control _select _mp col-sm-2 col-lg-2"
+							id="filter_patients">
+							<option value="agenda">Agendamentos de hoje</option>
+							<option value="male">Sexo masculino</option>
+							<option value="female">Sexo feminino</option>
+						</select>
 					</div>
 					<div class="row _container-table table-responsive">				
 						<div class="alert alert-warning" role="alert"

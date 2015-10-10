@@ -23,17 +23,8 @@ class PatientsController < ApplicationController
 		end
 	end
 
-	def search		
-		@value  = params[:value]
-		@field  = params[:field]
-		@filter = params[:filter]
-				
-		@patient_search = Patient.where "#{@field} like ?", "%#{@value}%" if @value	
-		@patient_search = Patient.where "gender = ?", "#{@filter}" if @filter			  
-	end
-
 	def patients		
-		patients = get_patients_to_consult
+		patients = get_patients_all
 		render :json => { :patients => patients,
 					:error => true }				
 	end
@@ -75,8 +66,9 @@ class PatientsController < ApplicationController
 			order('name ASC').limit(limit).offset(offset)
 	end
 
-	def get_patients_to_consult
-		Patient.select('id', 'name', 'email', 'telephone', 'cellphone').
+	def get_patients_all
+		Patient.select('id', 'name', 'email', 
+			'telephone', 'cellphone', 'gender').
 			order('name ASC')
 	end
 
