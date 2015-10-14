@@ -1,3 +1,4 @@
+//= require modulejs
 //= require jquery
 //= require bootstrap
 //= require jquery-ui/datepicker

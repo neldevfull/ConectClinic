@@ -62,14 +62,14 @@ class PatientsController < ApplicationController
 	private
 
 	def get_patients(limit, offset)
-		Patient.select('id', 'name', 'email', 'telephone', 'cellphone'). 
-			order('name ASC').limit(limit).offset(offset)
+		Patient.select("id", "name", "email", "telephone", "cellphone"). 
+			order("name ASC").limit(limit).offset(offset)
 	end
 
 	def get_patients_all
-		Patient.select('id', 'name', 'email', 
-			'telephone', 'cellphone', 'gender').
-			order('name ASC')
+		Patient.select("id", "name", "email", 
+			"telephone", "cellphone", "gender").
+			order("name ASC")
 	end
 
 	def set_patient
@@ -79,7 +79,8 @@ class PatientsController < ApplicationController
 	def patient_params
 		params.require(:patient)
 			.permit :name, :email, :telephone,
-				:cellphone, :birth, :gender, :mailAccept
+				:cellphone, :birth, :gender,
+				:mail_accept, :status
 	end
 
 end

@@ -1,14 +1,12 @@
 class CreateConsults < ActiveRecord::Migration
   def change
     create_table :consults do |t|
-      t.string :typeConsult
-      t.string :namePatient
-      t.string :TellephonePatient
-      t.string :emailPatient
-      t.string :agreement
-      t.string :dateConsult
-      t.string :hourConsult
-      t.string :obsConsult
+      t.integer :patient_id, foreign_key: true
+      t.string  :type
+      t.string  :date
+      t.string  :hour_ini
+      t.string  :hour_end  
+      t.integer :confirm, default: 0  
 
       t.timestamps null: false
     end

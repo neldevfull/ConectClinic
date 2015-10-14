@@ -11,33 +11,49 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150926191137) do
+ActiveRecord::Schema.define(version: 20151013123449) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "consults", force: :cascade do |t|
-    t.string   "typeConsult"
-    t.string   "namePatient"
-    t.string   "telephonePatient"
-    t.string   "emailPatient"
-    t.string   "agreement"
-    t.string   "dateConsult"
-    t.string   "hourIniConsult"
-    t.string   "obsConsult"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-    t.string   "cellphonePatient"
-    t.string   "hourEndConsult"
+    t.integer  "patient_id"
+    t.string   "type"
+    t.string   "date"
+    t.string   "hour_ini"
+    t.string   "hour_end"
+    t.integer  "confirm",    default: 0
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "insurances", force: :cascade do |t|
+    t.integer  "locale_id"
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "locales", force: :cascade do |t|
+    t.integer  "code"
+    t.string   "city"
+    t.string   "state"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "patients", force: :cascade do |t|
+    t.integer  "insurance_id"
     t.string   "name"
     t.string   "email"
     t.string   "telephone"
     t.string   "cellphone"
     t.string   "birth"
     t.string   "gender"
-    t.integer  "mailAccept"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "mail_accept"
+    t.integer  "status",       default: 1
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
 end

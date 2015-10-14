@@ -1,6 +1,6 @@
 #encoding: utf-8 
 class Patient < ActiveRecord::Base 
-
+	has_many :consults
 	# Constants use in the validation
 	NAME_REGEX  = /\A[^0-9`!@#\$%\^&*+_=]+\z/
 	EMAIL_REGEX = /\A[^@]+@([^@\.]+\.)+[^@\.]+\z/ 
@@ -37,11 +37,11 @@ class Patient < ActiveRecord::Base
 			end
 		end
 		# Validate MailAccept						
-		if patient.mailAccept != 0 &&
-			patient.mailAccept != 1
-			errors.add :mailAccept, "nao deve possuir esse valor"
+		if patient.mail_accept != 0 &&
+			patient.mail_accept != 1
+			errors.add :mail_accept, "nao deve possuir esse valor"
 		else
-			if patient.mailAccept == 1	
+			if patient.mail_accept == 1	
 				unless patient.email.present?
 					errors.add :email, "deve ser preenchido"
 				end

@@ -2,16 +2,15 @@ class ConsultsController < ApplicationController
 
 	# Check if dates have been sent, if so,
 	# search Consults scheduled for the requested week
-	def index						
+	def index()						
 		weekStart    = params[:weekStart]
 		weekEnd      = params[:weekEnd]
 		if weekStart && weekEnd
-			consult  = Consult.new
-			consults = Array.new
-			result   = consult.getConsults(weekStart, weekEnd)			
+			consults = Array.new			
+			result   = getConsults(weekStart, weekEnd)						
 			result.each do |consult|
 				consults.push(consult)								
-			end
+			end			
 			respond_to do |format|			  
 			  format.json { render :json => consults.to_json }
 			end
@@ -20,28 +19,96 @@ class ConsultsController < ApplicationController
 		end 
 	end
 
-	def create
-		@consult = Consult.new consult_params
+	def create	 	
+		patient = Patient.new patient_params
+		id = check_patient(patient)
 
-		if @consult.save			
-			render :json => { :response => @consult.id,
-				:error => false }			
-		else			
-			render :json => { :response => error_message(),
+		if id == 0
+			Patient.transaction do
+				if patient.save
+					@consult = patient.consults.new consult_params					
+					if @consult.save
+						create_response(true, @consult)
+					else
+						create_response(false, @consult)
+					end
+				else
+					create_response(false, patient)
+					raise ActiveRecord::Rollback
+				end
+			end
+		else
+			@consult = Consult.new consult_params
+			@consult.patient_id = id
+			if @consult.save
+				create_response(true, @consult)
+			else
+				create_response(false, @consult)
+			end
+		end
+	end
+
+	def create_response(success, obj)
+		if success
+			render :json => { :response => 
+				{ id: obj.id, 
+				patient_id: obj.patient_id },
+				:error => false }
+		else
+			render :json => { :response => error_message(obj),
 				:error => true }
 		end
 	end
 
-	def update   
-		@consult = Consult.find params[:id]
-
-		if @consult.update consult_params
-			render :json => { :response => "",
-				:error => false }
-		else
-			render :json => { :response => error_message(),
-				:error => true }
+	def check_patient(patient_c)		
+		Patient.all.each do |patient|
+			if patient_c.name == patient.name
+				if patient_c.email == patient.email
+					return patient.id
+				else
+					if patient_c.telephone == patient.telephone
+						return patient.id
+					else
+						if patient_c.cellphone == patient.cellphone
+							return patient.id
+						end
+					end
+				end
+			end
 		end
+		return 0
+	end
+
+	def update  
+			success = true
+			msg     = ""
+
+			unless params[:patient].blank?  
+				patient = Patient.find params[:consult][:patient_id]		
+				if patient.update patient_params
+					success = true
+				else
+					msg += error_message(@consult)					
+				end		
+			end
+			
+			unless params[:consult].blank? 
+				@consult = Consult.find params[:id]
+				if @consult.update consult_params
+					success = true		
+				else					
+					msg = ', ' unless msg != ''
+					msg += error_message(@consult)
+				end
+			end
+
+			if success
+				render :json => { :response => "",
+					:error => false }
+			else
+				render :json => { :response => msg,
+					:error => true }
+			end
 	end
 
 	def destroy
@@ -57,16 +124,19 @@ class ConsultsController < ApplicationController
 
 	private
 
-	def consult_params
-		params.require(:consult)
-			.permit :namePatient, :emailPatient, :telephonePatient,
-				:cellphonePatient, :dateConsult, :hourIniConsult, :hourEndConsult 
+	def getConsults weekStart, weekEnd
+		@consult = Consult.select("id", "patient_id", "patients.name",
+			"patients.email", "patients.telephone", "patients.cellphone", 
+			"patients.gender", "patients.mail_accept", "date",
+			"hour_ini", "hour_end", "confirm").
+			joins("LEFT JOIN patients ON patients.id = patient_id").			
+			where("date BETWEEN '#{weekStart}' AND '#{weekEnd}'")
 	end
 
-	def error_message
-		errors = ""
-		counter = @consult.errors.full_messages.count					
-		@consult.errors.full_messages.each do |message|
+	def error_message(entity)
+		errors  = ""
+		counter = entity.errors.full_messages.count					
+		entity.errors.full_messages.each do |message|
 			errors += message
 			counter -= 1
 			if counter != 0
@@ -74,6 +144,19 @@ class ConsultsController < ApplicationController
 			end
 		end	
 		return errors
+	end
+
+	def consult_params
+		params.require(:consult)
+			.permit :patient_id, :name, :email, :telephone, :cellphone,
+				:gender, :date, :hour_ini, :hour_end, 
+				:checkin, :confirm  
+	end
+
+	def patient_params
+		params.require(:patient)
+			.permit :name, :email, :telephone,
+				:cellphone, :gender, :mail_accept
 	end
 
 end 

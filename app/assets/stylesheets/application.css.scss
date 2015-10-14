@@ -10,7 +10,7 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require_self 
+ *= require_self
  *= require jquery-ui/datepicker
  *= require jquery-ui/dialog
  *= require jquery-ui/autocomplete
@@ -19,3 +19,5 @@
  *= consults
  *= require_tree .
 */
+/* Bootstrap */
+@import "bootstrap"; 

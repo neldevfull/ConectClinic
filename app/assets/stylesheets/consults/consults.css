@@ -12,11 +12,6 @@
 .fc-time-grid .fc-slats td {
 	height: 2.5em;
 }
-/* New style for cell when scheduled */
-.fc-time-grid-event {
-	background-color: #3F9F3F;
-	border-color: #425690;
-}
 /* end */
 
 /* Change jQuery Dialog start */
@@ -38,7 +33,11 @@
 }
 .btn-danger .ui-button-text {
 	background-color: #C9302C;
-} 
+}
+.btn-warning .ui-button-text {
+	background-color: #EC971F;
+	color: white;
+}  
 .ui-button {	
 	outline: none !important; 
 	border: none !important; 

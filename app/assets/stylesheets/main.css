@@ -1,50 +1,3 @@
-/* Bootstrap */
-@import "bootstrap"; 
-/* Fonts for Customization and Optimization */
-@font-face {
-  font-family: 'panel';
-  src: url('panel.woff?3905730') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'calendar';
-  src: url('calendar.woff?13433766') format('woff');
-  font-weight: normal;
-  font-style: normal;
-} 
-@font-face {
-  font-family: 'users';
-  src: url('users.woff?25556889') format('woff');
-  font-weight: normal;
-  font-style: normal;
-} 
-@font-face {
-  font-family: 'charts';
-  src: url('charts.woff?23929682') format('woff');
-  font-weight: normal;
-  font-style: normal;
-} 
-@font-face {
-  font-family: 'reports';
-  src: url('reports.woff?80148170') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'config';
-  src: url('config.woff?87694979') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'find';
-  src: url('find.woff?95576706') format('woff');
-  font-weight: normal;
-  font-style: normal;
-} 
-/* end */
-
 /* Menu start */
 .navbar {
   border-radius: 0;
@@ -172,6 +125,10 @@ label {
 ._sl {
   margin-right: .5em;
 }
+._fl-right {
+  float:right;
+  margin-right: 1em;
+}
 .form-control {
   margin-top: -.5em;
 }
@@ -214,6 +171,9 @@ label {
 }
 ._lessen-row {
   margin-bottom: -.5em;
+}
+._plus-row {
+  margin-top: 1em;
 }
 /* end */ 
 

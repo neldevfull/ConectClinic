@@ -1,41 +1,70 @@
+<!-- Error Message -->
 <div id="error_message"
 	class="alert alert-warning" role="alert">
 </div>
+<!-- Name -->
 <div class="form-group">							    		
 	<label class="control-label _sl col-sm-2 col-lg-2">Nome</label>
 	<div class="col-sm-9 col-lg-9">												
-		<input type="text" class="form-control namePatient">						
+		<input type="text" class="form-control" id="name">						
 	</div>
 </div>
+<!-- E-mail -->
 <div class="form-group">							    		
 	<label class="control-label _sl col-sm-2 col-lg-2">E-mail</label>
 	<div class="col-sm-9 col-lg-9">
-		<input type="text" class="form-control emailPatient">						
+		<input type="text" class="form-control" id="email">						
 	</div>
 </div>
+<!-- Telephones -->
 <div class="form-group">							    											    	
 	<label class="control-label _sl col-sm-2 col-lg-2">Telefone</label>
 	<div class="col-sm-4 col-lg-4">
-		<input type="text" class="form-control telephonePatient">								
+		<input type="text" class="form-control" id="telephone">								
 	</div>
 	<label class="control-label _sl col-sm-1 col-lg-1">Celular</label>
 	<div class="col-sm-4 col-lg-4">
-		<input type="text" class="form-control _cw cellphonePatient"> 								
+		<input type="text" class="form-control _cw" id="cellphone"> 								
 	</div>
 </div>
+<!-- Date and Gender -->
 <div class="form-group">							    		
 	<label class="control-label _sl col-sm-2 col-lg-2">Data</label>
 	<div class="col-sm-4 col-lg-4">
-		<input type="text" class="form-control dateConsult">										
+		<input type="text" class="form-control" id="date">										
+	</div>
+	<label class="control-label _sl col-sm-1 col-lg-1">Sexo</label>
+	<div class="col-sm-4 col-lg-4">
+		<input type="radio" value="male" name="gender" 
+			id="gender_male">
+			<label class="_sl" for="gender_male">Masculino</label>
+		<input type="radio" value="female" name="gender"
+			id="gender_female">
+			<label for="gender_female">Femino</label>
 	</div>
 </div>
+<!-- Hourly -->
 <div class="form-group">							    		
 	<label class="control-label _sl col-sm-2 col-lg-2">Horario</label>
 	<div class="col-sm-3 col-lg-3">												
-		<input type="text" class="form-control hourIniConsult">
+		<input type="text" class="form-control" id="hour_ini">
 	</div>
 	<label class="col-sm-1 col-lg-1">as</label>
 	<div class="col-sm-3 col-lg-3">												
-		<input type="text" class="form-control hourEndConsult">
+		<input type="text" class="form-control" id="hour_end">
 	</div>											
+</div>
+<!-- Accept e-mail and Confirm -->
+<div class="form-group">
+	<div class="_sl col-sm-6 col-lg-6">		
+		<label class="control-label" for="mail_accept">Aceita</label>
+		<div class="_fl-right">			
+			<input type="checkbox" value="1" id="mail_accept">
+			<label for="mail_accept">confirmar por e-mail</label>
+		</div>
+	</div>
+	<div class="_sl col-sm-5 col-lg-5">		
+		<input type="checkbox" value="1" id="confirm">
+		<label class="control-label" for="confirm">Confirmado</label>
+	</div>
 </div>

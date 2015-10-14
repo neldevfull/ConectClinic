@@ -80,14 +80,20 @@
 				</div>
 				<!-- Accept e-mail -->
 				<div class="form-group row _lessen-row" style="margin-top: -1em;">
-					<label class="control-label _sl col-sm-1 col-lg-1" for="patient_mailAccept">Aceita</label>
+					<label class="control-label _sl col-sm-1 col-lg-1" for="patient_mail_accept">Aceita</label>
 					<label class="checkbox-inline">
-						<%= f.check_box :mailAccept %>						
+						<%= f.check_box :mail_accept %>						
 						<span class="_ls">envio de e-mails de confirmaçao</span>
 					</label>			
 				</div>
+				<!-- Status -->
+				<div class="form-group row _lessen-row" style="margin-top: -1em;">
+					<label class="control-label _sl col-sm-1 col-lg-1" for="patient_status">Status</label>				
+					<%= f.select :status, [['Ativo', 1], ['Inativo', '0']], {},
+						class: 'form-control _select _mp col-sm-2 col-lg-2' %>
+				</div>
 				<!-- Buttons -->
-				<div class="button-group row _lessen-row">					
+				<div class="button-group row _plus-row">					
 					<%= f.submit button_value,
 						class: "btn btn-success _btn-confirm" %>
 					<%= link_to "Voltar", root_path,   
