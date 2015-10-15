@@ -1,5 +1,10 @@
 /* Fonts for Customization and Optimization */
 @font-face {
+  font-family: 'OpenSans';
+  src: url('../OpenSans.ttf');
+  font-weight: bold;
+}
+@font-face {
   font-family: 'panel';
   src: url('../panel.woff?3905730') format('woff');
   font-weight: normal;

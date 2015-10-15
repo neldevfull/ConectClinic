@@ -476,7 +476,12 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll'],
 		        height: 600,
 		        width: 700,
 		        modal: true,
-		        closeOnEscape: false,        
+		        closeOnEscape: false, 
+		        create: function (event, ui) {
+		            $('.ui-dialog-titlebar').click(function() {
+		            	$('#dialog').dialog('close');
+		            });
+		        },       
 		        open: function() {
 		        	$('.ui-widget-overlay').addClass('custom-overlay');
 		        },
@@ -488,18 +493,11 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll'],
 			        	},	        	
 			        	click: function() {	        		
 			                removeEvent(_event);
-			                $.ajax({
-								type: "POST",
-								url: "/consults/" + _consult.id,
-								data: '_method=delete',
-								success: function(data) {
-									console.log("Consulta removida com sucesso");  
-								},
-								error: function(error) {
-									console.log(error);  
-								}
-						    });
-			                $(this).dialog('close');
+			                var data = 'consult[status]=' +
+		            			0 + '&_method=put';
+		            		ajaxjQuery('POST', '/consults/' + _consult.id, 
+		            				data, 'put');
+							consultForm.message('Confirmando...', 1);
 			            }
 		            },
 		            {
@@ -514,11 +512,12 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll'],
 		            				data, 'put');
 							consultForm.message('Confirmando...', 1);							
 		            		// Set values to event
-		            		var color     = setColors(3);
-			            	_event.color  = color.background;
-			            	_event.border = color.border; 
+		            		var color          = setColors(3);
+			            	_event.color       = color.background;
+			            	_event.borderColor = color.border; 
 		            	}
 		            },
+		            /*
 		            {
 		            	text: 'Fechar',
 		            	open: function() {            		
@@ -527,7 +526,8 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll'],
 		            	click: function() {            	
 		            		$(this).dialog('close');
 		            	}
-		            },            
+		            },
+		            */            
 		            {
 		            	text: 'Agendar',
 		            	open: function() {            		
@@ -539,9 +539,9 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll'],
 			            		var confirm = $('input[id="confirm"]:checked').length;
 			            		var color   = setColors(confirm);
 			            		// Set values to event
-				            	_event.title  = $('#name').val();
-				            	_event.color  = color.background;
-				            	_event.border = color.border; 
+				            	_event.title       = $('#name').val();
+				            	_event.color       = color.background;
+				            	_event.borderColor = color.border; 
 				            	// Insert
 				            	if(_control == 1) {
 									isChangeDate();   						 						

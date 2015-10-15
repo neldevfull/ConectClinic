@@ -1,0 +1,26 @@
+/* Login */
+.container-login {
+	padding: 5% 0 0 25%;		
+}
+.form-login {
+	width: 40%;
+}
+/* Correction Space Bottom */
+._correct-mgbt {
+	margin-bottom: 1em;
+}
+/* Correction Space Top Invert*/
+._correct-mgtop-iv {
+	margin-top: -3em;
+}
+/* Correction Space Top*/
+._correct-mgtop {
+	margin-top: .5em;
+}
+.logo-type {
+	font-family: 'OpenSans', helvetica, sans-serif;
+	font-size: 4em;
+	font-weight: bold;
+	color: #1C5884;
+	border-bottom: 1px solid #EEEEEE; 
+}

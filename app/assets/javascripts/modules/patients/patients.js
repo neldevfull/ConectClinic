@@ -1,4 +1,4 @@
-modulejs.define('', ['getPatientsAll'], function(getPatientsAll) {
+modulejs.define('patients', ['getPatientsAll'], function(getPatientsAll) {
 	return function() {
 		// Get Patients All
 		var patientsAll = [];
@@ -159,7 +159,7 @@ modulejs.define('', ['getPatientsAll'], function(getPatientsAll) {
 						patient.cellphone : patient.telephone
 				contentPatient +=
 				'<tr>' +
-				'<th><a href="patients/' + patient.id + '/edit">' + 
+				'<th><a href="patient/' + patient.id + '/edit">' + 
 					patient.name + '</th>' +
 				'<th>' + patient.email + '</th>' + 
 				'<th>' + telephone + '</th>' +		

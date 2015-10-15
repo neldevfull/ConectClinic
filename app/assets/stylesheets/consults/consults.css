@@ -48,6 +48,11 @@
     background-image: none;
     opacity: .4;  
 }
+.ui-dialog .ui-dialog-titlebar-close {
+	width: 40px;
+}	
+/* end */
+
 /* Correction width */
 ._cw {
 	width: 95% !important; 

@@ -128,9 +128,9 @@ class ConsultsController < ApplicationController
 		@consult = Consult.select("id", "patient_id", "patients.name",
 			"patients.email", "patients.telephone", "patients.cellphone", 
 			"patients.gender", "patients.mail_accept", "date",
-			"hour_ini", "hour_end", "confirm").
+			"hour_ini", "hour_end", "confirm", "status").
 			joins("LEFT JOIN patients ON patients.id = patient_id").			
-			where("date BETWEEN '#{weekStart}' AND '#{weekEnd}'")
+			where("consults.status = 1 AND date BETWEEN '#{weekStart}' AND '#{weekEnd}'")
 	end
 
 	def error_message(entity)
@@ -150,7 +150,7 @@ class ConsultsController < ApplicationController
 		params.require(:consult)
 			.permit :patient_id, :name, :email, :telephone, :cellphone,
 				:gender, :date, :hour_ini, :hour_end, 
-				:checkin, :confirm  
+				:confirm, :status  
 	end
 
 	def patient_params

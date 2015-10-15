@@ -68,7 +68,8 @@ class PatientsController < ApplicationController
 
 	def get_patients_all
 		Patient.select("id", "name", "email", 
-			"telephone", "cellphone", "gender").
+			"telephone", "cellphone", "gender",
+			"mail_accept").
 			order("name ASC")
 	end
 

@@ -1,4 +1,4 @@
-modulejs.define('patients', ['validationsForm'], 
+modulejs.define('patient', ['validationsForm'], 
 	function(validationForm) {
 	return function() {		
 		// Patient Form
