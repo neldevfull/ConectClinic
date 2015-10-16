@@ -1,6 +1,14 @@
 <aside class="sidebar">
 	<ul class="nav nav-sidebar">
-		<li><a href="#" class=""><span class="_panel"></span>Painel</a></li>
+		<li><a href="#" class=""><span class="_users"></span>Usuarios</a></li>
+		<li>			
+			<%= 
+				link_to "Pacientes", index_patients_path,
+					id: "show_patient",
+						class: "_patients"
+			%>			
+		</li>
+		<li><a href="#" class=""><span class="_insurance"></span>Convenios</a></li>
 		<li>
 			<%= 
 				link_to "Agenda", consults_path, 
@@ -8,13 +16,6 @@
 						class: "_calendar"
 			%>			
 		</li> 
-		<li>			
-			<%= 
-				link_to "Pacientes", index_patients_path,
-					id: "show_patient",
-						class: "_users"
-			%>			
-		</li>
 		<li><a href="#" class=""><span class="_charts"></span>Graficos</a></li> 
 		<li><a href="#" class=""><span class="_reports"></span>Relatorios</a></li>
 		<li><a href="#" class=""><span class="_config"></span>Configuraçoes</a></li>

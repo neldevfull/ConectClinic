@@ -1,24 +1,30 @@
 /* Fonts for Customization and Optimization */
 @font-face {
-  font-family: 'OpenSans';
-  src: url('../OpenSans.ttf');
+  font-family: 'opensans';
+  src: url('../opensans.ttf');
   font-weight: bold;
 }
 @font-face {
-  font-family: 'panel';
-  src: url('../panel.woff?3905730') format('woff');
+  font-family: 'users';
+  src: url('../users.woff?56650422') format('woff');
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
-  font-family: 'calendar';
-  src: url('../calendar.woff?13433766') format('woff');
+  font-family: 'patients';
+  src: url('../patients.woff?25556889') format('woff');
   font-weight: normal;
   font-style: normal;
 } 
 @font-face {
-  font-family: 'users';
-  src: url('../users.woff?25556889') format('woff');
+  font-family: 'insurance';
+  src: url('../insurance.woff?79683613') format('woff');
+  font-weight: normal;
+  font-style: normal;
+} 
+@font-face {
+  font-family: 'calendar';
+  src: url('../calendar.woff?13433766') format('woff');
   font-weight: normal;
   font-style: normal;
 } 

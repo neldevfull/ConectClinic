@@ -50,9 +50,25 @@
 /* end */
 
 /* Sidebar icons start */
-._panel:after {
+._patients:before {
   content: '\e800'; 
-  font-family: 'panel';
+  font-family: 'patients';
+    speak: none;
+    display: inline-block;
+    color: #333333;
+    padding-right: 1.2em;    
+}
+._users:after {
+  content: '\e800'; 
+  font-family: 'users';
+    speak: none;
+    display: inline-block;
+    color: #333333;
+    padding-right: 1.2em;     
+}
+._insurance:after {
+  content: '\e800'; 
+  font-family: 'insurance';
     speak: none;
     display: inline-block;
     color: #333333;
@@ -61,14 +77,6 @@
 ._calendar:before {
   content: '\e800'; 
   font-family: 'calendar';
-    speak: none;
-    display: inline-block;
-    color: #333333;
-    padding-right: 1.2em;    
-}
-._users:before {
-  content: '\e800'; 
-  font-family: 'users';
     speak: none;
     display: inline-block;
     color: #333333;
