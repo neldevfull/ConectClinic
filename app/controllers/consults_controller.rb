@@ -1,5 +1,9 @@
-class ConsultsController < ApplicationController 
+# Requires
+require 'patients_module'
 
+class ConsultsController < ApplicationController 
+	# Includes
+	include PatientsModule
 	# Check if dates have been sent, if so,
 	# search Consults scheduled for the requested week
 	def index()						
@@ -21,7 +25,7 @@ class ConsultsController < ApplicationController
 
 	def create	 	
 		patient = Patient.new patient_params
-		id = check_patient(patient)
+		id      = patient_exist?(patient)
 
 		Patient.transaction do
 			if id == 0
@@ -61,25 +65,6 @@ class ConsultsController < ApplicationController
 			render :json => { :response => error_message(obj),
 				:error => true }
 		end
-	end
-
-	def check_patient(patient_c)		
-		Patient.all.each do |patient|
-			if patient_c.name == patient.name
-				if patient_c.email == patient.email
-					return patient.id
-				else
-					if patient_c.telephone == patient.telephone
-						return patient.id
-					else
-						if patient_c.cellphone == patient.cellphone
-							return patient.id
-						end
-					end
-				end
-			end
-		end
-		return 0
 	end
 
 	def update  
