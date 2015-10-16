@@ -23,8 +23,8 @@ class ConsultsController < ApplicationController
 		patient = Patient.new patient_params
 		id = check_patient(patient)
 
-		if id == 0
-			Patient.transaction do
+		Patient.transaction do
+			if id == 0
 				if patient.save
 					@consult = patient.consults.new consult_params					
 					if @consult.save
@@ -36,14 +36,17 @@ class ConsultsController < ApplicationController
 					create_response(false, patient)
 					raise ActiveRecord::Rollback
 				end
-			end
-		else
-			@consult = Consult.new consult_params
-			@consult.patient_id = id
-			if @consult.save
-				create_response(true, @consult)
 			else
-				create_response(false, @consult)
+				patient = Patient.find id
+				if patient.update patient_params
+					@consult = Consult.new consult_params
+					@consult.patient_id = id
+					if @consult.save
+						create_response(true, @consult)
+					else
+						create_response(false, @consult)
+					end
+				end
 			end
 		end
 	end

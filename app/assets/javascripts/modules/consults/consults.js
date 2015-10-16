@@ -195,13 +195,17 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll'],
 			});
 
 			$('.fc-agendaWeek-button').click(function() {
-				_view = 'week';
-				loadCalendar();
+				if(_view !== 'week') {					
+					_view = 'week';
+					loadCalendar();
+				}
 			});
 
 			$('.fc-agendaDay-button').click(function() {
-				_view = 'day';
-				loadCalendar();
+				if(_view !== 'day'){					
+					_view = 'day';
+					loadCalendar();
+				}
 			});
 
 			$('#agenda_consulta').click(function() {
@@ -316,18 +320,25 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll'],
 						'&weekEnd=' + _weekEnd,
 					success: function(consults) {							
 						if(consults.length > 0){										
-							consults.forEach(function(consult) {	
-								// Check color and set
-								var color = setColors(consult.confirm);																		
-								var _event = {
-									title: consult.name,
-									start: consultUtil.parseDateToMoment(consult.date, consult.hour_ini),
-									end:   consultUtil.parseDateToMoment(consult.date, consult.hour_end),
-									color: color.background,
-									borderColor: color.border				
-								}				
-								renderEvent(_event);	
-								_consults.events.push(consult);					
+							consults.forEach(function(consult) {
+								var find = false;
+								_consults.events.forEach(function(_consult) {
+									if(consult.id === _consult.id)
+										find = true
+								});
+								if(find === false) {									
+									// Check color and set
+									var color = setColors(consult.confirm);																		
+									var _event = {
+										title: consult.name,
+										start: consultUtil.parseDateToMoment(consult.date, consult.hour_ini),
+										end:   consultUtil.parseDateToMoment(consult.date, consult.hour_end),
+										color: color.background,
+										borderColor: color.border				
+									}				
+									renderEvent(_event);	
+									_consults.events.push(consult);					
+								}	
 							});	 				
 							console.log('Consultas recuperadas com sucesso');			 												
 						}
