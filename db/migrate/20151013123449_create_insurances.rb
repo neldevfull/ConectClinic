@@ -1,8 +1,11 @@
 class CreateInsurances < ActiveRecord::Migration
   def change
     create_table :insurances do |t|
-      t.integer :locale_id, foreign_key: true
-      t.string :name
+      t.string :identifier, default: ''
+      t.string :name, null: false
+      t.string :city, default: ''
+      t.string :state, default: ''
+      t.integer :status, default: 1
 
       t.timestamps null: false
     end

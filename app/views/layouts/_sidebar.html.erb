@@ -5,15 +5,20 @@
 			<%= 
 				link_to "Pacientes", index_patients_path,
 					id: "show_patient",
-						class: "_patients"
+					class: "_patients"
 			%>			
 		</li>
-		<li><a href="#" class=""><span class="_insurance"></span>Convenios</a></li>
+		<li>
+			<%= 
+				link_to "Convenio", new_insurance_path,
+					id: "new_insurance",
+					class: "_insurance"
+			%>
 		<li>
 			<%= 
 				link_to "Agenda", consults_path, 
 					id: "show_consult",
-						class: "_calendar"
+					class: "_calendar"
 			%>			
 		</li> 
 		<li><a href="#" class=""><span class="_charts"></span>Graficos</a></li> 

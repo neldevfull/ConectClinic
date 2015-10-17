@@ -1,0 +1,59 @@
+<div class="container-fluid">
+	<h2 class="page-header">Convenios</h2>
+	<div id="progressbar"></div>
+	<!-- Error Message -->
+	<div id="output_message"
+		class="alert alert-warning" role="alert">
+		<p><%= button_value %> Paciente</p>
+	</div>
+	<%= form_for @insurance, :remote => true, :format => :json,
+		:html => { :id => 'new_insurance' } do |f| %>		
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">					
+					<h3 class="col-xs-12">Geral</h3>
+				</div>
+			</div>
+			<div class="panel-body">
+				<!-- Name -->
+				<div class="form-group row _lessen-row">
+					<label for="insurance_name" class="control-label _sl col-sm-1 col-lg-1">Nome</label>
+					<div class="col-xs-12 col-sm-4 col-lg-7">
+						<%= f.text_field :name, class: "form-control" %>	 											
+					</div>
+				</div>
+				<!-- Identifier -->
+				<div class="form-group row _lessen-row">
+					<label for="identifier_identifier" class="control-label _sl col-sm-1 col-lg-1">Identificador</label>
+					<div class="col-xs-12 col-sm-4 col-lg-7">
+						<%= f.text_field :identifier, class: "form-control" %>											
+					</div>
+				</div>
+				<!-- City and State-->
+				<div class="form-group row _lessen-row">
+					<label for="insurance_identifier" class="control-label _sl col-sm-1 col-lg-1">Cidade</label>
+					<div class="col-xs-8 col-sm-3 col-lg-4">											
+						<%= f.text_field :city, class: "form-control" %>											
+					</div>
+					<label for="insurance_state" class="control-label col-sm-1 col-lg-1">Estado</label>
+					<div class="col-xs-4 col-sm-1 col-lg-2">					
+						<%= f.text_field :state, class: "form-control" %>						
+					</div>
+				</div>
+				<!-- Status -->
+				<div class="form-group row _lessen-row" style="margin-top: -1em;">
+					<label class="control-label _sl col-sm-1 col-lg-1" for="insurance_status">Status</label>				
+					<%= f.select :status, [['Ativo', 1], ['Inativo', '0']], {},
+						class: 'form-control _select _mp col-sm-2 col-lg-2' %>
+				</div>
+				<!-- Buttons -->
+				<div class="button-group row _plus-row">					
+					<%= f.submit button_value,
+						class: "btn btn-success _btn-confirm" %>
+					<%= link_to "Voltar", index_patients_path,   
+						class: "btn btn-default _btn-back"%>													
+				</div>				
+			</div>
+		</div>
+	<% end %><!-- form -->	
+</div><!-- container-fluid -->

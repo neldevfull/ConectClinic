@@ -11,36 +11,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151014233037) do
+ActiveRecord::Schema.define(version: 20151017143651) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "consults", force: :cascade do |t|
-    t.integer  "patient_id"
-    t.string   "type"
-    t.string   "date"
-    t.string   "hour_ini"
-    t.string   "hour_end"
+    t.integer  "patient_id",              null: false
+    t.string   "type",       default: ""
+    t.string   "date",                    null: false
+    t.string   "hour_ini",                null: false
+    t.string   "hour_end",                null: false
     t.integer  "confirm",    default: 0
     t.integer  "status",     default: 1
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
   end
+
+  add_index "consults", ["patient_id"], name: "idx_patient_id", using: :btree
 
   create_table "insurances", force: :cascade do |t|
-    t.integer  "locale_id"
-    t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "locales", force: :cascade do |t|
-    t.integer  "code"
-    t.string   "city"
-    t.string   "state"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "identifier", default: ""
+    t.string   "name",                    null: false
+    t.string   "city",       default: ""
+    t.string   "state",      default: ""
+    t.integer  "status"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
   end
 
   create_table "logins", force: :cascade do |t|
@@ -52,16 +49,18 @@ ActiveRecord::Schema.define(version: 20151014233037) do
 
   create_table "patients", force: :cascade do |t|
     t.integer  "insurance_id"
-    t.string   "name"
-    t.string   "email"
-    t.string   "telephone"
-    t.string   "cellphone"
-    t.string   "birth"
-    t.string   "gender"
+    t.string   "name",                      null: false
+    t.string   "email",        default: ""
+    t.string   "telephone",    default: ""
+    t.string   "cellphone",    default: ""
+    t.string   "birth",        default: ""
+    t.string   "gender",                    null: false
     t.integer  "mail_accept"
     t.integer  "status",       default: 1
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
+
+  add_index "patients", ["insurance_id"], name: "idx_insurance_id", using: :btree
 
 end

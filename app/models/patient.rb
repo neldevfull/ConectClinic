@@ -1,6 +1,7 @@
 #encoding: utf-8 
 class Patient < ActiveRecord::Base 
 	has_many :consults
+	belongs_to :insurance	
 	# Constants use in the validation
 	NAME_REGEX  = /\A[^0-9`!@#\$%\^&*+_=]+\z/
 	EMAIL_REGEX = /\A[^@]+@([^@\.]+\.)+[^@\.]+\z/ 
