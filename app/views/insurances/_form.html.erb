@@ -1,17 +1,17 @@
 <div class="container-fluid">
-	<h2 class="page-header">Convenios</h2>
+	<h2 class="page-header">Convenio</h2>
 	<div id="progressbar"></div>
 	<!-- Error Message -->
 	<div id="output_message"
 		class="alert alert-warning" role="alert">
-		<p><%= button_value %> Paciente</p>
+		<p><%= action_value %> Convenio</p>
 	</div>
 	<%= form_for @insurance, :remote => true, :format => :json,
 		:html => { :id => 'new_insurance' } do |f| %>		
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<div class="row">					
-					<h3 class="col-xs-12">Geral</h3>
+					<h3 class="col-xs-12">Formulario</h3>
 				</div>
 			</div>
 			<div class="panel-body">
@@ -48,9 +48,9 @@
 				</div>
 				<!-- Buttons -->
 				<div class="button-group row _plus-row">					
-					<%= f.submit button_value,
+					<%= f.submit action_value,
 						class: "btn btn-success _btn-confirm" %>
-					<%= link_to "Voltar", index_patients_path,   
+					<%= link_to "Voltar", index_insurances_path,   
 						class: "btn btn-default _btn-back"%>													
 				</div>				
 			</div>

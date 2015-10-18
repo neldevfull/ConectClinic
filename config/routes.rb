@@ -14,8 +14,12 @@ Rails.application.routes.draw do
   # Consults
   resources :consults, only: [:index, :create, :update] 
   
-  #Insurance
-  resources :insurances, only: [:index, :create, :edit, :update] 
+  #Insurances
+  resources :insurances, only: [:create, :update] 
   get "insurances" => "insurances#index", as: :index_insurances
   get "insurance"  => "insurances#new", as: :new_insurance
+  get "insurance/:id/edit" => "insurances#edit", as: :edit_insurance
+  get "insurance/main/:limit/:offset" => "insurances#main", as: :main_insurances
+  get "insurance/amount" => "insurance#amount", as: :amount_insurances
+
 end

@@ -20,11 +20,15 @@ class PatientsController < ApplicationController
 		offset = params[:offset]		
 		patients = get_patients(limit, offset)					 
 		if patients.length > 0
-			render :json => { :patients => patients,
-					:error => false }				
+			render :json => { 
+				:patients => patients,
+				:error => false
+			}				
 		else
-			render :json => { :patients => '',
-					:error => true }
+			render :json => { 
+				:patients => '',
+				:error => true
+			}
 		end
 	end
 
@@ -73,7 +77,8 @@ class PatientsController < ApplicationController
 
 	# Get Patients
 	def get_patients(limit, offset)
-		Patient.select("id", "name", "email", "telephone", "cellphone"). 
+		Patient.select("id", "name", "email", "telephone",
+			"cellphone"). 
 			order("name ASC").limit(limit).offset(offset)
 	end
 	# Get Patients All

@@ -4,20 +4,20 @@
 		<li>			
 			<%= 
 				link_to "Pacientes", index_patients_path,
-					id: "show_patient",
+					id: "index_patient",
 					class: "_patients"
 			%>			
 		</li>
 		<li>
 			<%= 
-				link_to "Convenios", new_insurance_path,
-					id: "new_insurance",
+				link_to "Convenios", index_insurances_path,
+					id: "index_insurance",
 					class: "_insurance"
 			%>
 		<li>
 			<%= 
 				link_to "Agenda", consults_path, 
-					id: "show_consult",
+					id: "index_consult",
 					class: "_calendar"
 			%>			
 		</li> 

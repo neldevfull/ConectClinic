@@ -3,7 +3,7 @@ modulejs.define('insurance', function() {
 		// jQuery
 		$(function() {
 			// Vars
-			var $insurance = $('.new_insurance');
+			var $insurance = $('#new_insurance');
 			
 			// New Insurance			
 			$insurance.on('ajax:complete', function(jEvent, data){

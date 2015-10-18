@@ -6,6 +6,29 @@ class InsurancesController < ApplicationController
 	include MainModule
 
 	def index
+		@insurances = get_insurances(12, 0)
+	end
+
+	def amount
+		count = Insurance.count
+		render :json => { :amount => count }
+	end
+
+	def main
+		limit  = params[:limit]
+		offset = params[:offset]
+		insurances = get_insurances(limit, offset)
+		if insurances.length > 0
+			render :json => {
+				:insurance => insurances,
+				:error     => false
+			}
+		else
+			render :json => {
+				:insurance => '',
+				:error     => true
+			}
+		end 
 	end
 
 	def new
@@ -28,12 +51,37 @@ class InsurancesController < ApplicationController
 	end
 
 	def edit
+		@insurance = get_insurance()
 	end
 
 	def update
+		@insurance = get_insurance()
+		if @insurance.update insurance_params
+			render :json => { 
+				:response => success_message('salvar', 'Convenio'),
+				:error => false
+			}
+		else
+			render :json => {
+				:response => errors_message(@insurance),
+				:error => true
+			}
+		end
 	end
 
-	private 
+	private
+
+	# Get Insurance 
+	def get_insurance
+		Insurance.find(params[:id])
+	end
+
+	# Get Insurances
+	def get_insurances(limit, offset)
+		Insurance.select("id", "identifier", "name", "city",
+			"state", "status").
+			order("id DESC").limit(limit).offset(offset)
+	end
 
 	def insurance_params
 		params.require(:insurance)
