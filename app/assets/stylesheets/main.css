@@ -66,7 +66,7 @@
     color: #333333;
     padding-right: 1.2em;     
 }
-._insurance:after {
+._insurance:before {
   content: '\e800'; 
   font-family: 'insurance';
     speak: none;
@@ -155,6 +155,10 @@ label {
 ._mp {
   margin-right: 2em;  
 }
+/* Fixed Status Insurance */
+._f-status {
+  margin-left: 1em !important;
+} 
 ._select {
   width: 20%;
   display: inline;

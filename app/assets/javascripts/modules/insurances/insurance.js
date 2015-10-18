@@ -16,7 +16,7 @@ modulejs.define('insurance', function() {
 				else if(data.responseJSON.error === true) {
 					$('#output_message').removeClass('alert alert-warning alert-success');
 					$('#output_message').addClass('alert alert-danger');
-					$('#output_message').empty().append(data.responseJSON.response);
+					$('#output_message').empty().append('Erro ao Salvar Convenio: ' + data.responseJSON.response);
 				}
 				else {
 					console.log('IMPLEMENT LOG');

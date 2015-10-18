@@ -38,6 +38,6 @@ class InsurancesController < ApplicationController
 	def insurance_params
 		params.require(:insurance)
 			.permit :identifier, :name,
-			:city, :state
+			:city, :state, :status
 	end
 end

@@ -3,9 +3,8 @@ module Validations
 	STRING_REGEX     = /\A[^0-9`!@#\$%\^&*+_=]+\z/
 	NUMBERTEXT_REGEX = /\A(?!_)(?:[a-z0-9]_?)*[a-z](?:_?[a-z0-9])*(?<!_)\z/i
 	
-	# Validate Presence of
-	def presence_of?(attribute)
-		# validates_presence_of attribute
+	# Validate is Present?
+	def is_present?(attribute)
 		return attribute.present?
 	end
 
