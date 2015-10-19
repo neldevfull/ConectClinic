@@ -536,15 +536,10 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll', 'getAllInsuran
 		  	// Dialog 
 			$('#dialog').dialog({
 		        autoOpen: false,
-		        height: 650,
-		        width: 700,
+		        height: 630,
+		        width: 720,
 		        modal: true,
-		        closeOnEscape: false, 
-		        create: function (event, ui) {
-		            $('.ui-dialog-titlebar').click(function() {
-		            	$('#dialog').dialog('close');
-		            });
-		        },       
+		        closeOnEscape: false,       
 		        open: function() {
 		        	$('.ui-widget-overlay').addClass('custom-overlay');
 		        },
@@ -579,18 +574,16 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll', 'getAllInsuran
 			            	_event.color       = color.background;
 			            	_event.borderColor = color.border; 
 		            	}
-		            },
-		            /*
+		            },		            
 		            {
-		            	text: 'Fechar',
+		            	text: 'Cancelar',
 		            	open: function() {            		
 			        		$(this).addClass('btn btn-warning');
 		            	},
 		            	click: function() {            	
 		            		$(this).dialog('close');
 		            	}
-		            },
-		            */            
+		            },            
 		            {
 		            	text: 'Agendar',
 		            	open: function() {            		
@@ -830,10 +823,17 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll', 'getAllInsuran
 		}
 		// Open Dialog
 		function openDialog() {
+			// Check screen heigth
+			if($(window).height() <= 700) 
+				$('#dialog').dialog( { height:560 } );
+
+			console.log($(window).height());
+
 			consultForm.message('Agendar Consulta', 1);
 			$('#dialog').css('display', 'block');
 			$('#dialog').dialog('open');
-			// Function responsible get Patient's names
+			
+			// Check autocomplete
 			if(checkAutoComplete === false){
 				loadAutoComplete(); 
 				checkAutoComplete = true;
