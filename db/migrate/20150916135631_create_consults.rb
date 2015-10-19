@@ -7,7 +7,7 @@ class CreateConsults < ActiveRecord::Migration
       t.string  :hour_ini, null: false
       t.string  :hour_end, null: false  
       t.integer :confirm, default: 0
-      t.string  :type, default: ''
+      t.string  :scheduling, default: ''
       t.string  :obs, default: ''
       t.integer :status, default: 1  
 

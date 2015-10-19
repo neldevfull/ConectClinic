@@ -23,7 +23,7 @@ ActiveRecord::Schema.define(version: 20151017143651) do
     t.string   "hour_ini",                  null: false
     t.string   "hour_end",                  null: false
     t.integer  "confirm",      default: 0
-    t.string   "type",         default: ""
+    t.string   "scheduling",   default: ""
     t.string   "obs",          default: ""
     t.integer  "status",       default: 1
     t.datetime "created_at",                null: false

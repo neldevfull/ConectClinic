@@ -121,8 +121,11 @@ class ConsultsController < ApplicationController
 	def create_response(success, obj)
 		if success
 			render :json => { :response => 
-				{ id: obj.id, 
-				patient_id: obj.patient_id },
+				{ 
+					id: obj.id, 
+					patient_id: obj.patient_id,
+					insurance_id: obj.insurance_id
+				},
 				:error => false }
 		else
 			render :json => { :response => errors_message(obj),
@@ -143,7 +146,8 @@ class ConsultsController < ApplicationController
 		params.require(:consult)
 			.permit :patient_id, :insurance_id, :name, :email,
 				:telephone, :cellphone, :gender, :date, 
-				:hour_ini, :hour_end, :confirm, :type, :status  
+				:hour_ini, :hour_end, :confirm,
+				:scheduling, :status  
 	end
 
 	def patient_params

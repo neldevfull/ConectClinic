@@ -30,6 +30,7 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll', 'getAllInsuran
 				$email       = $('#email').val();
 				$telephone   = $('#telephone').val();
 				$cellphone   = $('#cellphone').val();
+				$insurances  = $('#insurance_other').val();
 				$date        = $('#date').val();
 				$hourIni     = $('#hour_ini').val();
 				$hourEnd     = $('#hour_end').val();
@@ -49,6 +50,8 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll', 'getAllInsuran
 					$genderName, $genderId));
 				addMessage(validationForm.mailAccept(
 					$mailAccept, $email));
+				addMessage(validationForm.alphanumeric(
+					$insurances, 'Nome do Convenio', 3));
 
 				if(messages.length > 0) {
 					var msg;
@@ -94,6 +97,8 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll', 'getAllInsuran
 				$('#telephone').val(consult.telephone);
 				$('#cellphone').val(consult.cellphone);
 				$('#gender_'+consult.gender).prop('checked', true);
+				$('#insurances').val(consult.insurance_id);
+				$('#insurances').val(consult.insurance_id);
 				$('#date').val(consultUtil.parseDate(consult.date, '-','/'));
 				$('#hour_ini').val(consult.hour_ini);
 				$('#hour_end').val(consult.hour_end);
@@ -127,6 +132,7 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll', 'getAllInsuran
 				$('#telephone').val('');
 				$('#cellphone').val('');
 				$('#gender_male').prop('checked', false);
+				$('#insurances').val(0);
 				$('#gender_female').prop('checked', false);
 				$('#date').val(dateFormat); 	
 				$('#hour_ini').val(hourIni);
@@ -618,7 +624,8 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll', 'getAllInsuran
 										'&patient[mail_accept]=' + 
 										$('input[id="mail_accept"]:checked').length +
 										'&consult[confirm]=' +
-										$('input[id="confirm"]:checked').length;
+										$('input[id="confirm"]:checked').length +
+										'&consult[scheduling]=' + $('#scheduling').val();
 									ajaxjQuery('POST', '/consults', data, 'post');
 									consultForm.message('Agendando...', 1);	 		            		            								 							            		 
 				            	}
@@ -803,15 +810,16 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll', 'getAllInsuran
 				_event.end = consultUtil.parseDateToMoment(date, hourEnd);
 		}
 		// Insert consultation
-		function insertConsult(response) {
+		function insertConsult(obj) {
 			var _consult = {
-				id: response.id,
-				patient_id: response.patient_id,				
+				id: obj.id,
+				patient_id: obj.patient_id,				
 				name: $('#name').val(),
 				email: $('#email').val(),
 				telephone: $('#telephone').val(),
 				cellphone: $('#cellphone').val(),
 				gender: $('input[type="radio"][name="gender"]:checked').val(),
+				insurance_id: obj.insurance_id,
 				date: consultUtil.parseDate($('#date').val(), '/', '-'),
 				hour_ini: $('#hour_ini').val(),
 				hour_end: $('#hour_end').val(),

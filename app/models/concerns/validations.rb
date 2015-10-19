@@ -1,7 +1,7 @@
 module Validations
 	# Constants use in the validation
-	STRING_REGEX     = /\A[^0-9`!@#\$%\^&*+_=]+\z/
-	NUMBERTEXT_REGEX = /\A(?!_)(?:[a-z0-9]_?)*[a-z](?:_?[a-z0-9])*(?<!_)\z/i
+	STRING_REGEX   = /\A[^0-9`!@#\$%\^&*+_=]+\z/
+	ALPHANUM_REGEX = /\A[^`!@#\$%\^&*+_=]+\z/
 	
 	# Validate is Present?
 	def is_present?(attribute)
@@ -14,8 +14,8 @@ module Validations
 	end
 
 	# Validate Number and Text with Regex
-	def number_text_regex(symbol)
-		validates_format_of symbol, with: NUMBERTEXT_REGEX
+	def alphanumeric_regex(symbol)
+		validates_format_of symbol, with: ALPHANUM_REGEX
 	end
 
 	# Validate Minimum

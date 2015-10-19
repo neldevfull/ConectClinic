@@ -20,7 +20,7 @@ class Insurance < ActiveRecord::Base
 			if minimum?(insurance.identifier, 3)
 				errors.add :identifier, minimum_error(3)
 			else
-				number_text_regex(:identifier)
+				alphanumeric_regex(:identifier)
 			end
 		end
 		# Validate Name
@@ -30,7 +30,7 @@ class Insurance < ActiveRecord::Base
 			if minimum?(insurance.name, 3)
 				errors.add :name, minimum_error(3)
 			else
-				string_regex(:name)
+				alphanumeric_regex(:name)
 			end
 		end
 		# Validate City

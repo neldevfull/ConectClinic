@@ -1,5 +1,21 @@
 modulejs.define('validationsForm', ['validations'], function(validation) {	
 	return {
+		// Validate Alphanumeric
+		alphanumeric: function(alphanumeric, field, minimum) {
+			if(!(validation.common.isEmpty(alphanumeric))) {
+				if(validation.common.minChar(alphanumeric, minimum)) {
+					if(!(validation.regex.alphanumeric(alphanumeric)))
+						return field + " nao e valido";
+				}
+				else {
+					return field + ' deve ter no minimo '
+						+ minimum + ' letras'
+				}
+			}
+			else
+				return field + " nao pode ficar vazio";
+			return true;
+		},
 		// Validate Name
 		fullName: function(name) {
 			if(!(validation.common.isEmpty(name))) {
