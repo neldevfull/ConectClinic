@@ -4,7 +4,7 @@
 </div>
 <!-- Name -->
 <div class="form-group">							    		
-	<label class="control-label _sl col-sm-2 col-lg-2">Nome</label>
+	<label class="control-label _sl col-sm-2 col-lg-2">Paciente</label>
 	<div class="col-sm-9 col-lg-9">												
 		<input type="text" class="form-control" id="name">						
 	</div>
@@ -27,11 +27,12 @@
 		<input type="text" class="form-control _cw" id="cellphone"> 								
 	</div>
 </div>
-<!-- Date and Gender -->
+<!-- Insurance and Gender -->
 <div class="form-group">							    		
-	<label class="control-label _sl col-sm-2 col-lg-2">Data</label>
+	<label class="control-label _sl col-sm-2 col-lg-2">Convenio</label>
 	<div class="col-sm-4 col-lg-4">
-		<input type="text" class="form-control" id="date">										
+		<select class="form-control" id="insurances"></select>
+		<input class="form-control" id="insurance_other" type="text">	
 	</div>
 	<label class="control-label _sl col-sm-1 col-lg-1">Sexo</label>
 	<div class="col-sm-4 col-lg-4">
@@ -42,6 +43,19 @@
 			id="gender_female">
 			<label for="gender_female">Femino</label>
 	</div>
+</div>
+<!-- Date and Type -->
+<div class="form-group">							    		
+	<label class="control-label _sl col-sm-2 col-lg-2">Data</label>
+	<div class="col-sm-4 col-lg-4">
+		<input type="text" class="form-control" id="date">										
+	</div>
+	<!-- Type -->
+	<label class="control-label col-sm-1 col-lg-1">Tipo</label>
+	<select class="form-control select-agenda-type col-sm-2 col-lg-2" id="type">
+		<option value="consult">Consulta</option>
+		<option value="return">Retorno</option>
+	</select>
 </div>
 <!-- Hourly -->
 <div class="form-group">							    		

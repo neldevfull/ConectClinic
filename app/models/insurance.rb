@@ -8,7 +8,7 @@ class Insurance < ActiveRecord::Base
 	include Validations
 	
 	#Relationships
-	has_many :patients
+	has_many :consults
 	
 	# Constants
 	BLANK_ERROR    = "nao pode ficar em branco"

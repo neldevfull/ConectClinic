@@ -1,7 +1,6 @@
 class CreatePatients < ActiveRecord::Migration
   def change
-    create_table :patients do |t|
-      t.integer :insurance_id, foreign_key: true, default: ''
+    create_table :patients do |t|      
       t.string :name, null: false
       t.string :email, default: ''
       t.string :telephone, default: ''

@@ -1,6 +1,8 @@
 #encoding: utf-8  
 class Consult < ActiveRecord::Base
+	# Relationships
 	belongs_to :patient
+	belongs_to :insurance
 
 	#Validation of fields	
 	validates :date, mask: "9999-99-99", if: :date?

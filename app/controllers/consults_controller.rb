@@ -1,9 +1,12 @@
 # Requires
+require 'main_module'
 require 'patients_module'
 
 class ConsultsController < ApplicationController 
 	# Includes
 	include PatientsModule
+	include MainModule
+
 	# Check if dates have been sent, if so,
 	# search Consults scheduled for the requested week
 	def index()						
@@ -26,6 +29,20 @@ class ConsultsController < ApplicationController
 	def create	 	
 		patient = Patient.new patient_params
 		id      = patient_exist?(patient)
+		insurance_value = params[:consult][:insurance_id]
+
+		# Check if Insurance no exist
+		if insurance_value.to_i == 0 && 
+			insurance_value != "0" 
+			insurance = Insurance.new(
+				name: insurance_value)
+			if insurance.save
+				params[:consult][:insurance_id] = insurance.id
+			else
+				create_response(false, insurance)
+				return				
+			end  
+		end
 
 		Patient.transaction do
 			if id == 0
@@ -55,17 +72,6 @@ class ConsultsController < ApplicationController
 		end
 	end
 
-	def create_response(success, obj)
-		if success
-			render :json => { :response => 
-				{ id: obj.id, 
-				patient_id: obj.patient_id },
-				:error => false }
-		else
-			render :json => { :response => error_message(obj),
-				:error => true }
-		end
-	end
 
 	def update  
 			success = true
@@ -76,7 +82,7 @@ class ConsultsController < ApplicationController
 				if patient.update patient_params
 					success = true
 				else
-					msg += error_message(@consult)					
+					msg += errors_message(@consult)					
 				end		
 			end
 			
@@ -86,7 +92,7 @@ class ConsultsController < ApplicationController
 					success = true		
 				else					
 					msg = ', ' unless msg != ''
-					msg += error_message(@consult)
+					msg += errors_message(@consult)
 				end
 			end
 
@@ -112,8 +118,20 @@ class ConsultsController < ApplicationController
 
 	private
 
+	def create_response(success, obj)
+		if success
+			render :json => { :response => 
+				{ id: obj.id, 
+				patient_id: obj.patient_id },
+				:error => false }
+		else
+			render :json => { :response => errors_message(obj),
+				:error => true }
+		end
+	end
+
 	def getConsults weekStart, weekEnd
-		@consult = Consult.select("id", "patient_id", "patients.name",
+		@consult = Consult.select("id", "patient_id", "insurance_id", "patients.name",
 			"patients.email", "patients.telephone", "patients.cellphone", 
 			"patients.gender", "patients.mail_accept", "date",
 			"hour_ini", "hour_end", "confirm", "status").
@@ -121,24 +139,11 @@ class ConsultsController < ApplicationController
 			where("consults.status = 1 AND date BETWEEN '#{weekStart}' AND '#{weekEnd}'")
 	end
 
-	def error_message(entity)
-		errors  = ""
-		counter = entity.errors.full_messages.count					
-		entity.errors.full_messages.each do |message|
-			errors += message
-			counter -= 1
-			if counter != 0
-				errors += ", "
-			end
-		end	
-		return errors
-	end
-
 	def consult_params
 		params.require(:consult)
-			.permit :patient_id, :name, :email, :telephone, :cellphone,
-				:gender, :date, :hour_ini, :hour_end, 
-				:confirm, :status  
+			.permit :patient_id, :insurance_id, :name, :email,
+				:telephone, :cellphone, :gender, :date, 
+				:hour_ini, :hour_end, :confirm, :type, :status  
 	end
 
 	def patient_params

@@ -12,4 +12,9 @@ pt:
       consult:
         date: Data
         hour_ini: Horário entrada
-        hour_end: Horário saida	
+        hour_end: Horário saida
+      insurance:
+        name: Nome do convenio
+        indentifier: Identificador
+        city: Cidade
+        state: Estado        	

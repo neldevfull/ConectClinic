@@ -66,3 +66,13 @@
 #new_consult {
 	display: none; 
 }
+
+/* Form  start */
+.select-agenda-type {
+	width: 27%;
+    margin-left: 1.4em;
+}
+#insurance_other {
+	display: none;
+}
+/* end */

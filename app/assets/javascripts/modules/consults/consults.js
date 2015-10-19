@@ -1,5 +1,5 @@
-modulejs.define('consults', ['validationsForm', 'getPatientsAll'],  
-	function(validationForm, getPatientsAll) {
+modulejs.define('consults', ['validationsForm', 'getPatientsAll', 'getAllInsurances'],  
+	function(validationForm, getPatientsAll, getAllInsurances) {
 	return function() {
 		// Get Patients All
 		var patientsAll = [];
@@ -9,6 +9,18 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll'],
 		getPatientsAll.fail(function(error) {
 			console.log(error);			
 		});
+
+		// All Insurances
+		var allInsurances = [];
+		getAllInsurances.done(function(insurances) {
+			allInsurances = insurances.response;
+			// Mount select of insurances
+			consultForm.selectInsurances(allInsurances);
+		});
+		getAllInsurances.fail(function(error) {
+			console.log(error);
+		});
+
 		// Initialize objects and vars
 		var consultForm = {
 			// Validate Fields
@@ -121,6 +133,37 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll'],
 				$('#hour_end').val(hourEnd);
 				$('#mail_accept').prop('checked', false);
 				$('#confirm').prop('checked', false);
+			},
+			// Mount select for insurances
+			selectInsurances: function(allInsurances) {
+				console.log(allInsurances);
+				var insurances = $('#insurances');
+				insurances.append($('<option>', {
+					value: 0,
+					text:  'Particular'
+				}));
+				allInsurances.forEach(function(insurance) {
+				    $('#insurances').append($('<option>', { 
+				        value: insurance.id,
+				        text : insurance.name + 
+				        	' - ' + insurance.identifier 
+				    }));
+				});
+				insurances.append($('<option>', {
+					value: 'other',
+					text:  'Outro'
+				}));
+			},
+			// Other Insurance
+			otherInsurance: function() {
+				var insurances     = $('#insurances');
+				var insuranceOther = $('#insurance_other');
+				insurances.change(function() {
+					if(insurances.val() === 'other')
+						insuranceOther.css('display', 'block');					
+					else
+						insuranceOther.css('display', 'none');
+				});
 			}
 		};
 		var _consults = {
@@ -147,6 +190,8 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll'],
 			eventButtons();		
 			// Call function that loads the masks
 			consultForm.loadMasksConsults();
+			// Call other insurances			
+			consultForm.otherInsurance();
 		});
 		// Get Patients Names
 		function loadAutoComplete() {	
@@ -219,6 +264,7 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll'],
 				// Open Dialog
 				openDialog();
 			});
+
 		} 
 		// Load Calendar
 		function loadCalendar() {	
@@ -484,7 +530,7 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll'],
 		  	// Dialog 
 			$('#dialog').dialog({
 		        autoOpen: false,
-		        height: 600,
+		        height: 650,
 		        width: 700,
 		        modal: true,
 		        closeOnEscape: false, 
@@ -552,7 +598,9 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll'],
 			            		// Set values to event
 				            	_event.title       = $('#name').val();
 				            	_event.color       = color.background;
-				            	_event.borderColor = color.border; 
+				            	_event.borderColor = color.border;
+				            	// Check Insurance
+				            	var insurance = checkInsurance(); 
 				            	// Insert
 				            	if(_control == 1) {
 									isChangeDate();   						 						
@@ -560,6 +608,7 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll'],
 				            			'&patient[email]=' + $('#email').val() +
 										'&patient[telephone]=' + $('#telephone').val() +
 										'&patient[cellphone]=' + $('#cellphone').val() +
+										'&consult[insurance_id]=' + insurance +
 										'&consult[date]=' + 
 										consultUtil.parseDate($('#date').val(), '/', '-') +
 										'&consult[hour_ini]=' + $('#hour_ini').val() +
@@ -591,6 +640,14 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll'],
 		        }
 		    });
 		} 
+		// Check Insurance
+		function checkInsurance() {
+			var other = $('#insurance_other');
+			if(other.val() != '')
+				return other.val();
+			else
+				return $('#insurances').val();
+		}
 		// Event start for Drag n' Drop and Resize
 		function eventStart(_event) {	
 			var start = consultUtil.parseMomentToHour(_event.start);

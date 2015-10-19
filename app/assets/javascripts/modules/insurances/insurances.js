@@ -11,7 +11,7 @@ modulejs.define('insurances', ['getAllInsurances'],
 
 		// Promise for all Insurances
 		getAllInsurances.done(function(insurances) {
-			allObjs.objs   = insurances.response
+			allObjs.objs   = insurances.response;
 			// Pagination
 			pagination = modulejs.require('pagination', { allObjs: allObjs });	
 			pagination.startPagination(); 	
