@@ -19,16 +19,16 @@
 						<select class="form-control _select 
 							_mp col-sm-2 col-lg-2" id="select_search">
 							<option value="name">Nome do convenio</option>
-							<option value="email">Identificador</option>
-							<option value="cellphone">Cidade</option>
-							<option value="cellphone">Estado</option>
+							<option value="identifier">Identificador</option>
+							<option value="city">Cidade</option>
+							<option value="state">Estado</option>
 						</select>	
 						<div class="input-group col-sm-5 col-lg-5">
 							<input type="text" placeholder="Buscar..."
-								id="search_patients" class="form-control">
+								id="search_insurances" class="form-control">
 							<span class="input-group-btn">
 								<button class="btn btn-default _btnc _find"
-									id="btn_search_patients">
+									id="btn_search_insurances">
 									<span class="input-group-bt"></span>
 								</button>
 							</span>
@@ -37,8 +37,8 @@
 					<div class="row form-group">
 						<label class="_mp _lbw control-label col-sm-1 col-lg-1">Filtrar por</label>
 						<select class="form-control _select _mp col-sm-2 col-lg-2"
-							id="filter_patients">
-							<option value="todos">Todos os convenios</option>
+							id="filter_insurances">
+							<option value="all">Todos os convenios</option>
 							<option value="active">Ativo</option>
 							<option value="inactive">Inativo</option>
 						</select>
@@ -46,7 +46,7 @@
 					<div class="row _container-table table-responsive">
 						<% if @insurances.empty? %>				
 							<div class="alert alert-warning" role="alert"
-								id="no_patients">
+								id="no_insurances">
 								<p>Não há convenios cadastrados até o momento</p>
 							</div>
 						<% else %> 				    	
@@ -60,7 +60,7 @@
 										<th>Status</th>
 									</tr>
 								</thead>
-								<tbody id="content_patients">
+								<tbody id="content_insurances">
 									<%= render 'insurances' %>								 
 								</tbody>
 							</table>	

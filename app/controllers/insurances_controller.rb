@@ -20,12 +20,12 @@ class InsurancesController < ApplicationController
 		insurances = get_insurances(limit, offset)
 		if insurances.length > 0
 			render :json => {
-				:insurance => insurances,
+				:response => insurances,
 				:error     => false
 			}
 		else
 			render :json => {
-				:insurance => '',
+				:response => '',
 				:error     => true
 			}
 		end 
@@ -69,7 +69,23 @@ class InsurancesController < ApplicationController
 		end
 	end
 
+	# All Insurances
+	def allinsurances
+		allinsurances = get_all_insurances()
+		render :json => {
+			:response => allinsurances,
+			:error    => false
+		}	
+	end
+
 	private
+
+	# Get all Insurances
+	def get_all_insurances
+		Insurance.select("id", "identifier",
+			"name", "city", "state", "status")
+			.order("id DESC")
+	end
 
 	# Get Insurance 
 	def get_insurance

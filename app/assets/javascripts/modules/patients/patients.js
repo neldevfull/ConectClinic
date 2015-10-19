@@ -156,7 +156,7 @@ modulejs.define('patients', ['getPatientsAll'], function(getPatientsAll) {
 			var telephone;
 			patients.forEach(function(patient) {
 				telephone = patient.cellphone != '' ?
-						patient.cellphone : patient.telephone
+						patient.cellphone : patient.telephone;
 				contentPatient +=
 				'<tr>' +
 				'<th><a href="patient/' + patient.id + '/edit">' + 
