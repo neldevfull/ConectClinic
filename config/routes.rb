@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
   # Root
   root "login#index"
+
+  # Users
+  resources :users, only: [:create, :update]
+  get "users" => "users#index", as: :index_users
+  get "user"  => "users#new", as: :new_user
+  get "user/:id/edit" => "users#edit", as: :edit_user
   
   # Patients
   resources :patients, only: [:create, :update]

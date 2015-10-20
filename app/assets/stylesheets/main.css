@@ -58,7 +58,7 @@
     color: #333333;
     padding-right: 1.2em;    
 }
-._users:after {
+._users:before {
   content: '\e800'; 
   font-family: 'users';
     speak: none;
@@ -186,6 +186,9 @@ label {
 }
 ._plus-row {
   margin-top: 1em;
+}
+.radio-inline, .checkbox-inline {
+  padding-left: 35px !important;
 }
 /* end */ 
 
