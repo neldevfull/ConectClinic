@@ -1,6 +1,14 @@
 pt:  
   activerecord:    
     attributes:
+      user:
+        name: Nome
+        email: Email
+        password: Senha
+        password_confirmation: "Senha de confirmaçao"
+        gender: Sexo
+        privilege: Privilegio
+        career: Colabora
       patient:
         name: Nome
         email: E-mail

@@ -58,10 +58,4 @@ class Insurance < ActiveRecord::Base
 		end
 	end
 
-	private
-	
-	# Output message for minimum value
-	def minimum_error(minimum)
-		return "deve ter no minimo #{minimum} letras"
-	end
 end

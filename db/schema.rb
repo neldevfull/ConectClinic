@@ -76,7 +76,7 @@ ActiveRecord::Schema.define(version: 20151020164226) do
     t.string   "password_digest",             null: false
     t.string   "career",                      null: false
     t.string   "gender",                      null: false
-    t.integer  "adm",                         null: false
+    t.integer  "privilege",                   null: false
     t.integer  "status",          default: 1
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
