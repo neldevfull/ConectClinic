@@ -1,0 +1,13 @@
+<% @users.each do |user| %>
+	<tr>								
+		<th>
+			<%=
+				link_to user.name,
+					edit_user_path(user),
+					class: ""  											 
+			%></th>
+		<th><%= user.email %></th>
+		<th><%= user.career%></th>		
+		<th><%= user.status%></th>
+	</tr>
+<% end %>

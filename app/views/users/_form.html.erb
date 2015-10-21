@@ -60,20 +60,21 @@
 				<!-- Career -->
 				<div class="form-group row _lessen-row" style="margin-top: -1em;">
 					<label class="control-label _sl col-sm-1 col-lg-1" for="user_status">Colabora</label>				
-					<%= f.select :career, [['Profissional da Saude', 1], ['Atendimento', '0']], {},
-						class: 'form-control _select _f-status col-sm-2 col-lg-2' %>
+					<%= f.select :career, [["Profissional da Saude", "Profissional da Saude"],
+						["Atendimento", "Atendimento"]], {},
+						class: "form-control _select _f-status col-sm-2 col-lg-2" %>
 				</div>
 				<!-- Status -->
 				<div class="form-group row _lessen-row" style="margin-top: -1em;">
 					<label class="control-label _sl col-sm-1 col-lg-1" for="user_status">Status</label>				
-					<%= f.select :status, [['Ativo', 1], ['Inativo', '0']], {},
+					<%= f.select :status, [["Ativo", "Ativo"], ["Inativo", "Inativo"]], {},
 						class: 'form-control _select _f-status col-sm-2 col-lg-2' %>
 				</div>
 				<!-- Buttons -->
 				<div class="button-group row _plus-row">					
 					<%= f.submit action_value,
 						class: "btn btn-success _btn-confirm" %>
-					<%= link_to "Voltar", index_insurances_path,   
+					<%= link_to "Voltar", index_users_path,   
 						class: "btn btn-default _btn-back"%>													
 				</div>				
 			</div>
