@@ -16,6 +16,15 @@ class User < ActiveRecord::Base
 	# Constants
 	BLANK_ERROR    = "nao pode ficar em branco"
 
+	# Authenticate
+	def self.authenticate(email, password)
+		user = self.find_by(email: email)
+		if user.present?
+			user.authenticate(password)			
+		end
+	end
+
+	# Validate User
 	validate do |user|
 		# Validate Name
 		unless is_present?(user.name)

@@ -15,8 +15,8 @@
   margin: .5em .5em 0 0;
 }
 ._brand {
-  font-weight: bold;
-  color: white;
+  font-weight: bold !important;
+  color: white !important;
 }
 .dropdown {
   margin: .5em 2em 0 0;
@@ -231,5 +231,12 @@ background: #eaeaea;
 }
 .ui-widget-header {
   border: .075em solid #adadad !important;
+}
+/* end */
+
+/* Login start */
+#output_message_login {
+  display: none;
+  margin: 2em 0 1em 0;
 }
 /* end */

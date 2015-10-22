@@ -1,0 +1,32 @@
+<div class="container-fluid container-login">
+	<div class="form-login">	
+		<fieldset id="fieldset_login">
+			<h1 class="logo-type">MedConecta</h1>
+			<div id="output_message_login"></div>
+			<%= form_for @user_session, :remote => true, :format => :json,
+				:html => { :id => 'new_user_session' } do |f| %>
+				<div class="form-group">
+					<label class="control-label _correct-mgbt" for="user_email">E-mail</label>
+					<%= f.text_field :email, placeholder: "Seu endereço de e-mail",
+						class: "form-control"  %>
+				</div>
+				<div class="form-group _correct-mgtop-iv">
+					<label class="control-label _correct-mgbt" for="user_password">Senha</label>
+					<%= f.password_field :password, placeholder: "Sua Senha",
+						class: "form-control" %>
+				</div>
+				<div class="row" style="margin-top: 25px">
+					<div class="col-xs-6 col-sm-6 col-md-6">
+						<%= f.submit "Entrar",
+							class: "btn btn-success btn-block" %>
+					</div>
+					<div class="col-xs-6 col-sm-6 col-md-6 _correct-mgtop">
+						<a class="btn btn-default btn-block" href="#">Cadastre-se</a>
+					</div>
+				</div>
+			<% end %>
+			<hr>
+			<p style="margin-top: -6px"><a href="/users/password/new">Esqueceu a senha?</a></p>
+		</fieldset>
+	</div>
+</div>

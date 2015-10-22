@@ -2,7 +2,12 @@
 	<nav class="navbar navbar-inverse navbar-fixed-top">	
 		<div class="container-fluid">				
 			<ul class="nav navbar-nav navbar-left">
-				<li><a href="#" class="navbar-btn"><span class="_brand">MedConecta</span></a></li>
+				<li>
+					<%=
+						link_to "MedConecta", root_path,
+							class: "navbar-btn _brand"
+					%>
+				</li>
 				<li><a href="#" class="navbar-btn">Documentação</a></li>
 				<li><a href="#" class="navbar-btn">Suporte</a></li>
 				<li><a href="#" class="navbar-btn">Entre em contato</a></li>										
