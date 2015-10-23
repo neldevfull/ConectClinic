@@ -2,17 +2,22 @@
 .navbar {
   border-radius: 0;
   border: 0;
-  height: 40px; 
+  height: 40px;
+  min-height: 40px; 
 }
 .navbar-fixed-top {
   position: fixed;
   z-index: 1030;
 }
 .navbar-nav {
-  margin-top: -.5em;
+  margin-top: -.9em;
 }
 .navbar-right {
-  margin: .5em .5em 0 0;
+  margin: .2em .5em 0 0;
+  list-style: none;
+}
+.navbar-right :hover {
+  text-decoration: none;
 }
 ._brand {
   font-weight: bold !important;
@@ -141,7 +146,7 @@ label {
   margin-top: -.5em;
 }
 .btn-success {
-  margin: .5em 0 1em 1em;
+  margin: .5em 0 1em 0;
 }
 /* Label Space */
 ._ls {  

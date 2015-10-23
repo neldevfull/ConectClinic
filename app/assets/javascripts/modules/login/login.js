@@ -1,7 +1,5 @@
 modulejs.define('login', function() {
 		return function() {
-			$('.sidebar').css('display', 'none');
-
 			// jQuery
 			$(function() {
 				// Vars

@@ -9,19 +9,26 @@
 					%>
 				</li>
 				<li><a href="#" class="navbar-btn">Documentação</a></li>
-				<li><a href="#" class="navbar-btn">Suporte</a></li>
 				<li><a href="#" class="navbar-btn">Entre em contato</a></li>										
+				<li><a href="#" class="navbar-btn">Suporte</a></li>
 			</ul>
 			<ul class="navbar-nav navbar-right">
-				<li class="dropdown">
-					<a class="dropdown-toggle" href="#">
-						<span>Minha conta</span>
-						<b class="caret"></b>
-					</a>						
-				</li>
-				<li class="dropdown">
-					<a href="#">Sair</a>
-				</li>
+				<% if @user_session.blank? %>
+					<li class="dropdown">
+						<a class="dropdown-toggle" href="#">
+							<span>Minha conta</span>
+							<b class="caret"></b>
+						</a>						
+					</li>
+					<li class="dropdown">
+						<a href="user_sessions" data-method="delete"
+							rel="nofollow">Sair</a>
+					</li>
+				<% else %>
+					<li class="dropdown">
+						<a class="navbar-btn" href="">Cadastre-se</a>
+					</li>
+				<% end %>
 			</ul>
 		</div>								 									
 	</nav>		

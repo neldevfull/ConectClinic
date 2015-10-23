@@ -1,34 +1,36 @@
-<aside class="sidebar">
-	<ul class="nav nav-sidebar">
-		<li>
-			<%=
-				link_to "Usuarios", index_users_path,
-					id: "index_user",
-					class: "_users"
-			%>
-		</li>
-		<li>			
-			<%= 
-				link_to "Pacientes", index_patients_path,
-					id: "index_patient",
-					class: "_patients"
-			%>			
-		</li>
-		<li>
-			<%= 
-				link_to "Convenios", index_insurances_path,
-					id: "index_insurance",
-					class: "_insurance"
-			%>
-		<li>
-			<%= 
-				link_to "Agenda", consults_path, 
-					id: "index_consult",
-					class: "_calendar"
-			%>			
-		</li> 
-		<li><a href="#" class=""><span class="_charts"></span>Graficos</a></li> 
-		<li><a href="#" class=""><span class="_reports"></span>Relatorios</a></li>
-		<li><a href="#" class=""><span class="_config"></span>Configuraçoes</a></li>
-	</ul>
-</aside>
+<% if @user_session.blank? %>
+	<aside class="sidebar">
+		<ul class="nav nav-sidebar">
+			<li>
+				<%=
+					link_to "Usuarios", index_users_path,
+						id: "index_user",
+						class: "_users"
+				%>
+			</li>
+			<li>			
+				<%= 
+					link_to "Pacientes", index_patients_path,
+						id: "index_patient",
+						class: "_patients"
+				%>			
+			</li>
+			<li>
+				<%= 
+					link_to "Convenios", index_insurances_path,
+						id: "index_insurance",
+						class: "_insurance"
+				%>
+			<li>
+				<%= 
+					link_to "Agenda", consults_path, 
+						id: "index_consult",
+						class: "_calendar"
+				%>			
+			</li> 
+			<li><a href="#" class=""><span class="_charts"></span>Graficos</a></li> 
+			<li><a href="#" class=""><span class="_reports"></span>Relatorios</a></li>
+			<li><a href="#" class=""><span class="_config"></span>Configuraçoes</a></li>
+		</ul>
+	</aside>
+<% end %>
