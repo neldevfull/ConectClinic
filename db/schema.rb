@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151020164226) do
+ActiveRecord::Schema.define(version: 20151023151751) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,9 @@ ActiveRecord::Schema.define(version: 20151020164226) do
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
   end
+
+  add_index "answers", ["healtcare_id"], name: "idx_healtcare_id", using: :btree
+  add_index "answers", ["secretary_id"], name: "idx_secreatary_id", using: :btree
 
   create_table "consults", force: :cascade do |t|
     t.integer  "patient_id",                null: false
@@ -48,13 +51,6 @@ ActiveRecord::Schema.define(version: 20151020164226) do
     t.integer  "status",     default: 1
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
-  end
-
-  create_table "logins", force: :cascade do |t|
-    t.string   "email"
-    t.string   "passw"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "patients", force: :cascade do |t|

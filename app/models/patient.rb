@@ -1,5 +1,6 @@
 #encoding: utf-8 
 class Patient < ActiveRecord::Base 
+	# Relationships
 	has_many :consults
 		
 	# Constants use in the validation
