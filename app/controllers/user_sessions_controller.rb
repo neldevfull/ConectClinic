@@ -1,5 +1,9 @@
 class UserSessionsController < ApplicationController
 
+	# Before action
+	before_action :require_no_authentication, only: [:new, :create]
+	before_action :require_authentication, only: :destroy
+
 	def new
 		@user_session = UserSession.new(session)
 	end
@@ -25,7 +29,13 @@ class UserSessionsController < ApplicationController
 	end
 
 	def destroy
-
+		user_session.destroy
+		respond_to do |format|
+			format.html { 
+				redirect_to new_user_sessions_path, 
+				notice: "Usuario nao esta logado" 
+			}		      
+		end
 	end
 
 	private 

@@ -10,9 +10,9 @@ class UserSession
 
 	# Initialize
 	def initialize(session, attributes = {})
-		@session = session
-		@email   = attributes[:email]
-		@password   = attributes[:password]
+		@session  = session
+		@email    = attributes[:email]
+		@password = attributes[:password]
 	end
 
 	# Autheticate!
@@ -23,7 +23,6 @@ class UserSession
 			store(user)
 			true
 		else
-			errors.add(:base, "Login invalido")
 			false
 		end
 	end
@@ -31,6 +30,21 @@ class UserSession
 	# Store User
 	def store(user)
 		@session[:user_id] = user.id
+	end
+
+	# Current User
+	def current_user
+		User.find(@session[:user_id])
+	end
+
+	# User signed in?
+	def user_session_present?
+		@session[:user_id].present?
+	end
+
+	# Destroy session
+	def destroy
+		@session[:user_id] = nil
 	end
 
 end

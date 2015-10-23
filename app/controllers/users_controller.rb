@@ -5,6 +5,10 @@ class UsersController < ApplicationController
 	# Includes
 	include MainModule
 
+	# Authentication
+	before_action :require_authentication, only: [:create, :update, 
+		:index, :new, :edit]
+
 	def index
 		@users = get_all_users()
 	end

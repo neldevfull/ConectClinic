@@ -5,6 +5,10 @@ class InsurancesController < ApplicationController
 	# Includes
 	include MainModule
 
+	# Authentication
+	before_action :require_authentication, only: [:create, :update, 
+		:index, :new, :edit, :main, :amount, :allinsurances]
+
 	def index
 		@insurances = get_insurances(12, 0)
 	end

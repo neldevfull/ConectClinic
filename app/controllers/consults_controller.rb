@@ -7,6 +7,10 @@ class ConsultsController < ApplicationController
 	include PatientsModule
 	include MainModule
 
+	# Authentication
+	before_action :require_authentication, only: [:index, :create, 
+		:update]
+
 	# Check if dates have been sent, if so,
 	# search Consults scheduled for the requested week
 	def index()						
