@@ -7,7 +7,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string  :career, null:false
       t.string  :gender, null:false
       t.integer :privilege, null:false
-      t.string  :status, default: 1
+      t.string  :status, default: "Ativo"
 
       t.timestamps null: false
     end
