@@ -1,0 +1,87 @@
+/* -- Sidebar -- */
+.sidebar {
+  width: 15%;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0; 
+  padding-top: 5em;
+  z-index: 1000;
+  display: block;    
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: #ccc;
+  background-image: url("../imgs/img-bg.jpg");
+  font-size: 1em;
+  line-height: 1.5em;
+  text-shadow: white 0 1em 1em;
+}
+.sidebar ul li a{
+  padding-left: 1.8em;
+}
+.sidebar ul li a {
+  color: #333;  
+}
+.sidebar ul li a:hover {  
+  background-color: #bfbfbf; 
+} 
+/* end */
+
+/* Sidebar icons start */
+._patients:before {
+  content: '\e800'; 
+  font-family: 'patients';
+    speak: none;
+    display: inline-block;
+    color: #333333;
+    padding-right: 1.2em;    
+}
+._users:before {
+  content: '\e800'; 
+  font-family: 'users';
+    speak: none;
+    display: inline-block;
+    color: #333333;
+    padding-right: 1.2em;     
+}
+._insurance:before {
+  content: '\e800'; 
+  font-family: 'insurance';
+    speak: none;
+    display: inline-block;
+    color: #333333;
+    padding-right: 1.2em;     
+}
+._calendar:before {
+  content: '\e800'; 
+  font-family: 'calendar';
+    speak: none;
+    display: inline-block;
+    color: #333333;
+    padding-right: 1.2em;    
+}
+._charts:after {
+  content: '\e801'; 
+  font-family: 'charts';
+    speak: none;
+    display: inline-block;
+    color: #333333;
+    padding-right: 1.2em;    
+}
+._reports:after {
+  content: '\e800'; 
+  font-family: 'reports';
+    speak: none;
+    display: inline-block;
+    color: #333333;
+    padding-right: 1.2em;    
+}
+ ._config:after {
+  content: '\e801'; 
+  font-family: 'config';
+    speak: none;
+    display: inline-block;
+    color: #333333;
+    padding-right: 1.2em;    
+}
+/* end */

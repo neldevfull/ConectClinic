@@ -26,13 +26,13 @@ class ApplicationController < ActionController::Base
   # Check if user is already logged in
   def require_no_authentication 
     if user_session_present?
-	  respond_to do |format|
-	    format.html { 
-		  redirect_to root_path, 
+	    respond_to do |format|
+	      format.html { 
+		    redirect_to root_path, 
 		    alert: "Usuario logado" 
-	    }		      
+	     }		      
+	    end
 	  end
-	end
   end
 
 end

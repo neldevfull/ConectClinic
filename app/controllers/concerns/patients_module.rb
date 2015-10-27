@@ -1,4 +1,5 @@
 module PatientsModule
+	
 	# Patient exist?
 	def patient_exist?(patient_c)
 		Patient.all.each do |patient|
@@ -18,4 +19,5 @@ module PatientsModule
 		end
 		return 0
 	end
+
 end

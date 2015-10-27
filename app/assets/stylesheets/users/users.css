@@ -1,0 +1,75 @@
+/* User Form */
+._new-patient {
+  font-size: 1.5em;
+  background-color: #F2F2F2;
+}
+
+/* Title*/
+._healthcare-title {
+	display: block;
+	padding: .5em 1em;
+	font-weight: bold;
+}
+
+/* Helathcare List */
+.healthcare-list {
+	padding: 0 !important;
+	width: 20%;
+    height: 100%;
+	margin-left: 1em; 
+	list-style: none;
+	background-color: #F6F6F6;
+}
+.healthcare-list li {
+	border-bottom: 1px solid #CCC;
+}
+
+.healthList {
+	width: 100%;
+	display: block;
+}
+
+._healthcare {
+	padding: .5em 1em;
+	cursor: pointer;
+	overflow: auto;
+}
+._healthcare :hover {
+	color: black;
+}
+
+/* Healthcare Selected */
+.healthcare-selected {
+	padding: 0 !important;
+	width: 20%;
+	margin-left: 2em; 
+	list-style: none;
+	background-color: #F6F6F6;	
+}
+.healthcare-selected li {
+	border-bottom: 1px solid #CCC;	
+}
+
+.healthSelected {
+	width: 100%;
+    display: block;
+    text-align: right;
+}
+
+/* Icons */
+._rightarrow:before {
+	content: '\e800'; 
+	font-family: 'rightarrow';
+	speak: none;
+	display: inline-block;
+	color: #333333;
+	float: right;    
+}
+._leftarrow:before {
+	content: '\e800'; 
+	font-family: 'leftarrow';
+	speak: none;
+	display: inline-block;
+	color: #333333;
+	float: left;    
+}

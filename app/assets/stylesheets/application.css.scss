@@ -10,13 +10,14 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require_self
+ *= require normalize-rails/normalize
  *= require jquery-ui/datepicker
  *= require jquery-ui/dialog
  *= require jquery-ui/autocomplete
  *= require fullcalendar
  *= require simplePagination
  *= consults
+ *= require_self
  *= require_tree .
 */
 /* Bootstrap */

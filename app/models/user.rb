@@ -36,6 +36,7 @@ class User < ActiveRecord::Base
 				string_regex(:name)
 			end
 		end
+		
 		#Validate E-mail
 		unless is_present?(user.email)
 			errors.add :email, BLANK_ERROR
@@ -46,6 +47,7 @@ class User < ActiveRecord::Base
 				email_regex(:email)
 			end
 		end
+		
 		# Validate Password and Confirmation
 		if is_present?(user.password)						
 			if is_present?(user.password_confirmation)
@@ -53,6 +55,7 @@ class User < ActiveRecord::Base
 				passw_regex(:password_confirmation)
 			end
 		end
+		
 		# Validate Gender
 		unless is_present?(user.gender)
 			errors.add :gender, BLANK_ERROR
@@ -62,6 +65,7 @@ class User < ActiveRecord::Base
 				errors.add :gender, "nao e valido"
 			end
 		end
+		
 		# Validate Privilege
 		unless is_present?(user.privilege)
 			errors.add :privilege, BLANK_ERROR

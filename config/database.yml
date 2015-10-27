@@ -14,17 +14,17 @@ default: &default
 
 development:
   <<: *default
-  database: medconecta
+  database: connectclinic_db
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: medconecta_test 
+  database: connectclinic_db_test 
 
 production:
   <<: *default
-  database: medconecta_production
-  username: medconecta
+  database: connectclinic_db_production
+  username: connectclinic_user
   password: <%= ENV['MEDCONECTA_DATABASE_PASSWORD'] %>

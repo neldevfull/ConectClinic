@@ -16,7 +16,7 @@ modulejs.define('insurances', ['getAllInsurances'],
 			pagination = modulejs.require('pagination', { allObjs: allObjs });	
 			pagination.startPagination(); 	
 		});
-		getAllInsurances.error(function(error) {
+		getAllInsurances.fail(function(error) {
 			console.log(error);
 		});
 

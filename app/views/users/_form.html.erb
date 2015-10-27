@@ -60,9 +60,22 @@
 				<!-- Career -->
 				<div class="form-group row _lessen-row" style="margin-top: -1em;">
 					<label class="control-label _sl col-sm-1 col-lg-1" for="user_status">Colabora</label>				
-					<%= f.select :career, [["Profissional da Saude", "Profissional da Saude"],
-						["Atendimento", "Atendimento"]], {},
+					<%= f.select :career, [["Profissional da Saude", "healthcare"],
+						["Atendimento", "secretary"]], {},
 						class: "form-control _select _f-status col-sm-2 col-lg-2" %>
+				</div>
+				<!-- Answer -->
+				<div class="form-group row _lessen-row">
+					<label class="control-label _sl col-sm-1 col-lg-1" for="user_status">Recpeçao</label>
+					<ul id="healthcare_list"
+					 	class="form-control healthcare-list col-sm-2 col-lg-2"></ul>
+					<ul id="healthcare_selected"
+						class="form-control healthcare-selected col-sm-2 col-lg-2">
+						<li class="_healthcare-title">
+							Profissionais selecionados
+						</li>
+					</ul>					
+					<input type="hidden" id="answers" name="user[answers]">
 				</div>
 				<!-- Status -->
 				<div class="form-group row _lessen-row" style="margin-top: -1em;">

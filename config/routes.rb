@@ -7,6 +7,8 @@ Rails.application.routes.draw do
   get "users" => "users#index", as: :index_users
   get "user"  => "users#new", as: :new_user
   get "user/:id/edit" => "users#edit", as: :edit_user
+  get "allhealthcare" => "users#allhealthcare",
+    as: :all_healthcare
 
   # UserSession
   resource :user_sessions, only: [:create, :destroy]

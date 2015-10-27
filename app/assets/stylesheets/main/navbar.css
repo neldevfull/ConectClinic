@@ -1,0 +1,28 @@
+/* -- Navbar -- */
+.navbar {
+  border-radius: 0;
+  border: 0;
+  height: 40px;
+  min-height: 40px; 
+}
+.navbar-fixed-top {
+  position: fixed;
+  z-index: 1030;
+}
+.navbar-nav {
+  margin-top: -.9em;
+}
+.navbar-right {
+  margin: .2em .5em 0 0;
+  list-style: none;
+}
+.navbar-right :hover {
+  text-decoration: none;
+}
+._brand {
+  font-weight: bold !important;
+  color: white !important;
+}
+.dropdown {
+  margin: .5em 2em 0 0;
+}

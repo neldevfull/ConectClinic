@@ -52,4 +52,16 @@
   font-weight: normal;
   font-style: normal;
 } 
+@font-face {
+  font-family: 'rightarrow';
+  src: url('../rightarrow.woff?17654297') format('woff');
+  font-weight: normal;
+  font-style: normal;
+} 
+@font-face {
+  font-family: 'leftarrow';
+  src: url('../leftarrow.woff?1910729') format('woff');
+  font-weight: normal;
+  font-style: normal;
+} 
 /* end */

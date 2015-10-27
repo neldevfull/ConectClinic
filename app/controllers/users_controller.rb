@@ -1,9 +1,11 @@
 # Requires
 require 'main_module'
+require 'user_module'
 
 class UsersController < ApplicationController
 	# Includes
 	include MainModule
+	include UserModule
 
 	# Authentication
 	before_action :require_authentication, only: [:create, :update, 
@@ -18,19 +20,32 @@ class UsersController < ApplicationController
 	end
 
 	def create
-		@user = User.new user_params
-		if @user.save
-			render :json => {
-				:response => success_message('salvar', 'Usuario'),
-				:verb     => 'post',
-				:fail     => false
-			}
+		verb = "post"
+		answers = params[:user][:answers].split(",")
+		career  = params[:user][:career]
+		if accepts_answers?(career, answers)
+			User.transaction do
+				@user = User.new user_params
+				if @user.save
+					answers.each do |answer|
+						new_answer = Answer.new(healtcare_id: answer, 
+							secretary_id: @user.id)
+						unless new_answer.save
+							raise ActiveRecord::Rollback
+							render_response(errors_message(new_answer),
+								verb, true)									
+						end
+					end
+					render_response(success_message('salvar', 'Usuario'),
+						verb, false)
+				else
+					render_response(errors_message(@user),
+						verb, true)
+				end
+			end
 		else
-			render :json => {
-				:response => errors_message(@user),
-				:verb     => 'post',
-				:fail     => true
-			}
+			render_response("Profissional da saude nao pode recepcinar",
+				verb, true)
 		end
 	end
 
@@ -55,7 +70,30 @@ class UsersController < ApplicationController
 		end
 	end
 
+	def allhealthcare
+		allhealthcare = get_all_healthcare()
+		if allhealthcare
+			render :json => {
+				:response => allhealthcare,
+				:verb     => 'get',
+				:error    => true
+			}
+		else
+			render :json => {
+				:response => "Error",
+				:verb     => 'get',
+				:error    => false
+			}
+		end
+	end
+
 	private
+
+	def get_all_healthcare
+		User.select("id", "name")
+			.where("career = 'healthcare'")
+			.order("name ASC")
+	end
 
 	def get_user
 		User.find(params[:id])

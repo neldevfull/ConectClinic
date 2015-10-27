@@ -84,6 +84,7 @@ GEM
       railties (>= 3.1)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
+    normalize-rails (3.0.3)
     pg (0.18.3)
     rack (1.6.4)
     rack-test (0.6.3)
@@ -140,6 +141,7 @@ DEPENDENCIES
   mask_validator
   modulejs-rails
   momentjs-rails
+  normalize-rails
   pg
   rails (= 4.2.4)
   turbolinks
