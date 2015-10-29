@@ -1,5 +1,14 @@
-class HomeController < ApplicationController
+# Require
+require 'main_module'
 
-	def home
+class HomeController < ApplicationController
+	
+	# Include
+	include MainModule
+
+	# Before Action
+	before_action :get_answers_to_user
+
+	def home				
 	end
 end

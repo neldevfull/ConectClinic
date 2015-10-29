@@ -91,6 +91,14 @@ class User < ActiveRecord::Base
  			AND id NOT IN (SELECT healthcare_id FROM answers
  					WHERE user_id = #{id})"
 	end
+
+	def get_healthcare_belonging(user)
+		connect = get_connection()
+		connect.select_all "SELECT * FROM users
+			WHERE career = 'healthcare'
+			AND id IN (SELECT healthcare_id FROM answers
+				WHERE user_id = #{user.id})"
+	end
 	
 	private 
 

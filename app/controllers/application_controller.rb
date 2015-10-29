@@ -11,6 +11,12 @@ class ApplicationController < ActionController::Base
     UserSession.new(session)
   end
 
+  # Get healthcare beloging to secretary
+  def get_answers_to_user
+    @user    = current_user()
+    @answers = User.new.get_healthcare_belonging(@user)
+  end
+
   # Check if user is authenticated
   def require_authentication
     unless user_session_present?

@@ -10,6 +10,8 @@ class ConsultsController < ApplicationController
 	# Authentication
 	before_action :require_authentication, only: [:index, :create, 
 		:update]
+	# Before Action
+	before_action :get_answers_to_user
 
 	# Check if dates have been sent, if so,
 	# search Consults scheduled for the requested week

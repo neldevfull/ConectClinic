@@ -1,15 +1,18 @@
 # Requires
+require 'main_module'
 require 'patients_module'
 
 class PatientsController < ApplicationController
 	# Includes
+	include MainModule
 	include PatientsModule
 
-	# Before action
-	before_action :set_patient, only: [:edit, :update, :destroy]
 	# Authentication
 	before_action :require_authentication, only: [:create, :update, 
 		:index, :new, :edit, :main, :amount, :patients]
+	# Before action
+	before_action :set_patient, only: [:edit, :update, :destroy]
+	before_action :get_answers_to_user
 
 	def index		
 		@patients = get_patients(12, 0)	

@@ -24,17 +24,19 @@ ActiveRecord::Schema.define(version: 4) do
   end
 
   create_table "consults", force: :cascade do |t|
-    t.integer  "patient_id",                null: false
-    t.integer  "insurance_id",              null: false
-    t.string   "date",                      null: false
-    t.string   "hour_ini",                  null: false
-    t.string   "hour_end",                  null: false
-    t.integer  "confirm",      default: 0
-    t.string   "scheduling",   default: ""
-    t.string   "obs",          default: ""
-    t.integer  "status",       default: 1
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.integer  "healthcare_id",              null: false
+    t.integer  "secretary_id",               null: false
+    t.integer  "patient_id",                 null: false
+    t.integer  "insurance_id",               null: false
+    t.string   "date",                       null: false
+    t.string   "hour_ini",                   null: false
+    t.string   "hour_end",                   null: false
+    t.integer  "confirm",       default: 0
+    t.string   "scheduling",    default: ""
+    t.string   "obs",           default: ""
+    t.integer  "status",        default: 1
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "insurances", force: :cascade do |t|
@@ -72,8 +74,10 @@ ActiveRecord::Schema.define(version: 4) do
     t.datetime "updated_at",                        null: false
   end
 
-  add_foreign_key "answers", "users", column: "healthcare_id", name: "pk_healthcare_id_answers"
-  add_foreign_key "answers", "users", name: "pk_user_id_answers"
-  add_foreign_key "consults", "insurances", name: "pk_insurance_id_consults"
-  add_foreign_key "consults", "patients", name: "pk_patient_id_consults"
+  add_foreign_key "answers", "users", column: "healthcare_id", name: "fk_healthcare_id_answers"
+  add_foreign_key "answers", "users", name: "fk_user_id_answers"
+  add_foreign_key "consults", "insurances", name: "fk_insurance_id_consults"
+  add_foreign_key "consults", "patients", name: "fk_patient_id_consults"
+  add_foreign_key "consults", "users", column: "healthcare_id", name: "fk_healthcare_id_consults"
+  add_foreign_key "consults", "users", column: "secretary_id", name: "fk_secretary_id_consults"
 end
