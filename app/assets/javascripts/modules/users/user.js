@@ -6,6 +6,13 @@ modulejs.define('user', ['getAllHealthcare', 'getAnswers'],
 
 		// Form
 		var userForm = {
+			// Attributes
+			height: 0,
+			$healthcare: $('#healthcare_list'),
+			$answers: $('#healthcare_selected'),
+			$div_answers: $('#user_answers'),
+			$div_removers: $('#user_removers'),
+			// Methods
 			cleanFields: function() {
 				$('#user_name').val('');
 				$('#user_email').val('');
@@ -22,55 +29,47 @@ modulejs.define('user', ['getAllHealthcare', 'getAnswers'],
 					.split(window.location.host + '/')[1];
 			},
 			mainAnswers: function(_this) {
-				var $healthcare = $('#healthcare_list');
-				var $answers    = $('#healthcare_selected');
-
-				_this.addRemoveAnswers(
-					_this, $healthcare, $answers);
+				_this.addRemoveAnswers(_this);
 
 				if(_this.domain() !== "user"){					
-					_this.answersList(
-						_this, $answers);
+					_this.answersList(_this);
 				}
 
-				_this.healtcareList(
-					_this, $healthcare);								
+				_this.healtcareList(_this);								
 			},
-			answersList: function(_this, $answers) {
+			answersList: function(_this) {
 				promises = getAnswers.execute();
 				promises.done(function(answers) {
 					answers = answers.response;					
-					_this.renderAnswers(
-						_this, $answers, answers);
+					_this.renderAnswers(_this, answers);
 				});
 				promises.fail(function(error) {
 					console.log(error);
 				}); 
 			},
-			healtcareList: function(_this, $healthcare) {	
+			healtcareList: function(_this) {	
 				promises = getAllHealthcare.execute();			
 				promises.done(function(healthcare) {
 					healthcare = healthcare.response;					
-					_this.renderHealthcare(
-						_this, $healthcare, healthcare);					
+					_this.renderHealthcare(_this, healthcare);					
 				});
 				promises.fail(function(error) {
 					console.log(error);
 				});
 			},
-			addRemoveAnswers: function(_this, $healthcare, $answers) {
+			addRemoveAnswers: function(_this) {
 				// Answers
 				var answers = [];
 				var removers = [];
 
 				// Click to selected healthcare
-				$healthcare.on('click', '.healthList', function() {
+				_this.$healthcare.on('click', '.healthList', function() {
 				    var li   = $(this).closest('li');
 				    var name = _this.getName(li.html());
 					var id   = li.attr('id');
 								    
 				    li.remove();				    
-				    $answers.append(
+				    _this.$answers.append(
 				    	'<li id = "' + id + '"' +
 				    	'class="_leftarrow _healthcare">' +
 				    	'<span class="healthSelected">' + 
@@ -78,23 +77,24 @@ modulejs.define('user', ['getAllHealthcare', 'getAnswers'],
 				    	'</span></li>');
 				    
 				    answers.push(id);
-				    $('#answers').val(answers);
-				    console.log(answers);
+				    _this.$div_answers.val(answers);
+				    console.log(_this.$div_answers.val());
 				  
 				    var remx = removers.indexOf(id);
 					removers.splice(remx, 1);
-					$('#removers').val(removers);
-					console.log(removers);
+					_this.$div_removers.val(removers);
+					console.log(_this.$div_removers.val());
+
 				});
 
 				// Click to deselected healthcare
-				$answers.on('click', '.healthSelected', function() {
+				_this.$answers.on('click', '.healthSelected', function() {
 					var li   = $(this).closest('li');
 					var name = _this.getName(li.html());
 					var id   = li.attr('id');					
 					
 					li.remove();					
-					$healthcare.append(
+					_this.$healthcare.append(
 						'<li id = "' + id + '"' +
 						'class="_rightarrow _healthcare">' +
 						'<span class="healthList">' +
@@ -103,70 +103,71 @@ modulejs.define('user', ['getAllHealthcare', 'getAnswers'],
 					
 					var index = answers.indexOf(id);
 					answers.splice(index, 1);
-					$('#answers').val(answers);
-					console.log(answers);
+					_this.$div_answers.val(answers);	
+					console.log(_this.$div_answers.val());				
 
 					removers.push(id);
-				    $('#removers').val(removers);
-				    console.log(removers);
+				    _this.$div_removers.val(removers);				  
+				    console.log(_this.$div_removers.val());
 
 				});
 
 			},
-			renderAnswers: function(_this, $answers, objs) {
+			renderAnswers: function(_this, objs) {
 				// Render Healthcare selected
+				height = 0;
 				content = 
 					'<li class="_healthcare-title">' + 
 						'Profissionais selecionados' +
-					'</li>'
-				objs.forEach(function(obj) {
-					content +=
-						'<li id = "' + obj.id + '"' +
-						'class="_leftarrow _healthcare">' +
-						'<span class = "healthSelected">' +
-						obj.name +
-						'</span></li>';
-				});
-				$answers.empty()
+					'</li>';
+
+				if(objs !== undefined) {					
+					objs.forEach(function(obj) {
+						content +=
+							'<li id = "' + obj.id + '"' +
+							'class="_leftarrow _healthcare">' +
+							'<span class = "healthSelected">' +
+							obj.name +
+							'</span></li>';
+							height++;
+					});
+				}
+				_this.$answers.empty()
 					.append(content);
+
+				_this.renderHeight(_this, height);
 			},
-			renderHealthcare: function(_this, $healthcare, objs) {		
-				// Render healthcare list		
+			renderHealthcare: function(_this, objs) {		
+				// Render healthcare list
+				height = 0;		
 				var content = 
 					'<li class = "_healthcare-title">'+
 					'Profissionais da saude</li>';
 
-				// Render Healthcare list				
-				objs.forEach(function(obj) {					
-					content +=
-						'<li id = "' + obj.id + '"' +
-						'class = "_rightarrow _healthcare">' +
-						'<span class="healthList">' +
-						obj.name + '</span>' +
-						'</li>';
-				});
-				$healthcare.empty()
-					.append(content);	
+				if(objs !== undefined){					
+					objs.forEach(function(obj) {					
+						content +=
+							'<li id = "' + obj.id + '"' +
+							'class = "_rightarrow _healthcare">' +
+							'<span class="healthList">' +
+							obj.name + '</span>' +
+							'</li>';
+							height++;
+					});
+				}
+				if(_this.$healthcare !== undefined){					
+					_this.$healthcare.empty()
+						.append(content);	
+				
+					_this.renderHeight(_this, height);	
+				}				
+			},
+			renderHeight: function(_this, height) {
+				for(var i = 0; i < height; i++)
+					_this.height += 70;
 
-				_this.renderHeight(_this);	
-			},
-			renderHeight: function(_this) {
-				var $healthcare = $('#healthcare_list');
-				var $answers    = $('#healthcare_selected');
-				var aHeight     = $answers.height();
-				var hHeight     = $healthcare.height();
-				var height      = aHeight + hHeight;
-
-				_this.renderHealthcareHeight(
-					$healthcare, height);
-				_this.renderAnswersHeight(
-					$answers, height)
-			},
-			renderHealthcareHeight: function($healthcare, height) {
-				$healthcare.css('height', height);
-			},
-			renderAnswersHeight: function($answers, height) {
-				$answers.css('height', height);
+				_this.$healthcare.css('height', _this.height);
+				_this.$answers.css('height', _this.height);
 			},
 			getName: function(li) {
 				var sName = li.split(">")[1];

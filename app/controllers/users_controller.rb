@@ -62,32 +62,35 @@ class UsersController < ApplicationController
 			User.transaction do
 				@user = get_user()
 				if @user.update user_params	
-					# Delete Answers
-					Answer.where(:healthcare_id => removers,
-						user_id: @user.id).destroy_all
-					# Insert Answers
-					success = true				
-					answers.each do |answer|
-						already_exist = answers_already_exist?(answer, @user.id)
-						unless already_exist.present?
-							new_answer = Answer.new(healthcare_id: answer, 
-								user_id: @user.id)
-							unless new_answer.save
-								success = false
-								rollback()
+					if removers.count > 0
+						# Delete Answers
+						answers_removers = answers_removers(
+							removers, @user.id)					
+					end
+					if answers.count > 0
+						# Insert Answers
+						success = true				
+						answers.each do |answer|
+							already_exist = answers_already_exist?(answer, @user.id)
+							unless already_exist.present?
+								new_answer = Answer.new(healthcare_id: answer, 
+									user_id: @user.id)
+								unless new_answer.save
+									success = false
+									rollback()
+								end
 							end
 						end
+						unless success						
+							render_response(errors_message(new_answer),
+								verb, true)									
+							rollback()
+						end
 					end
-					if success
-						render_response(success_message('salvar', 'Usuario'),
-							verb, false)
-					else
-						render_response(errors_message(new_answer),
-							verb, true)									
-						rollback()
-					end
+					render_response(success_message('salvar', 'Usuario'),
+						verb, false)
 				else
-					render_response("Erro ao atualizar usuario",
+					render_response(errors_message(@user),
 						verb, true)
 					rollback()
 				end
@@ -151,6 +154,11 @@ class UsersController < ApplicationController
 			answers.healthcare_id")
 			.where("answers.user_id = #{id}")
 			.order("name ASC")
+	end
+
+	def answers_removers(removers, user_id)
+		Answer.where(:healthcare_id => removers,
+			user_id: user_id).destroy_all
 	end
 
 	def get_all_healthcare
