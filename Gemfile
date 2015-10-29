@@ -6,6 +6,8 @@ gem 'rails', '4.2.4'
 gem 'pg'
 # BCrypt has secure passw
 gem 'bcrypt', '~> 3.1.7'
+# Composite Primary Keys for ActiveRecords
+gem 'composite_primary_keys'
 
 #Front-end
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks

@@ -28,12 +28,12 @@ class UsersController < ApplicationController
 				@user = User.new user_params
 				if @user.save
 					answers.each do |answer|
-						new_answer = Answer.new(healtcare_id: answer, 
-							secretary_id: @user.id)
+						new_answer = Answer.new(healthcare_id: answer, 
+							user_id: @user.id)
 						unless new_answer.save
-							raise ActiveRecord::Rollback
 							render_response(errors_message(new_answer),
 								verb, true)									
+							raise ActiveRecord::Rollback
 						end
 					end
 					render_response(success_message('salvar', 'Usuario'),
@@ -54,40 +54,104 @@ class UsersController < ApplicationController
 	end
 
 	def update
-		@user = get_user()
-		if @user.update user_params
-			render :json => { 
-				:response => success_message('atualizar', 'Usuario'),
-				:verb     => 'put',
-				:fail     => false
-			}
+		verb = 'put'
+		answers  = params[:user][:answers].split(",")
+		removers = params[:user][:removers].split(",")
+		career   = params[:user][:career]		
+		if accepts_answers?(career, answers)
+			User.transaction do
+				@user = get_user()
+				if @user.update user_params	
+					# Delete Answers
+					Answer.where(:healthcare_id => removers,
+						user_id: @user.id).destroy_all
+					# Insert Answers
+					success = true				
+					answers.each do |answer|
+						already_exist = answers_already_exist?(answer, @user.id)
+						unless already_exist.present?
+							new_answer = Answer.new(healthcare_id: answer, 
+								user_id: @user.id)
+							unless new_answer.save
+								success = false
+								rollback()
+							end
+						end
+					end
+					if success
+						render_response(success_message('salvar', 'Usuario'),
+							verb, false)
+					else
+						render_response(errors_message(new_answer),
+							verb, true)									
+						rollback()
+					end
+				else
+					render_response("Erro ao atualizar usuario",
+						verb, true)
+					rollback()
+				end
+			end
 		else
-			render :json => {
-				:response => errors_message(@user),
-				:verb     => 'post',
-				:fail     => true
-			}
-		end
+			render_response("Profissional da saude nao pode recepcinar",
+				verb, true)
+		end		
 	end
 
+	# All healthcare for New action
 	def allhealthcare
 		allhealthcare = get_all_healthcare()
 		if allhealthcare
-			render :json => {
-				:response => allhealthcare,
-				:verb     => 'get',
-				:error    => true
-			}
+			render_response(allhealthcare,
+				'get', false)
 		else
-			render :json => {
-				:response => "Error",
-				:verb     => 'get',
-				:error    => false
-			}
+			render_response('Error',
+				'get', true)
+		end
+	end
+
+	# Healthcare no belonging for Edit action
+	def healthcarenobelonging
+		healthcare_no_belonging = 
+			User.new.get_healthcare_no_belonging(params[:id])
+		if healthcare_no_belonging
+			render_response(healthcare_no_belonging,
+					'get', false)
+		else
+			render_response("Error",
+				'get', false)
+		end
+	end
+
+	def answers				
+		answers = get_answers(params[:id])
+		if answers
+			render_response(answers, 'get', false)
+		else
+			render_response(
+				"Erro ao buscar profissionais da saude",
+				'get', true)
 		end
 	end
 
 	private
+
+	def rollback
+		raise ActiveRecord::Rollback
+	end
+
+	def answers_already_exist?(healthcare_id, user_id)
+		Answer.where(healthcare_id: healthcare_id,
+			user_id: user_id)
+	end
+
+	def get_answers(id)
+		User.select("id", "name")
+			.joins("JOIN answers ON users.id = 
+			answers.healthcare_id")
+			.where("answers.user_id = #{id}")
+			.order("name ASC")
+	end
 
 	def get_all_healthcare
 		User.select("id", "name")

@@ -74,6 +74,28 @@ class User < ActiveRecord::Base
 				errors.add :privilege, "nao e valido"
 			end
 		end
+
+		# Validate Career
+		if user.career != "healthcare" &&
+			user.career != "secretary"
+			errors.add :career, "nao e valido"
+		end
+
+	end
+
+	# Data Access Object
+	def get_healthcare_no_belonging(id)
+		connect = get_connection()
+ 		connect.select_all "SELECT id, name FROM users
+ 			WHERE id != #{id} AND career = 'healthcare'
+ 			AND id NOT IN (SELECT healthcare_id FROM answers
+ 					WHERE user_id = #{id})"
+	end
+	
+	private 
+
+	def get_connection
+		conn = ActiveRecord::Base.connection
 	end
 	
 end

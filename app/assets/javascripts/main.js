@@ -2,9 +2,9 @@
 	"use strict";
 
 	$(function() {
-		var url = window.location.href.toString()
+		var domain = window.location.href.toString()
 			.split(window.location.host + '/')[1];		
-		var resource = url.split('/')[0];
+		var resource = domain.split('/')[0];
 		var module   = modulejs.require(resource);		
 		module();
 	});

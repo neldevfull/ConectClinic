@@ -11,20 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151023151751) do
+ActiveRecord::Schema.define(version: 4) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "answers", id: false, force: :cascade do |t|
-    t.integer  "healtcare_id"
-    t.integer  "secretary_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.integer  "healthcare_id", null: false
+    t.integer  "user_id",       null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
-
-  add_index "answers", ["healtcare_id"], name: "idx_healtcare_id", using: :btree
-  add_index "answers", ["secretary_id"], name: "idx_secreatary_id", using: :btree
 
   create_table "consults", force: :cascade do |t|
     t.integer  "patient_id",                null: false
@@ -39,9 +36,6 @@ ActiveRecord::Schema.define(version: 20151023151751) do
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
   end
-
-  add_index "consults", ["insurance_id"], name: "idx_insurance_id", using: :btree
-  add_index "consults", ["patient_id"], name: "idx_patient_id", using: :btree
 
   create_table "insurances", force: :cascade do |t|
     t.string   "identifier", default: ""
@@ -78,4 +72,8 @@ ActiveRecord::Schema.define(version: 20151023151751) do
     t.datetime "updated_at",                        null: false
   end
 
+  add_foreign_key "answers", "users", column: "healthcare_id", name: "pk_healthcare_id_answers"
+  add_foreign_key "answers", "users", name: "pk_user_id_answers"
+  add_foreign_key "consults", "insurances", name: "pk_insurance_id_consults"
+  add_foreign_key "consults", "patients", name: "pk_patient_id_consults"
 end

@@ -1,11 +1,28 @@
 // Request for get all Users
 modulejs.define('getAllUsers', function() {
-	return $.get('allusers');
+	return {
+		execute: function() {
+			return $.get('allusers');
+		}
+	} 
 });
 
 // Request for get all Healtcare
 modulejs.define('getAllHealthcare', function() {
-	return $.get('allhealthcare');
+	return {
+		execute: function() {
+			return $.get('allhealthcare');
+		}
+	}
+});
+
+// Request for get all Answers
+modulejs.define('getAnswers', function() {
+	return {
+		execute: function() {			
+			return $.get('answers');
+		}
+	} 
 });
 
 // Request for get all Patients

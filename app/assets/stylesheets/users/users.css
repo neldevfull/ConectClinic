@@ -42,6 +42,7 @@
 .healthcare-selected {
 	padding: 0 !important;
 	width: 20%;
+	height: 100%;
 	margin-left: 2em; 
 	list-style: none;
 	background-color: #F6F6F6;	

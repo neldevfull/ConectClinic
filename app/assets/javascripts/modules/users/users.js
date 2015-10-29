@@ -1,9 +1,9 @@
-modulejs.define('users', ['getAllUsers'],
-	function(getAllUsers) {
-	return function() {
+modulejs.define('users', /*['getAllUsers'],*/
+	function(/*getAllUsers*/) {
+	return function() {		
 
 		/*
-			
+
 		// Objects
 		var allObjs = {
 			entity: 'users',
@@ -11,18 +11,18 @@ modulejs.define('users', ['getAllUsers'],
 		};
 
 		// Promise for all Users
-		getAllUsers.done(function(users) {
+		promises = getAllUsers.execute();
+		promises.done(function(users) {
 			allObjs.objs = users.response;
 			// Pagination
 			pagination = modulejs.require('pagination', { allObjs: allObjs });
 			pagination.startPagination();
 		});
-		getAllUsers.fail(function(error) {
+		promises.fail(function(error) {
 			console.log(error);
 		});
 
 		*/
-
 	}
 
 });
