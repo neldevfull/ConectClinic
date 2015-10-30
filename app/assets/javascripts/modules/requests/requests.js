@@ -27,10 +27,18 @@ modulejs.define('getAnswers', function() {
 
 // Request for get all Patients
 modulejs.define('getPatientsAll', function() {
-	return $.get('patients/patients');
+	return {
+		execute: function() {
+			return $.get('patients/patients');		
+		}
+	} 
 });
 
 // Request for get all Insurances
 modulejs.define('getAllInsurances', function() {
-	return $.get('allinsurances');
+	return {
+		execute: function() { 
+			return $.get('allinsurances');
+		}
+	}
 });

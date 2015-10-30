@@ -12,7 +12,6 @@ class PatientsController < ApplicationController
 		:index, :new, :edit, :main, :amount, :patients]
 	# Before action
 	before_action :set_patient, only: [:edit, :update, :destroy]
-	before_action :get_answers_to_user
 
 	def index		
 		@patients = get_patients(12, 0)	

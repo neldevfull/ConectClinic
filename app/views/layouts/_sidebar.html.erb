@@ -1,30 +1,18 @@
 <% if @user_session.blank? %>
 	<aside class="sidebar">
 		<ul class="nav nav-sidebar">
-			<% if @user.try(:career) == "healthcare" %>
-				<li>
-					<%= 
-						link_to "Agenda", consults_path, 
-							id: "index_consult",
-							class: "_calendar"
-					%>
-				</li>
-			<%  else %>
-				<li><a href="" class=""><span class="_charts"></span>Agenda</a></li>
-				<% if @answers %>
-					<% @answers.each do |answer| %>
-						<li>
-							<%= 
-								link_to answer["name"],
-								consults_path									
-							%>
-						</li>
-					<% end %>
-				<% end %>
-			<% end %>						
+			<li>
+				<%= 
+					link_to "Agenda", 
+						index_consults_path(:user => 2),
+						remote: true, 
+						id: "index_consult",
+						class: "_calendar"
+				%>
+			</li>					
 			<li>			
 				<%= 
-					link_to "Pacientes", index_patients_path,
+					link_to "Pacientes", index_patients_path,					
 						id: "index_patient",
 						class: "_patients"
 				%>			

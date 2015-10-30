@@ -10,17 +10,20 @@ class ConsultsController < ApplicationController
 	# Authentication
 	before_action :require_authentication, only: [:index, :create, 
 		:update]
-	# Before Action
-	before_action :get_answers_to_user
+
+	def index		
+		@healthcare  = User.find(params[:user])			
+	end
 
 	# Check if dates have been sent, if so,
 	# search Consults scheduled for the requested week
-	def index()						
-		weekStart    = params[:weekStart]
-		weekEnd      = params[:weekEnd]
+	def agenda
+		healthcare_id = params[:healthcare]
+		weekStart     = params[:weekStart]
+		weekEnd       = params[:weekEnd]
 		if weekStart && weekEnd
 			consults = Array.new			
-			result   = getConsults(weekStart, weekEnd)						
+			result   = getConsults(healthcare_id, weekStart, weekEnd)						
 			result.each do |consult|
 				consults.push(consult)								
 			end			
@@ -139,13 +142,14 @@ class ConsultsController < ApplicationController
 		end
 	end
 
-	def getConsults weekStart, weekEnd
+	def getConsults(healthcare_id, weekStart, weekEnd)
 		@consult = Consult.select("id", "patient_id", "insurance_id", "patients.name",
 			"patients.email", "patients.telephone", "patients.cellphone", 
 			"patients.gender", "patients.mail_accept", "date",
 			"hour_ini", "hour_end", "confirm", "status").
 			joins("LEFT JOIN patients ON patients.id = patient_id").			
-			where("consults.status = 1 AND date BETWEEN '#{weekStart}' AND '#{weekEnd}'")
+			where("healthcare_id = #{healthcare_id} AND consults.status = 1 AND 
+				date BETWEEN '#{weekStart}' AND '#{weekEnd}'")
 	end
 
 	def consult_params

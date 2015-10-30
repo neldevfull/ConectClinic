@@ -1,23 +1,28 @@
 modulejs.define('consults', ['validationsForm', 'getPatientsAll', 'getAllInsurances'],  
 	function(validationForm, getPatientsAll, getAllInsurances) {
 	return function() {
-		// Get Patients All
+		// Vars
+		var promise;		
 		var patientsAll = [];
-		getPatientsAll.done(function(patients) {
+		var allInsurances = [];
+
+		// All Patients
+		promise = getPatientsAll.execute();		
+		promise.done(function(patients) {
 			patientsAll = patients.patients;
 		});
-		getPatientsAll.fail(function(error) {
+		promise.fail(function(error) {
 			console.log(error);			
 		});
 
 		// All Insurances
-		var allInsurances = [];
-		getAllInsurances.done(function(insurances) {
+		promise = getAllInsurances.execute();
+		promise.done(function(insurances) {
 			allInsurances = insurances.response;
 			// Mount select of insurances
 			consultForm.selectInsurances(allInsurances);
 		});
-		getAllInsurances.fail(function(error) {
+		promise.fail(function(error) {
 			console.log(error);
 		});
 
@@ -141,20 +146,21 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll', 'getAllInsuran
 				$('#confirm').prop('checked', false);
 			},
 			// Mount select for insurances
-			selectInsurances: function(allInsurances) {
-				console.log(allInsurances);
+			selectInsurances: function(allInsurances) {				
 				var insurances = $('#insurances');
 				insurances.append($('<option>', {
 					value: 0,
 					text:  'Particular'
 				}));
-				allInsurances.forEach(function(insurance) {
-				    $('#insurances').append($('<option>', { 
-				        value: insurance.id,
-				        text : insurance.name + 
-				        	' - ' + insurance.identifier 
-				    }));
-				});
+				if(allInsurances !== undefined) {					
+					allInsurances.forEach(function(insurance) {
+					    $('#insurances').append($('<option>', { 
+					        value: insurance.id,
+					        text : insurance.name + 
+					        	' - ' + insurance.identifier 
+					    }));
+					});
+				}
 				insurances.append($('<option>', {
 					value: 'other',
 					text:  'Outro'
@@ -364,11 +370,13 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll', 'getAllInsuran
 		}
 		// Function responsible for recovers data of the Consults 
 		function recoversConsults(_weekStart, _weekEnd) {		
-			if(checkWeek(_weekStart, _weekEnd)) {		
+			if(checkWeek(_weekStart, _weekEnd)) {	
+				var healthcare_id = $('#healthcare_id').val();	
 				$.ajax({
 					type: 'GET',
 					url: '/consults',
-					data: 'weekStart=' + _weekStart +
+					data: 'healthcare=' + healthcare_id + 
+						'&weekStart=' + _weekStart +
 						'&weekEnd=' + _weekEnd,
 					success: function(consults) {							
 						if(consults.length > 0){										
@@ -536,7 +544,7 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll', 'getAllInsuran
 		  	// Dialog 
 			$('#dialog').dialog({
 		        autoOpen: false,
-		        height: 630,
+		        height: 660,
 		        width: 720,
 		        modal: true,
 		        closeOnEscape: false,       
@@ -826,8 +834,6 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll', 'getAllInsuran
 			// Check screen heigth
 			if($(window).height() <= 700) 
 				$('#dialog').dialog( { height:560 } );
-
-			console.log($(window).height());
 
 			consultForm.message('Agendar Consulta', 1);
 			$('#dialog').css('display', 'block');

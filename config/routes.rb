@@ -30,7 +30,15 @@ Rails.application.routes.draw do
   get "patients/patients" => "patients#patients", as: :names_patients 
   
   # Consults
-  resources :consults, only: [:index, :create, :update] 
+  resources :consults, only: [:create, :update]
+  get "consults/:user" => "consults#index",
+    as: :index_consults 
+  get "consults" => "consults#agenda",
+    as: :agenda_consults
+  get "consults/:user/patients/patients" => "patients#patients", 
+    as: :consults_allpatients
+  get "consults/:user/allinsurances" => "insurances#allinsurances",
+    as: :consults_allinsurances
   
   #Insurances
   resources :insurances, only: [:create, :update] 

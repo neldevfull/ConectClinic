@@ -1,14 +1,8 @@
-# Require
-require 'main_module'
-
 class HomeController < ApplicationController
-	
-	# Include
-	include MainModule
+	# Authentication
+	before_action :require_authentication, only: [:home]
 
-	# Before Action
-	before_action :get_answers_to_user
-
-	def home				
+	def home
 	end
+
 end
