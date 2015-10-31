@@ -10,8 +10,11 @@ class PatientsController < ApplicationController
 	# Authentication
 	before_action :require_authentication, only: [:create, :update, 
 		:index, :new, :edit, :main, :amount, :patients]
-	# Before action
+	# Set Patient
 	before_action :set_patient, only: [:edit, :update, :destroy]
+	# User Session
+	before_action :get_healthcare_to_user, :get_user_current,
+		only: [:index, :new, :edit]				
 
 	def index		
 		@patients = get_patients(12, 0)	

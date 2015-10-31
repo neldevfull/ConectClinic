@@ -35,9 +35,9 @@ Rails.application.routes.draw do
     as: :index_consults 
   get "consults" => "consults#agenda",
     as: :agenda_consults
-  get "consults/:user/patients/patients" => "patients#patients", 
+  get "consults/patients/patients" => "patients#patients", 
     as: :consults_allpatients
-  get "consults/:user/allinsurances" => "insurances#allinsurances",
+  get "consults/insurances/insurances" => "insurances#allinsurances",
     as: :consults_allinsurances
   
   #Insurances

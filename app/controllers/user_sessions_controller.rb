@@ -14,7 +14,7 @@ class UserSessionsController < ApplicationController
 
 		if @user_session.authenticate!
 			render :json => {
-				:response => @user_session.healthcare_to_user(),
+				:response => "Sucesso ao autenticar",
 				:action   => "authenticate",
 				:fail     => false
 			}

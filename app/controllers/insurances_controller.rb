@@ -8,6 +8,9 @@ class InsurancesController < ApplicationController
 	# Authentication
 	before_action :require_authentication, only: [:create, :update, 
 		:index, :new, :edit, :main, :amount, :allinsurances]
+	# User Session
+	before_action :get_healthcare_to_user, :get_user_current,
+		only: [:index, :new, :edit]	
 
 	def index
 		@insurances = get_insurances(12, 0)

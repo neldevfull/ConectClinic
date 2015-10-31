@@ -37,16 +37,6 @@ class UserSession
 		User.find(@session[:user_id])
 	end
 
-	def healthcare_to_user	
-		results  = User.new.get_healthcare_belonging(
-			current_user)
-
-		results.each do |result|
-			answer = User.new result
-			@answers << answer
-		end
-	end
-
 	# User signed in?
 	def user_session_present?
 		@session[:user_id].present?

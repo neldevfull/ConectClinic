@@ -10,15 +10,18 @@ class ConsultsController < ApplicationController
 	# Authentication
 	before_action :require_authentication, only: [:index, :create, 
 		:update]
+	# User Session
+	before_action :get_healthcare_to_user, :get_user_current,
+		only: [:index]		
 
 	def index		
-		@healthcare  = User.find(params[:user])			
+		@user = User.find(params[:user])			
 	end
 
 	# Check if dates have been sent, if so,
 	# search Consults scheduled for the requested week
 	def agenda
-		healthcare_id = params[:healthcare]
+		healthcare_id = params[:healthcare_id]
 		weekStart     = params[:weekStart]
 		weekEnd       = params[:weekEnd]
 		if weekStart && weekEnd

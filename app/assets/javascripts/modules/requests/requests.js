@@ -42,3 +42,12 @@ modulejs.define('getAllInsurances', function() {
 		}
 	}
 });
+
+// Request for get all Insurances
+modulejs.define('getAllInsurancesToConsults', function() {
+	return {
+		execute: function() { 
+			return $.get('insurances/insurances');
+		}
+	}
+});

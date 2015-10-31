@@ -10,6 +10,9 @@ class UsersController < ApplicationController
 	# Authentication
 	before_action :require_authentication, only: [:create, :update, 
 		:index, :new, :edit]
+	# User Session
+	before_action :get_healthcare_to_user, :get_user_current,
+		only: [:index, :new, :edit]		
 
 	def index
 		@users = get_all_users()

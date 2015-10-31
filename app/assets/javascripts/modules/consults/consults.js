@@ -1,5 +1,6 @@
-modulejs.define('consults', ['validationsForm', 'getPatientsAll', 'getAllInsurances'],  
-	function(validationForm, getPatientsAll, getAllInsurances) {
+modulejs.define('consults', 
+	['validationsForm', 'getPatientsAll', 'getAllInsurancesToConsults'],  
+	function(validationForm, getPatientsAll, getAllInsurancesToConsults) {
 	return function() {
 		// Vars
 		var promise;		
@@ -16,7 +17,7 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll', 'getAllInsuran
 		});
 
 		// All Insurances
-		promise = getAllInsurances.execute();
+		promise = getAllInsurancesToConsults.execute();
 		promise.done(function(insurances) {
 			allInsurances = insurances.response;
 			// Mount select of insurances
@@ -371,11 +372,11 @@ modulejs.define('consults', ['validationsForm', 'getPatientsAll', 'getAllInsuran
 		// Function responsible for recovers data of the Consults 
 		function recoversConsults(_weekStart, _weekEnd) {		
 			if(checkWeek(_weekStart, _weekEnd)) {	
-				var healthcare_id = $('#healthcare_id').val();	
+				var healthcare_id = $('#user_id').val();	
 				$.ajax({
 					type: 'GET',
 					url: '/consults',
-					data: 'healthcare=' + healthcare_id + 
+					data: 'healthcare_id=' + healthcare_id + 
 						'&weekStart=' + _weekStart +
 						'&weekEnd=' + _weekEnd,
 					success: function(consults) {							
