@@ -3,6 +3,8 @@ modulejs.define('consults',
 	function(validationForm, getPatientsAll, getAllInsurancesToConsults) {
 	return function() {
 		// Vars
+		var healthcare_id = $('#healthcare_id').val();
+		var user_id       = $('#user_id').val();
 		var promise;		
 		var patientsAll = [];
 		var allInsurances = [];
@@ -36,6 +38,7 @@ modulejs.define('consults',
 				$email       = $('#email').val();
 				$telephone   = $('#telephone').val();
 				$cellphone   = $('#cellphone').val();
+				$insuranceDf = $('#insurances').val(); 
 				$insurances  = $('#insurance_other').val();
 				$date        = $('#date').val();
 				$hourIni     = $('#hour_ini').val();
@@ -56,8 +59,12 @@ modulejs.define('consults',
 					$genderName, $genderId));
 				addMessage(validationForm.mailAccept(
 					$mailAccept, $email));
-				addMessage(validationForm.alphanumeric(
-					$insurances, 'Nome do Convenio', 3));
+
+				// If insurance is other
+				if($insuranceDf === 'other'){					
+					addMessage(validationForm.alphanumeric(
+						$insurances, 'Nome do Convenio', 3));
+				}
 
 				if(messages.length > 0) {
 					var msg;
@@ -104,7 +111,7 @@ modulejs.define('consults',
 				$('#cellphone').val(consult.cellphone);
 				$('#gender_'+consult.gender).prop('checked', true);
 				$('#insurances').val(consult.insurance_id);
-				$('#insurances').val(consult.insurance_id);
+				// $('#insurances').val(consult.insurance_id);
 				$('#date').val(consultUtil.parseDate(consult.date, '-','/'));
 				$('#hour_ini').val(consult.hour_ini);
 				$('#hour_end').val(consult.hour_end);
@@ -154,11 +161,15 @@ modulejs.define('consults',
 					text:  'Particular'
 				}));
 				if(allInsurances !== undefined) {					
+					var hifen;
 					allInsurances.forEach(function(insurance) {
+						hifen = insurance.identifier != '' ?
+							' - ' : '';
 					    $('#insurances').append($('<option>', { 
 					        value: insurance.id,
 					        text : insurance.name + 
-					        	' - ' + insurance.identifier 
+					        	hifen + 
+					        	insurance.identifier 
 					    }));
 					});
 				}
@@ -372,7 +383,6 @@ modulejs.define('consults',
 		// Function responsible for recovers data of the Consults 
 		function recoversConsults(_weekStart, _weekEnd) {		
 			if(checkWeek(_weekStart, _weekEnd)) {	
-				var healthcare_id = $('#user_id').val();	
 				$.ajax({
 					type: 'GET',
 					url: '/consults',
@@ -612,7 +622,9 @@ modulejs.define('consults',
 				            	// Insert
 				            	if(_control == 1) {
 									isChangeDate();   						 						
-				            		data = 'patient[name]=' + $('#name').val() +
+				            		data = 'consult[healthcare_id]=' + healthcare_id +
+				            			'&consult[secretary_id]=' + user_id +
+				            			'&patient[name]=' + $('#name').val() +
 				            			'&patient[email]=' + $('#email').val() +
 										'&patient[telephone]=' + $('#telephone').val() +
 										'&patient[cellphone]=' + $('#cellphone').val() +
@@ -707,7 +719,9 @@ modulejs.define('consults',
 		}
 		// Check each modified field and update 
 		function fieldUpdateConsult() {
-			var data       = '';
+			var data       = 
+				'consult[healthcare_id]=' + healthcare_id +
+				'&consult[secretary_id]=' + user_id;
 			var name       = $('#name').val();
 			var email      = $('#email').val(); 
 			var telephone  = $('#telephone').val();
@@ -720,56 +734,56 @@ modulejs.define('consults',
 			var confirm    = $('input[id="confirm"]:checked').length;
 
 			if(_consult.name != name) {		
-				data += 'patient[name]=' + name;
+				data += '&patient[name]=' + name;
 				_consult.name = name;
 			} 
 			if(_consult.email != email) {
 				concat();
-				data += 'patient[email]=' + email;
+				data += '&patient[email]=' + email;
 				_consult.email = email;
 			}
 			if(_consult.telephone != telephone) {
 				concat();
-				data += 'patient[telephone]=' + telephone;
+				data += '&patient[telephone]=' + telephone;
 				_consult.telephone = telephone;
 			}
 			if(_consult.cellphone != cellphone) {
 				concat();
-				data += 'patient[cellphone]=' + cellphone;
+				data += '&patient[cellphone]=' + cellphone;
 				_consult.cellphone = cellphone;
 			}
 			if(_consult.gender != gender) {
 				concat();
-				data += 'patient[gender]=' + gender;
+				data += '&patient[gender]=' + gender;
 				_consult.gender = gender;
 			}
 			if(_consult.date != date) {
 				concat();		
-				data += 'consult[date]=' + date; 
+				data += '&consult[date]=' + date; 
 				_consult.date = date;		
 				updateStart();
 				updateEnd();
 			}
 			if(_consult.hour_ini != hourIni) {
 				concat();
-				data += 'consult[hour_ini]=' + hourIni;
+				data += '&consult[hour_ini]=' + hourIni;
 				_consult.hour_ini = hourIni;
 				updateStart();
 			}
 			if(_consult.hour_end != hourEnd) {
 				concat();
-				data += 'consult[hour_end]=' + hourEnd;
+				data += '&consult[hour_end]=' + hourEnd;
 				_consult.hour_end = hourEnd;
 				updateEnd();
 			}
 			if(_consult.mail_accept != mailAceept) {
 				concat();
-				data += 'patient[mail_accept]=' + mailAceept;
+				data += '&patient[mail_accept]=' + mailAceept;
 				_consult.mail_accept = mailAceept;
 			}
 			if(_consult.confirm != confirm) {
 				concat();
-				data += 'consult[confirm]=' + confirm;
+				data += '&consult[confirm]=' + confirm;
 				_consult.confirm = confirm;
 			} 
 

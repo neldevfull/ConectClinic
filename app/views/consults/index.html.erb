@@ -1,9 +1,11 @@
 <div class="main">	 
 	<div class="container-fluid">
 		<h2 class="page-header">
-			<span>Agenda - <%= @user.name %></span>
+			<span>Agenda - <%= @healthcare.name %></span>
 			<%= hidden_field_tag "user_id",
 				"#{@user.id}" %>
+			<%= hidden_field_tag "healthcare_id",
+				"#{@healthcare.id}" %>
 			<button type="button"
 				class="_btn-success btn btn-success"
 				id="agenda_consulta">

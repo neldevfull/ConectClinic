@@ -2,9 +2,9 @@ class CreateConsults < ActiveRecord::Migration
   def change
     create_table :consults do |t|
       t.integer :healthcare_id, null: false
-      t.integer :secretary_id, null: false
+      t.integer :secretary_id, default: 0
       t.integer :patient_id, null: false
-      t.integer :insurance_id, null: false
+      t.integer :insurance_id, default: 0
       t.string  :date, null: false
       t.string  :hour_ini, null: false
       t.string  :hour_end, null: false  
@@ -18,9 +18,6 @@ class CreateConsults < ActiveRecord::Migration
     # Create Foreign Key healthcare_id
     execute "ALTER TABLE consults ADD CONSTRAINT fk_healthcare_id_consults
       FOREIGN KEY(healthcare_id) REFERENCES users(id);"
-    # Create Foreign Key secretary_id
-    execute "ALTER TABLE consults ADD CONSTRAINT fk_secretary_id_consults
-      FOREIGN KEY(secretary_id) REFERENCES users(id);"
     # Create Foreign Key patient_id
     execute "ALTER TABLE consults ADD CONSTRAINT fk_patient_id_consults
       FOREIGN KEY(patient_id) REFERENCES patients(id);"

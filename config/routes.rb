@@ -39,6 +39,8 @@ Rails.application.routes.draw do
     as: :consults_allpatients
   get "consults/insurances/insurances" => "insurances#allinsurances",
     as: :consults_allinsurances
+  delete "consults/user_sessions" => "user_sessions#destroy", 
+    as: :consults_user_sessions
   
   #Insurances
   resources :insurances, only: [:create, :update] 

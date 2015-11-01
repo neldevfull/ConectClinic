@@ -15,7 +15,8 @@ class ConsultsController < ApplicationController
 		only: [:index]		
 
 	def index		
-		@user = User.find(params[:user])			
+		@user      = current_user()
+		@healthcare = User.find(params[:user])			
 	end
 
 	# Check if dates have been sent, if so,
@@ -43,20 +44,20 @@ class ConsultsController < ApplicationController
 		id      = patient_exist?(patient)
 		insurance_value = params[:consult][:insurance_id]
 
-		# Check if Insurance no exist
-		if insurance_value.to_i == 0 && 
-			insurance_value != "0" 
-			insurance = Insurance.new(
-				name: insurance_value)
-			if insurance.save
-				params[:consult][:insurance_id] = insurance.id
-			else
-				create_response(false, insurance)
-				return				
-			end  
-		end
-
 		Patient.transaction do
+			# Check if Insurance no exist
+			if insurance_value.to_i == 0 && 
+				insurance_value != "0" 
+				insurance = Insurance.new(
+					name: insurance_value)
+				if insurance.save
+					params[:consult][:insurance_id] = insurance.id
+				else
+					create_response(false, insurance)
+					return				
+				end  
+			end
+
 			if id == 0
 				if patient.save
 					@consult = patient.consults.new consult_params					
@@ -83,7 +84,6 @@ class ConsultsController < ApplicationController
 			end
 		end
 	end
-
 
 	def update  
 			success = true
@@ -157,7 +157,8 @@ class ConsultsController < ApplicationController
 
 	def consult_params
 		params.require(:consult)
-			.permit :patient_id, :insurance_id, :name, :email,
+			.permit :healthcare_id, :secretary_id, :patient_id, 
+				:insurance_id, :name, :email,
 				:telephone, :cellphone, :gender, :date, 
 				:hour_ini, :hour_end, :confirm,
 				:scheduling, :status  
