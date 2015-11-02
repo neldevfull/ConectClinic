@@ -32,8 +32,7 @@ class UserSessionsController < ApplicationController
 		user_session.destroy
 		respond_to do |format|
 			format.html { 
-				redirect_to new_user_sessions_path, 
-				notice: "Usuario nao esta logado" 
+				redirect_to new_user_sessions_path 
 			}		      
 		end
 	end

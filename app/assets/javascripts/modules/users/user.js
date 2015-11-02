@@ -1,4 +1,4 @@
-modulejs.define('user', ['getAllHealthcare', 'getAnswers'],  
+modulejs.define('user', ['getAllHealthcare', 'getAnswers'],   
 	function(getAllHealthcare, getAnswers) {
 	return function() {	
 
@@ -9,10 +9,12 @@ modulejs.define('user', ['getAllHealthcare', 'getAnswers'],
 		var userForm = {
 			// Attributes
 			height: 0,
+			answers: [],
+			removers: [],
 			$healthcare: $('#healthcare_list'),
 			$answers: $('#healthcare_selected'),
-			$div_answers: $('#user_answers'),
-			$div_removers: $('#user_removers'),
+			$userAnswers: $('#user_answers'),
+			$userRemovers: $('#user_removers'),
 			// Methods
 			cleanFields: function() {
 				$('#user_name').val('');
@@ -20,10 +22,18 @@ modulejs.define('user', ['getAllHealthcare', 'getAnswers'],
 				this.cleanPassw();
 				$('#user_privilege').removeAttr('checked');
 				$("input:radio").attr("checked", false);
+				$('#user_career').val('career');
 			},
 			cleanPassw: function() {
 				$('#user_password').val('');
 				$('#user_password_confirmation').val('');				
+			},
+			cleanProperties: function(_this) {
+				_this.height   = 0;
+				_this.answers  = [];
+				_this.removers = []; 
+				_this.$userAnswers.val('');
+				_this.$userRemovers.val('');
 			},
 			domain: function() {
 				return window.location.href.toString()
@@ -40,8 +50,8 @@ modulejs.define('user', ['getAllHealthcare', 'getAnswers'],
 			},
 			answersList: function(_this) {
 				promises = getAnswers.execute();
-				promises.done(function(answers) {
-					answers = answers.response;					
+				promises.done(function(result) {
+					answers = result.response;					
 					_this.renderAnswers(_this, answers);
 				});
 				promises.fail(function(error) {
@@ -50,8 +60,8 @@ modulejs.define('user', ['getAllHealthcare', 'getAnswers'],
 			},
 			healtcareList: function(_this) {	
 				promises = getAllHealthcare.execute();			
-				promises.done(function(healthcare) {
-					healthcare = healthcare.response;					
+				promises.done(function(result) {
+					healthcare = result.response;					
 					_this.renderHealthcare(_this, healthcare);					
 				});
 				promises.fail(function(error) {
@@ -59,10 +69,6 @@ modulejs.define('user', ['getAllHealthcare', 'getAnswers'],
 				});
 			},
 			addRemoveAnswers: function(_this) {
-				// Answers
-				var answers = [];
-				var removers = [];
-
 				// Click to selected healthcare
 				_this.$healthcare.on('click', '.healthList', function() {
 				    var li   = $(this).closest('li');
@@ -77,12 +83,12 @@ modulejs.define('user', ['getAllHealthcare', 'getAnswers'],
 				    	name + 
 				    	'</span></li>');
 				    
-				    answers.push(id);
-				    _this.$div_answers.val(answers);
+				    _this.answers.push(id);
+				    _this.$userAnswers.val(_this.answers);
 				  
-				    var remx = removers.indexOf(id);
-					removers.splice(remx, 1);
-					_this.$div_removers.val(removers);
+				    var remx = _this.removers.indexOf(id);
+					_this.removers.splice(remx, 1);
+					_this.$userRemovers.val(_this.removers);
 				});
 
 				// Click to deselected healthcare
@@ -99,12 +105,12 @@ modulejs.define('user', ['getAllHealthcare', 'getAnswers'],
 						name + 
 						'</span></li>');					
 					
-					var index = answers.indexOf(id);
-					answers.splice(index, 1);
-					_this.$div_answers.val(answers);					
+					var index = _this.answers.indexOf(id);
+					_this.answers.splice(index, 1);
+					_this.$userAnswers.val(_this.answers);					
 
-					removers.push(id);
-				    _this.$div_removers.val(removers);		
+					_this.removers.push(id);
+				    _this.$userRemovers.val(_this.removers);		
 				});
 
 			},
@@ -159,10 +165,10 @@ modulejs.define('user', ['getAllHealthcare', 'getAnswers'],
 			},
 			renderHeight: function(_this, height) {
 				for(var i = 0; i < height; i++)
-					_this.height += 70;
+					_this.height += 42;
 
-				_this.$healthcare.css('height', _this.height);
-				_this.$answers.css('height', _this.height);
+				_this.$healthcare.css('height', _this.height + 32);
+				_this.$answers.css('height', _this.height + 32);
 			},
 			getName: function(li) {
 				var sName = li.split(">")[1];
@@ -171,7 +177,12 @@ modulejs.define('user', ['getAllHealthcare', 'getAnswers'],
 			noneAnswers: function() {
 				$('#container_answers')
 					.css('display', 'none');
-			}
+			},
+			successfully: function(_this) {
+				_this.cleanProperties(_this);
+				_this.healtcareList(_this);
+				_this.renderAnswers(_this, undefined);
+			},
 		};
 		// jQuery Exec
 		$(function() {
@@ -193,7 +204,7 @@ modulejs.define('user', ['getAllHealthcare', 'getAnswers'],
 					$('#output_message').empty().append(data.responseJSON.response);
 					if(data.responseJSON.verb === 'post') {
 						userForm.cleanFields();
-						userForm.renderHealthcare(healthcare);
+						userForm.successfully(userForm);
 					}
 					else if(data.responseJSON.verb === 'put')
 						userForm.cleanPassw();

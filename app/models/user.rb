@@ -19,12 +19,15 @@ class User < ActiveRecord::Base
 	# Authenticate
 	def self.authenticate(email, password)
 		user = self.find_by(email: email)
-		if user.present?
+		if user.present? && 
+			user.status == "Ativo"
 			user.authenticate(password)			
 		end
 	end
 
 	# Validate User
+	validates_uniqueness_of :email
+	
 	validate do |user|
 		# Validate Name
 		unless is_present?(user.name)

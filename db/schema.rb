@@ -74,6 +74,8 @@ ActiveRecord::Schema.define(version: 4) do
     t.datetime "updated_at",                        null: false
   end
 
+  add_index "users", ["email"], name: "idx_email_users", unique: true, using: :btree
+
   add_foreign_key "answers", "users", column: "healthcare_id", name: "fk_healthcare_id_answers"
   add_foreign_key "answers", "users", name: "fk_user_id_answers"
 end

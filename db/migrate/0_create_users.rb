@@ -9,6 +9,8 @@ class CreateUsers < ActiveRecord::Migration
       t.integer :privilege, null:false
       t.string  :status, default: "Ativo"
 
+      t.index :email, unique: true, name: 'idx_email_users'
+
       t.timestamps null: false
     end
   end
