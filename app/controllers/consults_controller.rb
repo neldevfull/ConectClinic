@@ -86,35 +86,35 @@ class ConsultsController < ApplicationController
 	end
 
 	def update  
-			success = true
-			msg     = ""
+		success = true
+		msg     = ""
 
-			unless params[:patient].blank?  
-				patient = Patient.find params[:consult][:patient_id]		
-				if patient.update patient_params
-					success = true
-				else
-					msg += errors_message(@consult)					
-				end		
-			end
-			
-			unless params[:consult].blank? 
-				@consult = Consult.find params[:id]
-				if @consult.update consult_params
-					success = true		
-				else					
-					msg = ', ' unless msg != ''
-					msg += errors_message(@consult)
-				end
-			end
-
-			if success
-				render :json => { :response => "",
-					:error => false }
+		unless params[:patient].blank?  
+			patient = Patient.find params[:consult][:patient_id]		
+			if patient.update patient_params
+				success = true
 			else
-				render :json => { :response => msg,
-					:error => true }
+				msg += errors_message(@consult)					
+			end		
+		end
+		
+		unless params[:consult].blank? 
+			@consult = Consult.find params[:id]
+			if @consult.update consult_params
+				success = true		
+			else					
+				msg = ', ' unless msg != ''
+				msg += errors_message(@consult)
 			end
+		end
+
+		if success
+			render :json => { :response => "",
+				:error => false }
+		else
+			render :json => { :response => msg,
+				:error => true }
+		end
 	end
 
 	def destroy

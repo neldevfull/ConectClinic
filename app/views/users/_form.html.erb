@@ -76,8 +76,8 @@
 						<li class="_healthcare-title">
 							Profissionais selecionados
 						</li>
-					</ul>	
-					<%= f.hidden_field :answers %>					
+					</ul>						
+					<input type="hidden" id="user_answers" name="user[answers]">
 					<input type="hidden" id="user_removers" name="user[removers]">
 				</div>
 				<!-- Status -->
@@ -88,7 +88,7 @@
 				</div>
 				<!-- Buttons -->
 				<div class="button-group row _plus-row">					
-					<%= f.submit action_value,
+					<%= f.submit action_value, id: "insurance_cad",
 						class: "btn btn-success _btn-confirm" %>
 					<%= link_to "Voltar", index_users_path,   
 						class: "btn btn-default _btn-back"%>													

@@ -15,14 +15,6 @@ class CreateConsults < ActiveRecord::Migration
 
       t.timestamps null: false
     end
-    # Create Foreign Key healthcare_id
-    execute "ALTER TABLE consults ADD CONSTRAINT fk_healthcare_id_consults
-      FOREIGN KEY(healthcare_id) REFERENCES users(id);"
-    # Create Foreign Key patient_id
-    execute "ALTER TABLE consults ADD CONSTRAINT fk_patient_id_consults
-      FOREIGN KEY(patient_id) REFERENCES patients(id);"
-    # Create Foreign Key insurance_id
-    execute "ALTER TABLE consults ADD CONSTRAINT fk_insurance_id_consults
-      FOREIGN KEY(insurance_id) REFERENCES insurances(id);"
   end
 end
+ 

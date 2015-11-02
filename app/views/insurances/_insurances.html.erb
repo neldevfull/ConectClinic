@@ -1,12 +1,16 @@
 <% @insurances.each do |insurance| %>
 	<tr>								
 		<th>
-			<%= insurance.name %></th>
-		<th><%=
-				link_to insurance.identifier,
-					edit_insurance_path(insurance),
-					class: ""
+			<%=
+				link_to insurance.name, 
+				edit_insurance_path(insurance)
 			%></th>
+		<th>
+			<%=
+				link_to insurance.identifier,
+					edit_insurance_path(insurance)
+			%>
+		</th>
 		<th><%= insurance.city %></th>
 		<th><%= insurance.state %></th>		
 		<th><%= insurance.status %></th>

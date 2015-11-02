@@ -1,12 +1,12 @@
 modulejs.define('consults', 
 	['validationsForm', 'getPatientsAll', 'getAllInsurancesToConsults'],  
-	function(validationForm, getPatientsAll, getAllInsurancesToConsults) {
+	function(validationForm, getPatientsAll, getAllInsurancesToConsults) { 
 	return function() {
 		// Vars
 		var healthcare_id = $('#healthcare_id').val();
 		var user_id       = $('#user_id').val();
 		var promise;		
-		var patientsAll = [];
+		var patientsAll   = [];
 		var allInsurances = [];
 
 		// All Patients
@@ -23,7 +23,7 @@ modulejs.define('consults',
 		promise.done(function(insurances) {
 			allInsurances = insurances.response;
 			// Mount select of insurances
-			consultForm.selectInsurances(allInsurances);
+			consultForm.mountInsurances(consultForm, allInsurances);
 		});
 		promise.fail(function(error) {
 			console.log(error);
@@ -154,7 +154,7 @@ modulejs.define('consults',
 				$('#confirm').prop('checked', false);
 			},
 			// Mount select for insurances
-			selectInsurances: function(allInsurances) {				
+			mountInsurances: function(_this, allInsurances) {				
 				var insurances = $('#insurances');
 				insurances.append($('<option>', {
 					value: 0,
@@ -173,22 +173,39 @@ modulejs.define('consults',
 					    }));
 					});
 				}
+				_this.insertInsuranceOther(insurances);
+				_this.displayInsuranceOther('none');
+			},
+			insertInsuranceOther: function(insurances) {
 				insurances.append($('<option>', {
 					value: 'other',
 					text:  'Outro'
+				}));				
+			},
+			insertNewInsurance: function(insurances, insurance) {
+				insurances.append($('<option>', {
+					value: insurance.value,
+					text: insurance.text
 				}));
 			},
+			removeInsuranceOther: function(_this, value) {
+				$('#insurances option[value='+value+']').remove();
+				_this.displayInsuranceOther('none');
+			},
+			displayInsuranceOther: function(value) {
+				$('#insurance_other').css('display', value);
+			},
 			// Other Insurance
-			otherInsurance: function() {
+			insuranceOther: function(_this) {
 				var insurances     = $('#insurances');
 				var insuranceOther = $('#insurance_other');
 				insurances.change(function() {
 					if(insurances.val() === 'other')
-						insuranceOther.css('display', 'block');					
+						_this.displayInsuranceOther('block');				
 					else
-						insuranceOther.css('display', 'none');
+						_this.displayInsuranceOther('none');
 				});
-			}
+			},
 		};
 		var _consults = {
 			weeks: [
@@ -215,7 +232,8 @@ modulejs.define('consults',
 			// Call function that loads the masks
 			consultForm.loadMasksConsults();
 			// Call other insurances			
-			consultForm.otherInsurance();
+			consultForm.insuranceOther(
+				consultForm);
 		});
 		// Get Patients Names
 		function loadAutoComplete() {	
@@ -463,6 +481,15 @@ modulejs.define('consults',
 				firstDay: 1,
 				// Insert consultation			
 				select: function(start, end) {	
+					// Mount insurances other
+					if(! $('#insurances option[value = "other"]')
+						.length > 0) {
+						consultForm.insertInsuranceOther(
+							$('#insurances'));
+					}
+					consultForm.displayInsuranceOther('none');
+
+					// Load hourly
 					_start = start;
 					_end   = end;			
 					_control = 1;
@@ -477,7 +504,12 @@ modulejs.define('consults',
 					openDialog();
 				}, 
 				// Update consultation
-				eventClick: function(event) {				 				
+				eventClick: function(event) {	
+					// Remove insurance other field					
+					consultForm.removeInsuranceOther(
+						consultForm, 'other');	
+
+					// Load hourly		 				
 					_start = consultUtil.parseMomentToHour(event.start);
 					_end   = consultUtil.parseMomentToHour(event.end); 
 					_date  = consultUtil.parseMomentToDate(event.start); 
@@ -669,6 +701,19 @@ modulejs.define('consults',
 			else
 				return $('#insurances').val();
 		}
+		// Check Insurance to insert
+		function checkInsuranceToInsert(insurance_id) {			
+			var insurances = $('#insurances');
+			var other      = $('#insurance_other');
+			if(other.val() != '') {
+				consultForm.insertNewInsurance(
+					insurances, {
+						value: insurance_id,
+						text: other.val()
+					});
+			}
+
+		}
 		// Event start for Drag n' Drop and Resize
 		function eventStart(_event) {	
 			var start = consultUtil.parseMomentToHour(_event.start);
@@ -692,7 +737,9 @@ modulejs.define('consults',
 				success: function(data) {							
 					if(data['error'] === false){				
 						if(option === 'post'){
-							renderEvent(_event);					
+							renderEvent(_event);
+							checkInsuranceToInsert(
+								data["response"].insurance_id);					
 							insertConsult(data["response"]); 
 						}
 						else if(option === 'put') {
@@ -719,19 +766,20 @@ modulejs.define('consults',
 		}
 		// Check each modified field and update 
 		function fieldUpdateConsult() {
-			var data       = 
+			var data            = 
 				'consult[healthcare_id]=' + healthcare_id +
 				'&consult[secretary_id]=' + user_id;
-			var name       = $('#name').val();
-			var email      = $('#email').val(); 
-			var telephone  = $('#telephone').val();
-			var cellphone  = $('#cellphone').val();
-			var gender     = $('input[name="gender"]:checked').val();
-			var date       = consultUtil.parseDate($('#date').val(), '/', '-');
-			var hourIni    = $('#hour_ini').val();
-			var hourEnd    = $('#hour_end').val();
-			var mailAceept = $('input[id="mail_accept"]:checked').length;
-			var confirm    = $('input[id="confirm"]:checked').length;
+			var name         = $('#name').val();
+			var email        = $('#email').val(); 
+			var telephone    = $('#telephone').val();
+			var cellphone    = $('#cellphone').val();
+			var insurance_id = $('#insurances').val();
+			var gender       = $('input[name="gender"]:checked').val();
+			var date         = consultUtil.parseDate($('#date').val(), '/', '-');
+			var hourIni      = $('#hour_ini').val();
+			var hourEnd      = $('#hour_end').val();
+			var mailAceept   = $('input[id="mail_accept"]:checked').length;
+			var confirm      = $('input[id="confirm"]:checked').length;
 
 			if(_consult.name != name) {		
 				data += '&patient[name]=' + name;
@@ -751,6 +799,11 @@ modulejs.define('consults',
 				concat();
 				data += '&patient[cellphone]=' + cellphone;
 				_consult.cellphone = cellphone;
+			}
+			if(_consult.insurance_id != insurance_id) {
+				concat();
+				data += '&consult[insurance_id]=' + insurance_id;
+				_consult.insurance_id = insurance_id;
 			}
 			if(_consult.gender != gender) {
 				concat();

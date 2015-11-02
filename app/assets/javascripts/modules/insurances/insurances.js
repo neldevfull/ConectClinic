@@ -10,13 +10,14 @@ modulejs.define('insurances', ['getAllInsurances'],
 		var pagination;
 
 		// Promise for all Insurances
-		getAllInsurances.done(function(insurances) {
+		promise = getAllInsurances.execute();
+		promise.done(function(insurances) {
 			allObjs.objs   = insurances.response;
 			// Pagination
 			pagination = modulejs.require('pagination', { allObjs: allObjs });	
 			pagination.startPagination(); 	
 		});
-		getAllInsurances.fail(function(error) {
+		promise.fail(function(error) {
 			console.log(error);
 		});
 

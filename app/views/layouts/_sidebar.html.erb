@@ -15,11 +15,13 @@
 					<span class="_calendar"></span>Agenda</a>
 				</li> 
 				<% @answers.each do |answer| %>
-					<%= 
-						link_to answer.name, 
-							index_consults_path(:user => answer),
-							id: "index_consult"
-					%>	
+					<li>						
+						<%= 
+							link_to answer.name, 
+								index_consults_path(:user => answer),
+								id: "index_consult"
+						%>	
+					</li>
 				<% end %>
 			<% end %>					
 			<li>			

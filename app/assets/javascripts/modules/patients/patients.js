@@ -2,10 +2,11 @@ modulejs.define('patients', ['getPatientsAll'], function(getPatientsAll) {
 	return function() {
 		// Get Patients All
 		var patientsAll = [];
-		getPatientsAll.done(function(patients) {
+		promise = getPatientsAll.execute();
+		promise.done(function(patients) {
 			patientsAll = patients.patients;
 		});
-		getPatientsAll.fail(function(error) {
+		promise.fail(function(error) {
 			console.log(error);			
 		});		
 		// Patients Pages

@@ -25,9 +25,9 @@ ActiveRecord::Schema.define(version: 4) do
 
   create_table "consults", force: :cascade do |t|
     t.integer  "healthcare_id",              null: false
-    t.integer  "secretary_id",               null: false
+    t.integer  "secretary_id",  default: 0
     t.integer  "patient_id",                 null: false
-    t.integer  "insurance_id",               null: false
+    t.integer  "insurance_id",  default: 0
     t.string   "date",                       null: false
     t.string   "hour_ini",                   null: false
     t.string   "hour_end",                   null: false
@@ -76,8 +76,4 @@ ActiveRecord::Schema.define(version: 4) do
 
   add_foreign_key "answers", "users", column: "healthcare_id", name: "fk_healthcare_id_answers"
   add_foreign_key "answers", "users", name: "fk_user_id_answers"
-  add_foreign_key "consults", "insurances", name: "fk_insurance_id_consults"
-  add_foreign_key "consults", "patients", name: "fk_patient_id_consults"
-  add_foreign_key "consults", "users", column: "healthcare_id", name: "fk_healthcare_id_consults"
-  add_foreign_key "consults", "users", column: "secretary_id", name: "fk_secretary_id_consults"
 end

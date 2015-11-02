@@ -1,6 +1,7 @@
-modulejs.define('user', ['getAllHealthcare', 'getAnswers'], 
+modulejs.define('user', ['getAllHealthcare', 'getAnswers'],  
 	function(getAllHealthcare, getAnswers) {
-	return function() {		
+	return function() {	
+
 		// All healthcare
 		var healthcare = [];
 
@@ -78,13 +79,10 @@ modulejs.define('user', ['getAllHealthcare', 'getAnswers'],
 				    
 				    answers.push(id);
 				    _this.$div_answers.val(answers);
-				    console.log(_this.$div_answers.val());
 				  
 				    var remx = removers.indexOf(id);
 					removers.splice(remx, 1);
 					_this.$div_removers.val(removers);
-					console.log(_this.$div_removers.val());
-
 				});
 
 				// Click to deselected healthcare
@@ -103,13 +101,10 @@ modulejs.define('user', ['getAllHealthcare', 'getAnswers'],
 					
 					var index = answers.indexOf(id);
 					answers.splice(index, 1);
-					_this.$div_answers.val(answers);	
-					console.log(_this.$div_answers.val());				
+					_this.$div_answers.val(answers);					
 
 					removers.push(id);
-				    _this.$div_removers.val(removers);				  
-				    console.log(_this.$div_removers.val());
-
+				    _this.$div_removers.val(removers);		
 				});
 
 			},
