@@ -20,34 +20,6 @@ class PatientsController < ApplicationController
 		@patients = get_patients(12, 0)	
 	end
 
-	def amount
-		count = Patient.count
-		render :json => { :amount => count }
-	end
-
-	def main
-		limit  = params[:limit]
-		offset = params[:offset]		
-		patients = get_patients(limit, offset)					 
-		if patients.length > 0
-			render :json => { 
-				:patients => patients,
-				:error => false
-			}				
-		else
-			render :json => { 
-				:patients => '',
-				:error => true
-			}
-		end
-	end
-
-	def patients		
-		patients = get_patients_all
-		render :json => { :patients => patients,
-					:error => true }				
-	end
-
 	def new
 		@patient = Patient.new 			
 	end 
@@ -83,25 +55,63 @@ class PatientsController < ApplicationController
 		end
 	end
 
+	def amount
+		count = Patient.count
+		render :json => { :amount => count }
+	end
+
+	def main
+		limit  = params[:limit]
+		offset = params[:offset]		
+		patients = get_patients(limit, offset)					 
+		if patients.length > 0
+			render :json => { 
+				:patients => patients,
+				:error => false
+			}				
+		else
+			render :json => { 
+				:patients => '',
+				:error => true
+			}
+		end
+	end
+
+	def allpatients		
+		patients = get_all_patients(params[:resource])
+		render :json => { 
+			:response => patients,
+			:verb     => 'get',
+			:error    => true 
+		}				
+	end
+
 	private
 
 	# Get Patients
 	def get_patients(limit, offset)
-		Patient.select("id", "name", "email", "telephone",
-			"cellphone"). 
-			order("name ASC").limit(limit).offset(offset)
+		patients = []
+		results = Patient.new.get_patients(
+			limit, offset)
 	end
+
 	# Get Patients All
-	def get_patients_all
+	def get_all_patients(resource)
+		if resource == "patients"
+			Patient.new.get_all_patients()
+		else
 		Patient.select("id", "name", "email", 
 			"telephone", "cellphone", "gender",
 			"mail_accept").
 			order("name ASC")
+		end
 	end
+
 	# Set Patient
 	def set_patient
 		@patient = Patient.find(params[:id])
 	end
+
 	# Patient Params
 	def patient_params
 		params.require(:patient)

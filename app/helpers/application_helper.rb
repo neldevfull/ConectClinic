@@ -1,7 +1,16 @@
 module ApplicationHelper
-	def button_to_with_icon(text, classes)
-	    button_tag(classes) do
-	      raw text
-	    end
+	def empty?(field)
+		if field
+			return true
+		else
+			return false
+		end
 	end
+
+	# Format date 
+	def format_date(date_str)
+		date = Date.parse date_str
+		date.strftime('%d/%m/%Y')
+	end
+
 end

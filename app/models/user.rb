@@ -106,7 +106,7 @@ class User < ActiveRecord::Base
 	private 
 
 	def get_connection
-		conn = ActiveRecord::Base.connection
+		User.connection
 	end
 	
 end

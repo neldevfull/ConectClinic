@@ -2,21 +2,33 @@
 	<tr>								
 		<th>
 			<%=
-				link_to patient.name,
-					edit_patient_path(patient),
+				link_to patient["name"],
+					edit_patient_path(patient["id"]),
 					class: ""  											 
 			%></th>
-		<th><%= patient.email %></th>
+		<th><%= patient["email"] %></th>
 		<th>
 			<%= 
-				if patient.cellphone.present?
-					patient.cellphone
+				if patient["cellphone"].present?
+					patient["cellphone"]
 				else
-					patient.telephone
+					patient["telephone"]
 				end 
 			%>
 		</th>		
-		<th>-----</th>							
-		<th>-----</th>
+		<th><%= 
+				if empty?(patient["date"])
+					patient["insurance"]
+				end 
+			%>
+		</th>							
+		<th>
+			<%=
+				if  empty?(patient["date"])
+					format_date(
+					patient["date"])
+				end
+			%>
+		</th>
 	</tr>
 <% end %>

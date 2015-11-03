@@ -5,7 +5,7 @@ class CreateInsurances < ActiveRecord::Migration
       t.string :name, null: false
       t.string :city, default: ""
       t.string :state, default: ""
-      t.integer :status, default: 1
+      t.string :status, default: "Ativo"
 
       t.timestamps null: false
     end

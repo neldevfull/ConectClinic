@@ -1,18 +1,20 @@
 modulejs.define('consults', 
-	['validationsForm', 'getPatientsAll', 'getAllInsurancesToConsults'],  
-	function(validationForm, getPatientsAll, getAllInsurancesToConsults) { 
+	['validationsForm', 'getAllPatients', 
+		'getAllInsurancesToConsults', 'util'],  
+	function(validationForm, getAllPatients, 
+		getAllInsurancesToConsults, util) { 
 	return function() {
 		// Vars
 		var healthcare_id = $('#healthcare_id').val();
 		var user_id       = $('#user_id').val();
 		var promise;		
-		var patientsAll   = [];
+		var allPatients   = [];
 		var allInsurances = [];
 
 		// All Patients
-		promise = getPatientsAll.execute();		
+		promise = getAllPatients.execute('consults');		
 		promise.done(function(patients) {
-			patientsAll = patients.patients;
+			allPatients = patients.response;
 		});
 		promise.fail(function(error) {
 			console.log(error);			
@@ -112,7 +114,7 @@ modulejs.define('consults',
 				$('#gender_'+consult.gender).prop('checked', true);
 				$('#insurances').val(consult.insurance_id);
 				// $('#insurances').val(consult.insurance_id);
-				$('#date').val(consultUtil.parseDate(consult.date, '-','/'));
+				$('#date').val(util.parseDate(consult.date, '-','/'));
 				$('#hour_ini').val(consult.hour_ini);
 				$('#hour_end').val(consult.hour_end);
 				$('#mail_accept')
@@ -132,13 +134,13 @@ modulejs.define('consults',
 			// Prepare fields of the New Form
 			preparedFields: function(start, end) {	
 				var hourIni    = start != '' ?
-					consultUtil.parseMomentToHour(start) : '';
+					util.parseMomentToHour(start) : '';
 				var hourEnd    = end != '' ?
-					consultUtil.parseMomentToHour(end) : '';	
+					util.parseMomentToHour(end) : '';	
 				var date       = start != '' ? 
-					consultUtil.parseMomentToDate(start) : '';
+					util.parseMomentToDate(start) : '';
 				var dateFormat = date != '' ?
-					consultUtil.parseDate(date, '-', '/') : '';  
+					util.parseDate(date, '-', '/') : '';  
 
 				$('#name').val('');
 				$('#email').val('');
@@ -240,7 +242,7 @@ modulejs.define('consults',
 			var name  = $('#name');
 			var email = $('#email'); 	
 	 		var names = []; 		
-			var _patients = patientsAll;
+			var _patients = allPatients;
 			// Load names
 			_patients.forEach(function(patient) {			
 				names.push(patient.name);
@@ -330,21 +332,21 @@ modulejs.define('consults',
 			var weekEnd;	
 
 			if(weekDay === 0){		
-				weekStart = consultUtil.parseMomentToDate(view.start);
-				weekEnd   = consultUtil.parseMomentToDate(view.end.add(3, 'day')); 	
+				weekStart = util.parseMomentToDate(view.start);
+				weekEnd   = util.parseMomentToDate(view.end.add(3, 'day')); 	
 				recoversConsults(weekStart, weekEnd);
 			}	
 			else if(weekDay === 4) {
-				weekStart = consultUtil.parseMomentToDate(view.start.subtract(4, 'day'));
-				weekEnd   = consultUtil.parseMomentToDate(view.end.subtract(1, 'day')); 
+				weekStart = util.parseMomentToDate(view.start.subtract(4, 'day'));
+				weekEnd   = util.parseMomentToDate(view.end.subtract(1, 'day')); 
 				recoversConsults(weekStart, weekEnd);
 			}
 		}
 		// Make dealings on the dates and loads consultations
 		function weekDates() {
 			var view      = $('#calendar').fullCalendar('getView');
-			var weekStart = consultUtil.parseMomentToDate(view.start);
-			var weekEnd   = consultUtil.parseMomentToDate(view.end.subtract(1, 'day')); 
+			var weekStart = util.parseMomentToDate(view.start);
+			var weekEnd   = util.parseMomentToDate(view.end.subtract(1, 'day')); 
 			
 			recoversConsults(weekStart, weekEnd); 
 		} 
@@ -420,8 +422,8 @@ modulejs.define('consults',
 									var color = setColors(consult.confirm);																		
 									var _event = {
 										title: consult.name,
-										start: consultUtil.parseDateToMoment(consult.date, consult.hour_ini),
-										end:   consultUtil.parseDateToMoment(consult.date, consult.hour_end),
+										start: util.parseDateToMoment(consult.date, consult.hour_ini),
+										end:   util.parseDateToMoment(consult.date, consult.hour_end),
 										color: color.background,
 										borderColor: color.border				
 									}				
@@ -510,9 +512,9 @@ modulejs.define('consults',
 						consultForm, 'other');	
 
 					// Load hourly		 				
-					_start = consultUtil.parseMomentToHour(event.start);
-					_end   = consultUtil.parseMomentToHour(event.end); 
-					_date  = consultUtil.parseMomentToDate(event.start); 
+					_start = util.parseMomentToHour(event.start);
+					_end   = util.parseMomentToHour(event.end); 
+					_date  = util.parseMomentToDate(event.start); 
 			        _control = 2;		
 					// Find scheduled consult and carries fields 
 					_consults.events.forEach(function(consult) {
@@ -534,9 +536,9 @@ modulejs.define('consults',
 			    	_eventStart = eventStart(event);
 			    },
 			    eventDrop: function(event) { 
-			    	_start = consultUtil.parseMomentToHour(event.start);
-					_end   = consultUtil.parseMomentToHour(event.end); 
-					_date  = consultUtil.parseMomentToDate(event.start); 
+			    	_start = util.parseMomentToHour(event.start);
+					_end   = util.parseMomentToHour(event.end); 
+					_date  = util.parseMomentToDate(event.start); 
 					// Find scheduled consult and update consult 
 					_consults.events.forEach(function(consult) {
 						if(consult.name == _eventStart.title &&
@@ -564,7 +566,7 @@ modulejs.define('consults',
 			    	_eventStart = eventStart(event);
 			    },
 			    eventResize: function(event) {
-			    	_end  = consultUtil.parseMomentToHour(event.end); 			
+			    	_end  = util.parseMomentToHour(event.end); 			
 			    	// Find scheduled consult and update consult 
 					_consults.events.forEach(function(consult) {
 						if(consult.name == _eventStart.title &&
@@ -662,7 +664,7 @@ modulejs.define('consults',
 										'&patient[cellphone]=' + $('#cellphone').val() +
 										'&consult[insurance_id]=' + insurance +
 										'&consult[date]=' + 
-										consultUtil.parseDate($('#date').val(), '/', '-') +
+										util.parseDate($('#date').val(), '/', '-') +
 										'&consult[hour_ini]=' + $('#hour_ini').val() +
 										'&consult[hour_end]=' + $('#hour_end').val() +
 										'&patient[gender]=' +
@@ -716,9 +718,9 @@ modulejs.define('consults',
 		}
 		// Event start for Drag n' Drop and Resize
 		function eventStart(_event) {	
-			var start = consultUtil.parseMomentToHour(_event.start);
-			var end   = consultUtil.parseMomentToHour(_event.end); 
-			var date  = consultUtil.parseMomentToDate(_event.start); 
+			var start = util.parseMomentToHour(_event.start);
+			var end   = util.parseMomentToHour(_event.end); 
+			var date  = util.parseMomentToDate(_event.start); 
 			var eventStart = {};
 			eventStart = {
 				title: _event.title,
@@ -775,7 +777,7 @@ modulejs.define('consults',
 			var cellphone    = $('#cellphone').val();
 			var insurance_id = $('#insurances').val();
 			var gender       = $('input[name="gender"]:checked').val();
-			var date         = consultUtil.parseDate($('#date').val(), '/', '-');
+			var date         = util.parseDate($('#date').val(), '/', '-');
 			var hourIni      = $('#hour_ini').val();
 			var hourEnd      = $('#hour_end').val();
 			var mailAceept   = $('input[id="mail_accept"]:checked').length;
@@ -844,11 +846,11 @@ modulejs.define('consults',
 				'&consult[patient_id]=' + _consult.patient_id + '&_method=put' : '';  
 
 			function updateStart() {
-				_event.start = consultUtil.parseDateToMoment(_consult.date, _consult.hour_ini)		
+				_event.start = util.parseDateToMoment(_consult.date, _consult.hour_ini)		
 			}
 
 			function updateEnd() {
-				_event.end = consultUtil.parseDateToMoment(_consult.date, _consult.hour_end); 		
+				_event.end = util.parseDateToMoment(_consult.date, _consult.hour_end); 		
 			}
 			 
 			function concat() {
@@ -859,24 +861,24 @@ modulejs.define('consults',
 		}
 		// Check if date was modified
 		function isChangeDate() {
-			var date           = consultUtil.parseDate($('#date').val(), '/', '-');
+			var date           = util.parseDate($('#date').val(), '/', '-');
 			var hourStart      = $('#hour_ini').val(); 
 			var hourEnd        = $('#hour_end').val();
 			var eventDate      = _event.start != '' ?
-				consultUtil.parseMomentToDate(_event.start) : ''; 
+				util.parseMomentToDate(_event.start) : ''; 
 			var eventHourStart = _event.start != '' ?
-				consultUtil.parseMomentToHour(_event.start) : '';
+				util.parseMomentToHour(_event.start) : '';
 			var eventHourEnd   = _event.end != '' ?
-				consultUtil.parseMomentToHour(_event.end) : '';
+				util.parseMomentToHour(_event.end) : '';
 
 			if(date != eventDate) {
-				_event.start = consultUtil.parseDateToMoment(date, hourStart);
-				_event.end   = consultUtil.parseDateToMoment(date, hourEnd);
+				_event.start = util.parseDateToMoment(date, hourStart);
+				_event.end   = util.parseDateToMoment(date, hourEnd);
 			}
 			if(hourStart != eventHourStart)
-				_event.start = consultUtil.parseDateToMoment(date, hourStart);
+				_event.start = util.parseDateToMoment(date, hourStart);
 			if(hourEnd != eventHourEnd)
-				_event.end = consultUtil.parseDateToMoment(date, hourEnd);
+				_event.end = util.parseDateToMoment(date, hourEnd);
 		}
 		// Insert consultation
 		function insertConsult(obj) {
@@ -889,7 +891,7 @@ modulejs.define('consults',
 				cellphone: $('#cellphone').val(),
 				gender: $('input[type="radio"][name="gender"]:checked').val(),
 				insurance_id: obj.insurance_id,
-				date: consultUtil.parseDate($('#date').val(), '/', '-'),
+				date: util.parseDate($('#date').val(), '/', '-'),
 				hour_ini: $('#hour_ini').val(),
 				hour_end: $('#hour_end').val(),
 				mail_accept: $('input[id="mail_accept"]:checked').length,
@@ -924,34 +926,6 @@ modulejs.define('consults',
 		// Remove events into calendar
 		function removeEvent(_event) {
 			$('#calendar').fullCalendar('removeEvents', _event._id);
-		}
-		// Consult Utilities
-		var consultUtil = {
-			// Parse Date
-			parseDate: function(date, charOld, charNew) {
-				var vDate = date.split(charOld);
-				return vDate[2] + charNew + vDate[1] + charNew + vDate[0]; 	
-			}, 
-			// Parse Date to Moment
-			parseDateToMoment: function(date, hour) {
-				return $.fullCalendar.moment.utc(date + 'T' + hour + ':00');
-			},
-			// Parse Moment in Date
-			parseMomentToDate: function(moment) {
-				return (new Date(moment)).toISOString().slice(0, 10); 
-			},
-			// Parse Moment in Date
-			parseMomentToHour: function(moment) {
-				var hour = +/ (\d+):/.exec(moment)[1];
-				var min  = +/:(\d+):/.exec(moment)[1];
-
-				if(hour.toString().length == 1)
-					hour = '0' + hour;	
-				if(min.toString().length == 1)
-					min = '0' + min;
-
-				return hour.toString() + ':' + min.toString(); 
-			} 
 		}
 	}
 });

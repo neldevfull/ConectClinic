@@ -8,7 +8,7 @@ pt:
         password_confirmation: "Senha de confirmaçao"
         gender: Sexo
         privilege: Privilegio
-        career: Colabora
+        career: Profissao
       patient:
         name: Nome
         email: E-mail

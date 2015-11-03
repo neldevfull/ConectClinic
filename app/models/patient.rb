@@ -7,6 +7,7 @@ class Patient < ActiveRecord::Base
 	NAME_REGEX  = /\A[^0-9`!@#\$%\^&*+_=]+\z/
 	EMAIL_REGEX = /\A[^@]+@([^@\.]+\.)+[^@\.]+\z/ 
 	MSG_ERROR   = "nao pode ficar em branco"
+	
 	# Validate
 	validate do |patient|
 		# Validate Name
@@ -50,9 +51,56 @@ class Patient < ActiveRecord::Base
 			end
 		end		
 	end
+
 	#Validation of fields	
 	validates :telephone, mask: "(99) 9999-9999", if: :telephone? 
 	validates :cellphone, mask: "(99) 99999-9999", if: :cellphone? 
 	validates :birth, mask: "99/99/9999", if: :birth?
 	validates_presence_of :gender 
+
+	# Data Access Object
+	def get_patients(limit, offset)
+		connect = get_connection()
+		connect.select_all(
+			"SELECT DISTINCT ON(patients.id)
+			    patients.id,
+			    patients.name, patients.email,
+			    patients.telephone, patients.cellphone, 
+			    patients.gender,
+			    COALESCE(insurances.name, 'Particular')
+			    AS insurance,
+			    consults.date
+			FROM patients
+			LEFT JOIN consults 
+			ON patients.id = consults.patient_id
+			LEFT JOIN insurances
+			ON insurances.id = consults.insurance_id
+			ORDER BY patients.id, consults.id DESC
+			LIMIT #{limit} OFFSET #{offset};")
+	end
+
+	def get_all_patients
+		connect = get_connection()
+		connect.select_all(
+			"SELECT DISTINCT ON(patients.id)
+		    	patients.name, patients.email,
+		    	patients.telephone, patients.cellphone,
+		    	patients.gender, 
+		    	COALESCE(insurances.name, 'Particular')
+		    	AS insurance,
+		    consults.date
+			FROM patients
+			LEFT JOIN consults 
+			ON patients.id = consults.patient_id
+			LEFT JOIN insurances
+			ON insurances.id = consults.insurance_id
+			ORDER BY patients.id, consults.id DESC;")
+	end
+
+	private 
+
+	def get_connection
+		Patient.connection
+	end
+
 end

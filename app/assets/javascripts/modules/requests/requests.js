@@ -26,10 +26,11 @@ modulejs.define('getAnswers', function() {
 });
 
 // Request for get all Patients
-modulejs.define('getPatientsAll', function() {
+modulejs.define('getAllPatients', function() {
 	return {
-		execute: function() {
-			return $.get('patients/patients');		
+		execute: function(resource) {
+			return $.get(
+				'allpatients/' + resource);		
 		}
 	} 
 });

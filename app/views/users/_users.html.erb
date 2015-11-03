@@ -7,7 +7,15 @@
 					class: ""  											 
 			%></th>
 		<th><%= user.email %></th>
-		<th><%= user.career%></th>		
+		<th>
+			<%= 
+				if user.career == "healthcare"
+					"Profissional da saude"
+				else
+					"Atendimento"
+				end
+			%>
+		</th>		
 		<th><%= user.status%></th>
 	</tr>
 <% end %>

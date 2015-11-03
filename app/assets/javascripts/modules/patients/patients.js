@@ -1,10 +1,11 @@
-modulejs.define('patients', ['getPatientsAll'], function(getPatientsAll) {
+modulejs.define('patients', ['util', 'getAllPatients'], 
+	function(util, getAllPatients) {
 	return function() {
 		// Get Patients All
-		var patientsAll = [];
-		promise = getPatientsAll.execute();
+		var allPatients = [];
+		promise = getAllPatients.execute('patients');
 		promise.done(function(patients) {
-			patientsAll = patients.patients;
+			allPatients = patients.response;
 		});
 		promise.fail(function(error) {
 			console.log(error);			
@@ -55,11 +56,11 @@ modulejs.define('patients', ['getPatientsAll'], function(getPatientsAll) {
 		// Get First Twelve
 		function getFirst() {
 			var firstTwelve = [];
-			var counter     = patientsAll.length;
+			var counter     = allPatients.length;
 			var count       = counter > 12 ?
 				12 : counter;
 			for(var i = 0; i < count; i++) {
-				firstTwelve.push(patientsAll[i]);
+				firstTwelve.push(allPatients[i]);
 			}
 			patientsPages = __patientsPages();
 			setPatientsPages(firstTwelve, 1);
@@ -104,7 +105,7 @@ modulejs.define('patients', ['getPatientsAll'], function(getPatientsAll) {
 		// Filter
 		function filter(key) {
 			var patientsFound = [];
-			patientsAll.forEach(function(patient) {
+			allPatients.forEach(function(patient) {
 				if(patient.gender == key) {
 					patientsFound.push(patient);
 				}
@@ -140,7 +141,7 @@ modulejs.define('patients', ['getPatientsAll'], function(getPatientsAll) {
 			else {
 				newValue = new RegExp(value.val(), 'i');	
 			}
-			$.grep(patientsAll, function(patient) {
+			$.grep(allPatients, function(patient) {
 				if(newValue.test(patient[key]))
 					patientsFound.push(patient);
 				else if(key === 'cellphone') {
@@ -155,17 +156,25 @@ modulejs.define('patients', ['getPatientsAll'], function(getPatientsAll) {
 		function contentPatients(patients) {	
 			var contentPatient = '';
 			var telephone;
+			var insuranceConsulted;
+			var dateConsulted;
 			patients.forEach(function(patient) {
+				// Check if telephone or cellphone
 				telephone = patient.cellphone != '' ?
-						patient.cellphone : patient.telephone;
+					patient.cellphone : patient.telephone;
+				// Check if already consulted
+				insuranceConsulted = patient.date !== null ?
+					patient.insurance : "";
+				dateConsulted = patient.date !== null ?
+					util.parseDate(patient.date, '-', '/') : "";
 				contentPatient +=
 				'<tr>' +
 				'<th><a href="patient/' + patient.id + '/edit">' + 
 					patient.name + '</th>' +
 				'<th>' + patient.email + '</th>' + 
 				'<th>' + telephone + '</th>' +		
-				'<th>-----</th>' +							
-				'<th>-----</th>' +
+				'<th>' + insuranceConsulted + '</th>' +							
+				'<th>' + dateConsulted + '</th>' +
 				'</tr>';
 			});
 			$('#content_patients').empty().append(contentPatient);
