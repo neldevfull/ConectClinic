@@ -1,9 +1,9 @@
 /* Login */
 .container-login {
-	padding: 5% 0 0 25%;		
+	padding: 5% 0 0 20%;		
 }
 .form-login {
-	width: 40%;
+	width: 400px;
 }
 /* Correction Space Bottom */
 ._correct-mgbt {
@@ -18,9 +18,9 @@
 	margin-top: .5em;
 }
 .logo-type {
-	font-family: 'OpenSans', helvetica, sans-serif;
-	font-size: 4em;
+	font-family: 'lora', helvetica, sans-serif;
+	font-size: 3.8em;
 	font-weight: bold;
-	color: #1C5884;
+	color: #2596D3;
 	border-bottom: 1px solid #EEEEEE; 
 }

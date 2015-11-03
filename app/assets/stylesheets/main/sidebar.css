@@ -1,6 +1,6 @@
 /* -- Sidebar -- */
 .sidebar {
-  width: 15%;
+  width: 18%;
   position: fixed;
   top: 0;
   bottom: 0;
@@ -13,8 +13,8 @@
   background-color: #ccc;
   background-image: url("../imgs/img-bg.jpg");
   font-size: 1em;
-  line-height: 1.5em;
-  text-shadow: white 0 1em 1em;
+  line-height: 1.2em;
+  text-shadow: white 0 1em 1.4em;
 }
 .sidebar ul li a{
   padding-left: 1.8em;
@@ -24,41 +24,67 @@
 }
 .sidebar ul li a:hover {  
   background-color: #bfbfbf; 
+}
+.sidebar ul li a:active {  
+  background-color: #bfbfbf; 
+}
+.menu-main {
+  background-color: #939393;
+}
+.menu-main a {
+  color: white !important;
+  font-weight: 200;  
 } 
 /* end */
 
 /* Sidebar icons start */
+._dash:before {
+  content: '\e800'; 
+  font-family: 'dash';
+  speak: none;
+  display: inline-block;
+  color: white;
+  padding-right: 1.2em;    
+}
+._star:before {
+  content: '\e800'; 
+  font-family: 'star';
+  speak: none;
+  display: inline-block;
+  color: #333333;
+  padding-right: 1.2em;    
+}
 ._patients:before {
   content: '\e800'; 
   font-family: 'patients';
-    speak: none;
-    display: inline-block;
-    color: #333333;
-    padding-right: 1.2em;    
+  speak: none;
+  display: inline-block;
+  color: #333333;
+  padding-right: 1.2em;    
 }
 ._users:before {
   content: '\e800'; 
   font-family: 'users';
-    speak: none;
-    display: inline-block;
-    color: #333333;
-    padding-right: 1.2em;     
+  speak: none;
+  display: inline-block;
+  color: #333333;
+  padding-right: 1.2em;     
 }
 ._insurance:before {
   content: '\e800'; 
   font-family: 'insurance';
-    speak: none;
-    display: inline-block;
-    color: #333333;
-    padding-right: 1.2em;     
+  speak: none;
+  display: inline-block;
+  color: #333333;
+  padding-right: 1.2em;     
 }
 ._calendar:before {
   content: '\e800'; 
   font-family: 'calendar';
-    speak: none;
-    display: inline-block;
-    color: #333333;
-    padding-right: 1.2em;    
+  speak: none;
+  display: inline-block;
+  color: #333333;
+  padding-right: 1.2em;    
 }
 ._charts:after {
   content: '\e801'; 

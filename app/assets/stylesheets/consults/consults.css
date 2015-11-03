@@ -67,6 +67,11 @@
 	display: none; 
 }
 
+/* Panel Consults */
+.consults-title {
+	font-size: .8em;
+}
+
 /* Form  start */
 .select-agenda-type {
 	width: 27%;

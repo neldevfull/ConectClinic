@@ -1,8 +1,23 @@
 /* Fonts for Customization and Optimization */
 @font-face {
-  font-family: 'opensans';
-  src: url('../opensans.ttf');
-  font-weight: bold;
+  font-family: 'lora';
+  src: url('../lora.ttf');
+}
+@font-face {
+  font-family: 'lato';
+  src: url('../lato.ttf');
+}
+@font-face {
+  font-family: 'dash';
+  src: url('../dash.woff?37659449') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'star';
+  src: url('../star.woff?68918500') format('woff');
+  font-weight: normal;
+  font-style: normal;
 }
 @font-face {
   font-family: 'users';
